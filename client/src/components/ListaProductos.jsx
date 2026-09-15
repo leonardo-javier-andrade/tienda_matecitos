@@ -5,7 +5,7 @@ import './ListaProductos.css';
 
 const CATEGORIAS = ['Todas', 'Mates', 'Bombillas', 'Termos', 'Yerberas', 'Kits', 'Accesorios'];
 
-function ListaProductos({ usuario, favoritos, onToggleFav }) {
+function ListaProductos() {
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -31,9 +31,12 @@ function ListaProductos({ usuario, favoritos, onToggleFav }) {
 
   return (
     <section className="lista-productos">
-      <h2>Nuestros Productos</h2>
+      <div className="lista-header reveal-on-scroll">
+        <h2>Nuestra Colección</h2>
+        <p className="lista-subtitulo">Piezas que combinan tradición artesanal con diseño contemporáneo</p>
+      </div>
 
-      <div className="filtros-categoria">
+      <div className="filtros-categoria reveal-on-scroll">
         {CATEGORIAS.map((cat) => (
           <button
             key={cat}
@@ -45,22 +48,25 @@ function ListaProductos({ usuario, favoritos, onToggleFav }) {
         ))}
       </div>
 
-      {cargando && <p className="estado-mensaje">Cargando productos...</p>}
+      {cargando && (
+        <div className="estado-cargando">
+          <div className="cargando-spinner" />
+          <p>Cargando productos...</p>
+        </div>
+      )}
+
       {error && <p className="estado-mensaje error">Error: {error}</p>}
 
       {!cargando && !error && productos.length === 0 && (
-        <p className="estado-mensaje">No se encontraron productos en esta categoría.</p>
+        <div className="estado-vacio">
+          <span className="vacio-icon">🧉</span>
+          <p>No se encontraron productos en esta categoría</p>
+        </div>
       )}
 
       <div className="productos-grid">
         {productos.map((producto) => (
-          <TarjetaProducto
-            key={producto._id}
-            producto={producto}
-            usuario={usuario}
-            favoritos={favoritos}
-            onToggleFav={onToggleFav}
-          />
+          <TarjetaProducto key={producto._id} producto={producto} />
         ))}
       </div>
     </section>
