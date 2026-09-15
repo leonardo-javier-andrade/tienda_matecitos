@@ -107,14 +107,21 @@ router.post('/', verificarAdmin, upload.array('archivos', 10), async (req, res) 
 });
 
 /**
- * DELETE /api/upload/:publicId
+ * DELETE /api/upload
  * Elimina un archivo de Cloudinary.
- * El publicId viene URL-encoded (contiene /).
+ * El publicId se envía como query param porque contiene "/".
+ * Ej: DELETE /api/upload?publicId=tienda-matecitos/abc123&tipo=imagen
  */
-router.delete('/:publicId(*)', verificarAdmin, async (req, res) => {
+router.delete('/', verificarAdmin, async (req, res) => {
   try {
-    const { publicId } = req.params;
-    const { tipo } = req.query; // 'imagen' o 'video'
+    const { publicId, tipo } = req.query;
+
+    if (!publicId) {
+      return res.status(400).json({
+        exito: false,
+        mensaje: 'El publicId es obligatorio.',
+      });
+    }
 
     const resourceType = tipo === 'video' ? 'video' : 'image';
     await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });

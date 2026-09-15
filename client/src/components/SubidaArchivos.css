@@ -1,0 +1,142 @@
+.subida-archivos {
+  margin-bottom: 1.5rem;
+}
+
+.subida-label {
+  display: block;
+  font-weight: 600;
+  color: #2d3436;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.subida-zona {
+  border: 2px dashed #b2bec3;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: #fafafa;
+}
+
+.subida-zona:hover {
+  border-color: #6c5b3e;
+  background: #f5f0e8;
+}
+
+.subida-zona.subiendo {
+  border-color: #6c5b3e;
+  cursor: wait;
+}
+
+.subida-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: #636e72;
+}
+
+.subida-icono {
+  font-size: 2.5rem;
+}
+
+.subida-hint {
+  font-size: 0.8rem;
+  color: #b2bec3;
+}
+
+.subida-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: #6c5b3e;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e8dfd2;
+  border-top-color: #6c5b3e;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.subida-error {
+  color: #c62828;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.subida-previews {
+  margin-top: 1rem;
+}
+
+.subida-seccion-titulo {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #636e72;
+  margin-bottom: 0.5rem;
+}
+
+.previews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.preview-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: #f0f0f0;
+}
+
+.preview-item img,
+.preview-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-eliminar {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.preview-eliminar:hover {
+  background: #c62828;
+}
+
+.preview-badge {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: #6c5b3e;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}

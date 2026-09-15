@@ -1,22 +1,27 @@
 import './TarjetaProducto.css';
 
 function TarjetaProducto({ producto }) {
-  const { nombre, descripcion, precio, stock, imagenUrl, categoria } = producto;
+  const { nombre, descripcion, precio, stock, imagenes, categoria } = producto;
 
   const precioFormateado = precio.toLocaleString('es-AR', {
     style: 'currency',
     currency: 'ARS',
   });
 
+  const imagenPrincipal = imagenes && imagenes.length > 0 ? imagenes[0].url : null;
+
   return (
     <article className="tarjeta-producto">
       <div className="tarjeta-imagen">
-        {imagenUrl ? (
-          <img src={imagenUrl} alt={nombre} loading="lazy" />
+        {imagenPrincipal ? (
+          <img src={imagenPrincipal} alt={nombre} loading="lazy" />
         ) : (
           <div className="imagen-placeholder">🧉</div>
         )}
         <span className="tarjeta-categoria">{categoria}</span>
+        {imagenes && imagenes.length > 1 && (
+          <span className="tarjeta-count">+{imagenes.length - 1}</span>
+        )}
       </div>
 
       <div className="tarjeta-contenido">

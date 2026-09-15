@@ -52,6 +52,16 @@ main {
   font-size: 0.9rem;
 }
 
+/* ─── Cargando (auth check) ─────────────────────── */
+.app-cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: #636e72;
+  font-size: 1.1rem;
+}
+
 /* ─── Responsive ────────────────────────────────── */
 @media (max-width: 600px) {
   .header-contenido h1 {
