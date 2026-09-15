@@ -2,44 +2,104 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // ─── Helpers ───────────────────────────────────────────
 
-const getToken = () => localStorage.getItem('admin_token');
+const getToken = () => localStorage.getItem('user_token');
 
 const headersConAuth = () => ({
   'Content-Type': 'application/json',
   Authorization: `Bearer ${getToken()}`,
 });
 
-// ─── Auth ──────────────────────────────────────────────
+// ─── Auth (unificado) ──────────────────────────────────
 
-export const loginAdmin = async (password) => {
+export const loginUsuario = async (email, password) => {
   const res = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password }),
+    body: JSON.stringify({ email, password }),
   });
   const data = await res.json();
   if (data.exito) {
-    localStorage.setItem('admin_token', data.token);
+    localStorage.setItem('user_token', data.token);
+    localStorage.setItem('user_data', JSON.stringify(data.usuario));
+  }
+  return data;
+};
+
+export const registrarUsuario = async ({ nombre, email, password, telefono }) => {
+  const res = await fetch(`${API_URL}/api/auth/registro`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre, email, password, telefono }),
+  });
+  const data = await res.json();
+  if (data.exito) {
+    localStorage.setItem('user_token', data.token);
+    localStorage.setItem('user_data', JSON.stringify(data.usuario));
   }
   return data;
 };
 
 export const verificarToken = async () => {
   const token = getToken();
-  if (!token) return false;
+  if (!token) return { valido: false };
   try {
     const res = await fetch(`${API_URL}/api/auth/verificar`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
-    return data.valido;
+    if (data.valido) {
+      localStorage.setItem('user_data', JSON.stringify(data.usuario));
+    }
+    return data;
   } catch {
-    return false;
+    return { valido: false };
   }
 };
 
-export const logoutAdmin = () => {
-  localStorage.removeItem('admin_token');
+export const logoutUsuario = () => {
+  localStorage.removeItem('user_token');
+  localStorage.removeItem('user_data');
+};
+
+export const getUsuarioLocal = () => {
+  try {
+    const data = localStorage.getItem('user_data');
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
+};
+
+// ─── Perfil ────────────────────────────────────────────
+
+export const actualizarPerfil = async ({ nombre, telefono }) => {
+  const res = await fetch(`${API_URL}/api/auth/perfil`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify({ nombre, telefono }),
+  });
+  const data = await res.json();
+  if (data.exito) {
+    localStorage.setItem('user_data', JSON.stringify(data.usuario));
+  }
+  return data;
+};
+
+// ─── Favoritos ─────────────────────────────────────────
+
+export const toggleFavorito = async (productoId) => {
+  const res = await fetch(`${API_URL}/api/auth/favorito/${productoId}`, {
+    method: 'POST',
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerFavoritos = async () => {
+  const res = await fetch(`${API_URL}/api/auth/favoritos`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
 };
 
 // ─── Productos (público) ──────────────────────────────
@@ -117,6 +177,16 @@ export const eliminarArchivo = async (publicId, tipo = 'imagen') => {
   const res = await fetch(`${API_URL}/api/upload?${params}`, {
     method: 'DELETE',
     headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+// ─── Admin seed ───────────────────────────────────────
+
+export const crearAdminInicial = async () => {
+  const res = await fetch(`${API_URL}/api/auth/seed-admin`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
   });
   return res.json();
 };

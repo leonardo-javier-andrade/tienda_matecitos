@@ -1,10 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 /**
- * Middleware para verificar token JWT del administrador.
- * El token se envía en el header Authorization: Bearer <token>
+ * Middleware genérico: verifica token JWT y agrega req.usuario
  */
-const verificarAdmin = (req, res, next) => {
+const verificarToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -18,7 +17,7 @@ const verificarAdmin = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.admin = decoded;
+    req.usuario = decoded; // { id, rol }
     next();
   } catch (error) {
     return res.status(401).json({
@@ -28,4 +27,19 @@ const verificarAdmin = (req, res, next) => {
   }
 };
 
-module.exports = verificarAdmin;
+/**
+ * Middleware: solo permite acceso a administradores
+ */
+const verificarAdmin = (req, res, next) => {
+  verificarToken(req, res, () => {
+    if (req.usuario.rol !== 'admin') {
+      return res.status(403).json({
+        exito: false,
+        mensaje: 'Acceso denegado. Se requiere rol de administrador.',
+      });
+    }
+    next();
+  });
+};
+
+module.exports = { verificarToken, verificarAdmin };

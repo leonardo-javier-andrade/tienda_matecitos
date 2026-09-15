@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Producto = require('../models/Product');
-const verificarAdmin = require('../middleware/auth');
+const { verificarAdmin } = require('../middleware/auth');
 const cloudinary = require('../config/cloudinary');
 
 // ─── RUTAS PÚBLICAS ────────────────────────────────────

@@ -5,7 +5,7 @@ import './ListaProductos.css';
 
 const CATEGORIAS = ['Todas', 'Mates', 'Bombillas', 'Termos', 'Yerberas', 'Kits', 'Accesorios'];
 
-function ListaProductos() {
+function ListaProductos({ usuario, favoritos, onToggleFav }) {
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -54,7 +54,13 @@ function ListaProductos() {
 
       <div className="productos-grid">
         {productos.map((producto) => (
-          <TarjetaProducto key={producto._id} producto={producto} />
+          <TarjetaProducto
+            key={producto._id}
+            producto={producto}
+            usuario={usuario}
+            favoritos={favoritos}
+            onToggleFav={onToggleFav}
+          />
         ))}
       </div>
     </section>

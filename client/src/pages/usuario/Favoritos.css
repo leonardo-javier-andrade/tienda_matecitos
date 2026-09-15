@@ -1,0 +1,72 @@
+.favoritos-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.favoritos-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.favoritos-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  color: #2d3436;
+}
+
+.favoritos-header p {
+  color: #636e72;
+  font-size: 1rem;
+}
+
+.favoritos-estado {
+  text-align: center;
+  color: #636e72;
+  font-size: 1.1rem;
+  padding: 2rem;
+}
+
+.favoritos-vacio {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.favoritos-vacio-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.favoritos-vacio h2 {
+  margin: 0 0 0.5rem;
+  color: #2d3436;
+  font-size: 1.3rem;
+}
+
+.favoritos-vacio p {
+  color: #636e72;
+  margin-bottom: 1.5rem;
+}
+
+.favoritos-btn-explorar {
+  background: #6c5b3e;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.favoritos-btn-explorar:hover {
+  background: #5a4a32;
+}
+
+.favoritos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}

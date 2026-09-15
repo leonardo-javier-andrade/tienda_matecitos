@@ -1,0 +1,290 @@
+/* ─── Navbar ──────────────────────────────────────── */
+.navbar {
+  background: #fff;
+  border-bottom: 2px solid #f0ebe3;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-contenido {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  height: 64px;
+}
+
+/* Logo */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #2d3436;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.navbar-logo-icon {
+  font-size: 1.5rem;
+}
+
+/* Links centrales */
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: #636e72;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.4rem 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.navbar-link:hover,
+.navbar-link.activo {
+  color: #6c5b3e;
+  border-bottom-color: #6c5b3e;
+}
+
+/* Sección usuario */
+.navbar-usuario {
+  position: relative;
+}
+
+.navbar-avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.navbar-avatar-btn:hover {
+  background: #f5f0e8;
+}
+
+.navbar-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5b3e, #8b7355);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.navbar-nombre-corto {
+  font-weight: 500;
+  color: #2d3436;
+  font-size: 0.9rem;
+}
+
+.navbar-chevron {
+  color: #636e72;
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.navbar-chevron.abierto {
+  transform: rotate(180deg);
+}
+
+/* Auth links (no logueado) */
+.navbar-auth-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar-btn-ingresar {
+  text-decoration: none;
+  color: #6c5b3e;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.navbar-btn-ingresar:hover {
+  background: #f5f0e8;
+}
+
+.navbar-btn-registro {
+  text-decoration: none;
+  background: #6c5b3e;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.navbar-btn-registro:hover {
+  background: #5a4a32;
+}
+
+/* Dropdown menu */
+.navbar-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid #f0ebe3;
+  min-width: 240px;
+  overflow: hidden;
+  animation: dropdown-in 0.15s ease-out;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.dropdown-nombre {
+  font-weight: 600;
+  color: #2d3436;
+  font-size: 0.95rem;
+}
+
+.dropdown-email {
+  color: #636e72;
+  font-size: 0.8rem;
+}
+
+.dropdown-rol {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  width: fit-content;
+}
+
+.dropdown-rol.admin {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.dropdown-rol.usuario {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #f0ebe3;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: #2d3436;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: #f5f0e8;
+}
+
+.dropdown-icono {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+}
+
+.dropdown-logout {
+  color: #c62828;
+}
+
+.dropdown-logout:hover {
+  background: #ffebee;
+}
+
+/* Hamburguesa (mobile) */
+.navbar-hamburguesa {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.navbar-hamburguesa span {
+  width: 22px;
+  height: 2px;
+  background: #2d3436;
+  border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-nombre-corto {
+    display: none;
+  }
+
+  .navbar-logo-texto {
+    font-size: 1rem;
+  }
+
+  .navbar-btn-registro {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .navbar-btn-ingresar {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
+}

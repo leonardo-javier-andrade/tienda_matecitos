@@ -61,6 +61,40 @@
   font-weight: 600;
 }
 
+/* Botón favorito */
+.tarjeta-fav {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: transform 0.2s, background 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tarjeta-fav:hover {
+  transform: scale(1.15);
+  background: #fff;
+}
+
+.tarjeta-fav.animando {
+  animation: fav-pop 0.3s ease;
+}
+
+@keyframes fav-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
 .tarjeta-contenido {
   padding: 1.25rem;
 }
@@ -86,6 +120,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.75rem;
 }
 
 .tarjeta-precio {
@@ -109,4 +144,31 @@
 .tarjeta-stock.agotado {
   background: #ffebee;
   color: #c62828;
+}
+
+/* Botón WhatsApp */
+.tarjeta-whatsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem;
+  background: #25d366;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tarjeta-whatsapp:hover {
+  background: #1da851;
+}
+
+.tarjeta-whatsapp svg {
+  flex-shrink: 0;
 }

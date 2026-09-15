@@ -1,0 +1,203 @@
+.micuenta-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.micuenta-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.micuenta-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5b3e, #8b7355);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 auto 1.5rem;
+}
+
+.micuenta-card h1 {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+  color: #2d3436;
+}
+
+.micuenta-exito {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.micuenta-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Info (modo vista) */
+.micuenta-info {
+  text-align: left;
+}
+
+.micuenta-campo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0ebe3;
+}
+
+.micuenta-campo:last-of-type {
+  border-bottom: none;
+  margin-bottom: 1.5rem;
+}
+
+.campo-label {
+  font-weight: 600;
+  color: #636e72;
+  font-size: 0.9rem;
+}
+
+.campo-valor {
+  color: #2d3436;
+  font-size: 0.95rem;
+}
+
+.campo-rol {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.2rem 0.75rem;
+  border-radius: 12px;
+}
+
+.campo-rol.admin {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.campo-rol.usuario {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Form (modo edición) */
+.micuenta-form {
+  text-align: left;
+}
+
+.micuenta-form .auth-campo {
+  margin-bottom: 1.25rem;
+}
+
+.micuenta-form .auth-campo label {
+  display: block;
+  font-weight: 600;
+  color: #2d3436;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.micuenta-form .auth-campo input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.micuenta-form .auth-campo input:focus {
+  outline: none;
+  border-color: #6c5b3e;
+}
+
+.campo-disabled {
+  background: #f5f5f5 !important;
+  color: #999 !important;
+  cursor: not-allowed;
+}
+
+.micuenta-form-acciones {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Botones */
+.micuenta-btn {
+  width: 100%;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.micuenta-btn.editar {
+  background: #6c5b3e;
+  color: #fff;
+}
+
+.micuenta-btn.editar:hover {
+  background: #5a4a32;
+}
+
+.micuenta-btn.guardar {
+  background: #6c5b3e;
+  color: #fff;
+}
+
+.micuenta-btn.guardar:hover:not(:disabled) {
+  background: #5a4a32;
+}
+
+.micuenta-btn.guardar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.micuenta-btn.cancelar {
+  background: #f0ebe3;
+  color: #6c5b3e;
+}
+
+.micuenta-btn.cancelar:hover {
+  background: #e4ddd3;
+}
+
+@media (max-width: 480px) {
+  .micuenta-card {
+    padding: 1.75rem;
+  }
+
+  .micuenta-campo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .micuenta-form-acciones {
+    flex-direction: column;
+  }
+}
