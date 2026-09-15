@@ -1,0 +1,58 @@
+.lista-productos {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.lista-productos h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2d3436;
+}
+
+.filtros-categoria {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.filtro-btn {
+  padding: 0.5rem 1.2rem;
+  border: 2px solid #6c5b3e;
+  background: transparent;
+  color: #6c5b3e;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.filtro-btn:hover {
+  background: #f5f0e8;
+}
+
+.filtro-btn.activo {
+  background: #6c5b3e;
+  color: #fff;
+}
+
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.estado-mensaje {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #636e72;
+  padding: 2rem;
+}
+
+.estado-mensaje.error {
+  color: #d63031;
+}

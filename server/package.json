@@ -1,0 +1,26 @@
+{
+  "name": "tienda-matecitos-server",
+  "version": "1.0.0",
+  "description": "API REST para Tienda Matecitos - Mates y Accesorios",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "mates",
+    "ecommerce",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
