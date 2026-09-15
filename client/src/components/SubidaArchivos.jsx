@@ -78,6 +78,7 @@ function SubidaArchivos({ imagenes = [], videos = [], onChange }) {
           type="file"
           multiple
           accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm"
+          capture="environment"
           onChange={handleSeleccion}
           style={{ display: 'none' }}
         />
@@ -89,7 +90,7 @@ function SubidaArchivos({ imagenes = [], videos = [], onChange }) {
         ) : (
           <div className="subida-placeholder">
             <span className="subida-icono">📷</span>
-            <span>Tocá para seleccionar fotos o videos</span>
+            <span className="subida-texto-principal">Tocá para sacar una foto o elegir archivos</span>
             <span className="subida-hint">JPG, PNG, WebP, MP4, MOV — Máx. 50 MB</span>
           </div>
         )}

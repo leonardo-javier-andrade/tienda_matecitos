@@ -10,6 +10,7 @@ body {
   background: #faf8f5;
   color: #2d3436;
   line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
 }
 
 .app {
@@ -62,13 +63,37 @@ main {
   font-size: 1.1rem;
 }
 
-/* ─── Responsive ────────────────────────────────── */
-@media (max-width: 600px) {
+/* ─── Responsive: Tablet ────────────────────────── */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 2rem 1rem;
+  }
+
   .header-contenido h1 {
     font-size: 1.8rem;
   }
 
   .header-contenido p {
     font-size: 0.95rem;
+  }
+}
+
+/* ─── Responsive: Mobile ────────────────────────── */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .header-contenido h1 {
+    font-size: 1.5rem;
+  }
+
+  .header-contenido p {
+    font-size: 0.9rem;
+  }
+
+  .app-footer {
+    padding: 1.25rem 0.75rem;
+    font-size: 0.8rem;
   }
 }

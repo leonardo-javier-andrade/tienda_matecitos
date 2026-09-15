@@ -123,6 +123,7 @@
   font-size: 1rem;
   box-sizing: border-box;
   transition: border-color 0.2s;
+  min-height: 48px;
 }
 
 .micuenta-form .auth-campo input:focus {
@@ -152,6 +153,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  min-height: 48px;
 }
 
 .micuenta-btn.editar {
@@ -187,8 +189,24 @@
 }
 
 @media (max-width: 480px) {
+  .micuenta-container {
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+  }
+
   .micuenta-card {
-    padding: 1.75rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .micuenta-card h1 {
+    font-size: 1.3rem;
+  }
+
+  .micuenta-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 1.6rem;
   }
 
   .micuenta-campo {

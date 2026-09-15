@@ -35,6 +35,7 @@
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .dash-btn-logout {
@@ -45,6 +46,7 @@
   color: #636e72;
   cursor: pointer;
   font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 /* ─── Stats ──────────────────────────── */
@@ -101,6 +103,11 @@
   font-size: 0.95rem;
   white-space: nowrap;
   transition: background 0.2s;
+  text-align: center;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dash-btn-nuevo:hover {
@@ -120,6 +127,8 @@
   border: 2px solid #dfe6e9;
   border-radius: 8px;
   font-size: 0.9rem;
+  min-height: 44px;
+  box-sizing: border-box;
 }
 
 .dash-busqueda input:focus {
@@ -135,6 +144,7 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
+  min-height: 44px;
 }
 
 /* ─── Filtros ────────────────────────── */
@@ -147,7 +157,7 @@
 }
 
 .filtro-chip {
-  padding: 0.35rem 0.85rem;
+  padding: 0.4rem 0.85rem;
   border: 1px solid #dfe6e9;
   background: #fff;
   border-radius: 20px;
@@ -155,6 +165,8 @@
   font-size: 0.8rem;
   color: #636e72;
   transition: all 0.2s;
+  min-height: 36px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .filtro-chip.activo {
@@ -163,7 +175,7 @@
   border-color: #6c5b3e;
 }
 
-/* ─── Tabla ──────────────────────────── */
+/* ─── Tabla (desktop) ────────────────── */
 
 .dash-tabla-wrapper {
   overflow-x: auto;
@@ -242,6 +254,7 @@
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .tabla-precio {
@@ -263,6 +276,7 @@
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .tabla-estado.activo {
@@ -288,6 +302,9 @@
   text-decoration: none;
   font-size: 0.8rem;
   font-weight: 500;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .btn-eliminar {
@@ -300,11 +317,20 @@
   font-size: 0.8rem;
   font-weight: 500;
   transition: all 0.2s;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .btn-eliminar:hover:not(:disabled) {
   background: #e17055;
   color: #fff;
+}
+
+/* ─── Cards mobile (ocultas en desktop) ────── */
+
+.dash-cards-mobile {
+  display: none;
 }
 
 /* ─── Vacío ──────────────────────────── */
@@ -326,11 +352,41 @@
   font-size: 1.1rem;
 }
 
-/* ─── Responsive ─────────────────────── */
+/* ─── Responsive: Tablet ─────────────── */
+
+@media (max-width: 900px) {
+  .dash-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dash-header-der {
+    width: 100%;
+  }
+
+  .dash-btn-tienda,
+  .dash-btn-logout {
+    flex: 1;
+    text-align: center;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ─── Responsive: Mobile ─────────────── */
 
 @media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem 0.75rem;
+  }
+
+  .dash-header h1 {
+    font-size: 1.15rem;
+  }
+
   .dash-stats {
-    grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
   }
 
@@ -342,8 +398,8 @@
     font-size: 1.5rem;
   }
 
-  .dash-header h1 {
-    font-size: 1.15rem;
+  .stat-label {
+    font-size: 0.75rem;
   }
 
   .dash-toolbar {
@@ -351,11 +407,135 @@
     align-items: stretch;
   }
 
+  .dash-btn-nuevo {
+    width: 100%;
+  }
+
   .dash-busqueda {
     max-width: none;
   }
 
-  .dash-btn-nuevo {
-    text-align: center;
+  .dash-filtros {
+    gap: 0.35rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filtro-chip {
+    flex-shrink: 0;
+  }
+
+  /* Ocultar tabla, mostrar cards */
+  .dash-tabla-wrapper {
+    display: none;
+  }
+
+  .dash-cards-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .dash-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+  }
+
+  .dash-card.card-inactiva {
+    opacity: 0.55;
+  }
+
+  .card-top {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f0e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .card-nombre {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2d3436;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.15rem;
+  }
+
+  .card-precio {
+    font-weight: 700;
+    color: #6c5b3e;
+    font-size: 0.95rem;
+  }
+
+  .card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 0.75rem;
+  }
+
+  .card-acciones {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .card-acciones .btn-editar,
+  .card-acciones .btn-eliminar {
+    min-height: 40px;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .dash-header h1 {
+    font-size: 1rem;
+  }
+
+  .stat-numero {
+    font-size: 1.3rem;
+  }
+
+  .card-thumb {
+    width: 50px;
+    height: 50px;
   }
 }

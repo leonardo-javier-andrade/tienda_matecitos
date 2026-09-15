@@ -68,8 +68,8 @@
   left: 0.75rem;
   background: rgba(255, 255, 255, 0.9);
   border: none;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -78,6 +78,7 @@
   font-size: 1.1rem;
   transition: transform 0.2s, background 0.2s;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tarjeta-fav:hover {
@@ -153,7 +154,7 @@
   justify-content: center;
   gap: 0.5rem;
   width: 100%;
-  padding: 0.6rem;
+  padding: 0.7rem;
   background: #25d366;
   color: #fff;
   border: none;
@@ -163,6 +164,8 @@
   text-decoration: none;
   cursor: pointer;
   transition: background 0.2s;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tarjeta-whatsapp:hover {
@@ -171,4 +174,65 @@
 
 .tarjeta-whatsapp svg {
   flex-shrink: 0;
+}
+
+/* ─── Responsive: Tablet ─────────────────────────── */
+@media (max-width: 768px) {
+  .tarjeta-producto:hover {
+    transform: none;
+  }
+
+  .tarjeta-contenido {
+    padding: 0.85rem;
+  }
+
+  .tarjeta-nombre {
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .tarjeta-descripcion {
+    font-size: 0.8rem;
+    margin-bottom: 0.65rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .tarjeta-precio {
+    font-size: 1.1rem;
+  }
+
+  .tarjeta-categoria {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .imagen-placeholder {
+    font-size: 3rem;
+  }
+}
+
+/* ─── Responsive: Mobile ─────────────────────────── */
+@media (max-width: 480px) {
+  .tarjeta-contenido {
+    padding: 1rem;
+  }
+
+  .tarjeta-nombre {
+    font-size: 1rem;
+  }
+
+  .tarjeta-precio {
+    font-size: 1.15rem;
+  }
+
+  .tarjeta-whatsapp {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .tarjeta-fav {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
 }

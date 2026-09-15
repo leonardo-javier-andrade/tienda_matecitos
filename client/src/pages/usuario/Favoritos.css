@@ -59,6 +59,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  min-height: 48px;
 }
 
 .favoritos-btn-explorar:hover {
@@ -69,4 +70,35 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
+}
+
+/* ─── Responsive ─────────────────────────────────── */
+@media (max-width: 768px) {
+  .favoritos-container {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .favoritos-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .favoritos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .favoritos-vacio {
+    padding: 3rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .favoritos-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .favoritos-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }

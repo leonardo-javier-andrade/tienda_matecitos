@@ -4,16 +4,18 @@ import './Navbar.css';
 
 function Navbar({ usuario, onLogout }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [mobileMenuAbierto, setMobileMenuAbierto] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const menuRef = useRef(null);
 
-  // Cerrar menú al cambiar de ruta
+  // Cerrar menús al cambiar de ruta
   useEffect(() => {
     setMenuAbierto(false);
+    setMobileMenuAbierto(false);
   }, [location.pathname]);
 
-  // Cerrar menú al hacer clic fuera
+  // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
     const handleClickFuera = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -23,6 +25,16 @@ function Navbar({ usuario, onLogout }) {
     document.addEventListener('mousedown', handleClickFuera);
     return () => document.removeEventListener('mousedown', handleClickFuera);
   }, []);
+
+  // Bloquear scroll del body cuando el menú mobile está abierto
+  useEffect(() => {
+    if (mobileMenuAbierto) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileMenuAbierto]);
 
   const handleLogout = () => {
     onLogout();
@@ -37,15 +49,15 @@ function Navbar({ usuario, onLogout }) {
           <span className="navbar-logo-texto">Tienda Matecitos</span>
         </Link>
 
-        {/* Links de navegación */}
+        {/* Links de navegación (desktop) */}
         <div className="navbar-links">
           <Link to="/" className={`navbar-link ${location.pathname === '/' ? 'activo' : ''}`}>
             Productos
           </Link>
         </div>
 
-        {/* Sección de usuario */}
-        <div className="navbar-usuario" ref={menuRef}>
+        {/* Sección de usuario (desktop) */}
+        <div className="navbar-usuario-desktop" ref={menuRef}>
           {usuario ? (
             <>
               <button
@@ -108,10 +120,10 @@ function Navbar({ usuario, onLogout }) {
           )}
         </div>
 
-        {/* Menú hamburguesa (mobile) */}
+        {/* Botón hamburguesa (mobile) */}
         <button
-          className="navbar-hamburguesa"
-          onClick={() => setMenuAbierto(!menuAbierto)}
+          className={`navbar-hamburguesa ${mobileMenuAbierto ? 'activo' : ''}`}
+          onClick={() => setMobileMenuAbierto(!mobileMenuAbierto)}
           aria-label="Menú"
         >
           <span></span>
@@ -119,6 +131,66 @@ function Navbar({ usuario, onLogout }) {
           <span></span>
         </button>
       </div>
+
+      {/* Menú mobile overlay */}
+      {mobileMenuAbierto && (
+        <div className="navbar-mobile-overlay" onClick={() => setMobileMenuAbierto(false)}>
+          <div className="navbar-mobile-menu" onClick={(e) => e.stopPropagation()}>
+            {usuario ? (
+              <>
+                <div className="mobile-usuario-info">
+                  <span className="navbar-avatar mobile-avatar">
+                    {usuario.nombre.charAt(0).toUpperCase()}
+                  </span>
+                  <div>
+                    <span className="mobile-nombre">{usuario.nombre}</span>
+                    <span className={`dropdown-rol ${usuario.rol}`}>
+                      {usuario.rol === 'admin' ? 'Admin' : 'Cliente'}
+                    </span>
+                  </div>
+                </div>
+                <div className="mobile-divider" />
+
+                <Link to="/" className="mobile-link">
+                  🏠 Productos
+                </Link>
+
+                {usuario.rol === 'admin' && (
+                  <Link to="/admin" className="mobile-link">
+                    📊 Panel Admin
+                  </Link>
+                )}
+
+                <Link to="/mi-cuenta" className="mobile-link">
+                  👤 Mi Cuenta
+                </Link>
+
+                <Link to="/favoritos" className="mobile-link">
+                  ❤️ Mis Favoritos
+                </Link>
+
+                <div className="mobile-divider" />
+                <button className="mobile-link mobile-logout" onClick={handleLogout}>
+                  🚪 Cerrar Sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/" className="mobile-link">
+                  🏠 Productos
+                </Link>
+                <div className="mobile-divider" />
+                <Link to="/ingresar" className="mobile-link">
+                  🔑 Ingresar
+                </Link>
+                <Link to="/registro" className="mobile-link mobile-registro">
+                  ✨ Crear Cuenta
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

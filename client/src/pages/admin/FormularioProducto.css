@@ -24,6 +24,10 @@
   font-size: 1rem;
   cursor: pointer;
   font-weight: 500;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .form-volver:hover {
@@ -73,13 +77,14 @@
 .form-grupo textarea,
 .form-grupo select {
   width: 100%;
-  padding: 0.7rem 0.85rem;
+  padding: 0.75rem 0.85rem;
   border: 2px solid #dfe6e9;
   border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   transition: border-color 0.2s;
   box-sizing: border-box;
   font-family: inherit;
+  min-height: 44px;
 }
 
 .form-grupo input:focus,
@@ -93,12 +98,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
-}
-
-@media (max-width: 600px) {
-  .form-fila {
-    grid-template-columns: 1fr;
-  }
 }
 
 .form-checks {
@@ -115,11 +114,13 @@
   font-size: 0.95rem;
   color: #2d3436;
   cursor: pointer;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .check-label input[type='checkbox'] {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   accent-color: #6c5b3e;
   cursor: pointer;
 }
@@ -140,6 +141,7 @@
   cursor: pointer;
   font-weight: 500;
   transition: border-color 0.2s;
+  min-height: 48px;
 }
 
 .btn-cancelar:hover {
@@ -156,6 +158,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  min-height: 48px;
 }
 
 .btn-guardar:hover:not(:disabled) {
@@ -165,4 +168,68 @@
 .btn-guardar:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+/* ─── Responsive: Tablet ─────────────────────────── */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .producto-form {
+    padding: 1.5rem;
+  }
+
+  .form-fila {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .form-fila .form-grupo:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ─── Responsive: Mobile ─────────────────────────── */
+@media (max-width: 600px) {
+  .form-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .form-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .producto-form {
+    padding: 1.25rem;
+    border-radius: 10px;
+  }
+
+  .form-fila {
+    grid-template-columns: 1fr;
+  }
+
+  .form-fila .form-grupo:nth-child(3) {
+    grid-column: auto;
+  }
+
+  .form-checks {
+    gap: 1rem;
+    flex-direction: column;
+  }
+
+  .form-acciones {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancelar,
+  .btn-guardar {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
 }
