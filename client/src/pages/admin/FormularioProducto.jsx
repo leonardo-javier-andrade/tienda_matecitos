@@ -19,6 +19,7 @@ const productoVacio = {
   videos: [],
   categoria: 'Mates',
   destacado: false,
+  promocionCentro: false,
   activo: true,
 };
 
@@ -45,6 +46,7 @@ function FormularioProducto() {
             videos: datos.videos || [],
             categoria: datos.categoria,
             destacado: datos.destacado,
+            promocionCentro: datos.promocionCentro || false,
             activo: datos.activo,
           });
         })
@@ -202,7 +204,20 @@ function FormularioProducto() {
               checked={producto.destacado}
               onChange={handleChange}
             />
-            ⭐ Producto destacado
+            <span className="check-icono">⭐</span>
+            Producto destacado
+          </label>
+
+          <label className="check-label check-promo">
+            <input
+              type="checkbox"
+              name="promocionCentro"
+              checked={producto.promocionCentro}
+              onChange={handleChange}
+            />
+            <span className="check-icono">🎯</span>
+            Promoción Centro Pág
+            <span className="check-hint">Se muestra en el carrusel principal de la tienda</span>
           </label>
 
           <label className="check-label">
@@ -212,7 +227,8 @@ function FormularioProducto() {
               checked={producto.activo}
               onChange={handleChange}
             />
-            ✅ Activo (visible en la tienda)
+            <span className="check-icono">✅</span>
+            Activo (visible en la tienda)
           </label>
         </div>
 

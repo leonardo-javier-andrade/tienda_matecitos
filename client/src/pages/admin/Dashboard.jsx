@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
   obtenerTodosProductos,
   eliminarProducto,
-  logoutAdmin,
+  logoutUsuario,
 } from '../../services/api';
 import './Dashboard.css';
 
@@ -61,7 +61,7 @@ function Dashboard() {
   };
 
   const handleLogout = () => {
-    logoutAdmin();
+    logoutUsuario();
     navigate('/');
   };
 

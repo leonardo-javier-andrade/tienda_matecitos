@@ -125,6 +125,27 @@
   cursor: pointer;
 }
 
+.check-icono {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* Promocion Centro Pag checkbox with hint */
+.check-promo {
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.check-hint {
+  display: block;
+  width: 100%;
+  font-size: 0.75rem;
+  color: #636e72;
+  margin-top: 0.15rem;
+  padding-left: 2.75rem;
+  font-weight: 400;
+}
+
 .form-acciones {
   display: flex;
   gap: 1rem;

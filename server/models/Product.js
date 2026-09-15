@@ -27,7 +27,7 @@ const productoSchema = new mongoose.Schema(
     imagenes: [
       {
         url: { type: String, required: true },
-        publicId: { type: String, required: true }, // ID de Cloudinary para borrar
+        publicId: { type: String, required: true },
       },
     ],
     videos: [
@@ -45,6 +45,10 @@ const productoSchema = new mongoose.Schema(
       required: [true, 'La categoría es obligatoria'],
     },
     destacado: {
+      type: Boolean,
+      default: false,
+    },
+    promocionCentro: {
       type: Boolean,
       default: false,
     },

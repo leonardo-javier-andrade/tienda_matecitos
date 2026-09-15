@@ -9,11 +9,12 @@ const cloudinary = require('../config/cloudinary');
 // GET /api/products — Obtener todos los productos (con filtros opcionales)
 router.get('/', async (req, res) => {
   try {
-    const { categoria, destacado, activo, buscar } = req.query;
+    const { categoria, destacado, promocionCentro, activo, buscar } = req.query;
     const filtro = {};
 
     if (categoria) filtro.categoria = categoria;
     if (destacado) filtro.destacado = destacado === 'true';
+    if (promocionCentro) filtro.promocionCentro = promocionCentro === 'true';
     if (activo !== undefined) {
       filtro.activo = activo === 'true';
     } else {
@@ -108,7 +109,6 @@ router.post('/', verificarAdmin, async (req, res) => {
       datos: productoGuardado,
     });
   } catch (error) {
-    // Errores de validación de Mongoose
     if (error.name === 'ValidationError') {
       const errores = Object.values(error.errors).map((e) => e.message);
       return res.status(400).json({
