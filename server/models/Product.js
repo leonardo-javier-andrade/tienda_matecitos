@@ -36,6 +36,10 @@ const productoSchema = new mongoose.Schema(
         publicId: { type: String, required: true },
       },
     ],
+    imagenHero: {
+      url: { type: String },
+      publicId: { type: String },
+    },
     categoria: {
       type: String,
       enum: {

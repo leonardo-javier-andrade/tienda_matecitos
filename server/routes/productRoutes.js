@@ -190,6 +190,15 @@ router.delete('/:id', verificarAdmin, async (req, res) => {
       }
     }
 
+    // Eliminar imagen hero de Cloudinary
+    if (producto.imagenHero && producto.imagenHero.publicId) {
+      try {
+        await cloudinary.uploader.destroy(producto.imagenHero.publicId, { resource_type: 'image' });
+      } catch (e) {
+        console.error(`Error eliminando imagen hero ${producto.imagenHero.publicId}:`, e.message);
+      }
+    }
+
     await Producto.findByIdAndDelete(req.params.id);
 
     res.json({

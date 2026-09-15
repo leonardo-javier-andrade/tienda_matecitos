@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   crearProducto,
   actualizarProducto,
   obtenerProductoPorId,
+  subirArchivos,
+  eliminarArchivo,
 } from '../../services/api';
 import SubidaArchivos from '../../components/SubidaArchivos';
 import './FormularioProducto.css';
@@ -17,6 +19,7 @@ const productoVacio = {
   stock: 0,
   imagenes: [],
   videos: [],
+  imagenHero: null,
   categoria: 'Mates',
   destacado: false,
   promocionCentro: false,
@@ -32,6 +35,8 @@ function FormularioProducto() {
   const [errores, setErrores] = useState([]);
   const [guardando, setGuardando] = useState(false);
   const [cargando, setCargando] = useState(esEdicion);
+  const [subiendoHero, setSubiendoHero] = useState(false);
+  const heroInputRef = useRef(null);
 
   useEffect(() => {
     if (esEdicion) {
@@ -44,6 +49,7 @@ function FormularioProducto() {
             stock: datos.stock,
             imagenes: datos.imagenes || [],
             videos: datos.videos || [],
+            imagenHero: datos.imagenHero || null,
             categoria: datos.categoria,
             destacado: datos.destacado,
             promocionCentro: datos.promocionCentro || false,
@@ -67,6 +73,40 @@ function FormularioProducto() {
     setProducto((prev) => ({ ...prev, imagenes, videos }));
   };
 
+  // ─── Hero Image Upload ───────────────────────────────
+  const handleHeroSeleccion = async (e) => {
+    const archivos = Array.from(e.target.files);
+    if (archivos.length === 0) return;
+
+    setSubiendoHero(true);
+    try {
+      const resultado = await subirArchivos(archivos);
+      if (resultado.exito && resultado.datos.length > 0) {
+        const item = resultado.datos[0];
+        setProducto((prev) => ({
+          ...prev,
+          imagenHero: { url: item.url, publicId: item.publicId },
+        }));
+      }
+    } catch (err) {
+      console.error('Error subiendo imagen hero:', err);
+    } finally {
+      setSubiendoHero(false);
+      if (heroInputRef.current) heroInputRef.current.value = '';
+    }
+  };
+
+  const handleEliminarHero = async () => {
+    if (!producto.imagenHero) return;
+    try {
+      await eliminarArchivo(producto.imagenHero.publicId, 'imagen');
+      setProducto((prev) => ({ ...prev, imagenHero: null }));
+    } catch (err) {
+      console.error('Error eliminando imagen hero:', err);
+    }
+  };
+
+  // ─── Submit ──────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrores([]);
@@ -208,7 +248,7 @@ function FormularioProducto() {
             Producto destacado
           </label>
 
-          <label className="check-label check-promo">
+          <label className="check-label">
             <input
               type="checkbox"
               name="promocionCentro"
@@ -217,7 +257,6 @@ function FormularioProducto() {
             />
             <span className="check-icono">🎯</span>
             Promoción Centro Pág
-            <span className="check-hint">Se muestra en el carrusel principal de la tienda</span>
           </label>
 
           <label className="check-label">
@@ -231,6 +270,66 @@ function FormularioProducto() {
             Activo (visible en la tienda)
           </label>
         </div>
+
+        {/* ─── Hero Image Upload (only when promocionCentro is active) ─── */}
+        {producto.promocionCentro && (
+          <div className="hero-upload-section">
+            <div className="hero-upload-header">
+              <h3 className="hero-upload-titulo">
+                🖼️ Imagen del Hero (Carrusel Principal)
+              </h3>
+              <p className="hero-upload-desc">
+                Esta imagen se usará como fondo del carrusel en la página principal. Recomendado: 1920×600px o mayor, formato horizontal.
+              </p>
+            </div>
+
+            {producto.imagenHero ? (
+              <div className="hero-preview">
+                <img
+                  src={producto.imagenHero.url}
+                  alt="Imagen hero"
+                  className="hero-preview-img"
+                />
+                <button
+                  type="button"
+                  className="hero-preview-eliminar"
+                  onClick={handleEliminarHero}
+                >
+                  ✕ Eliminar
+                </button>
+              </div>
+            ) : (
+              <div
+                className={`hero-upload-zona ${subiendoHero ? 'subiendo' : ''}`}
+                onClick={() => !subiendoHero && heroInputRef.current?.click()}
+              >
+                <input
+                  ref={heroInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleHeroSeleccion}
+                  style={{ display: 'none' }}
+                />
+                {subiendoHero ? (
+                  <div className="hero-upload-spinner">
+                    <div className="spinner" />
+                    <span>Subiendo imagen...</span>
+                  </div>
+                ) : (
+                  <div className="hero-upload-placeholder">
+                    <span className="hero-upload-icono">🌄</span>
+                    <span className="hero-upload-texto">
+                      Hacé click para subir la imagen del Hero
+                    </span>
+                    <span className="hero-upload-hint">
+                      JPG, PNG, WebP — Formato horizontal recomendado
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="form-acciones">
           <button
