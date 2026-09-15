@@ -24,10 +24,18 @@ const productoSchema = new mongoose.Schema(
       default: 0,
       min: [0, 'El stock no puede ser negativo'],
     },
-    imagenUrl: {
-      type: String,
-      default: '',
-    },
+    imagenes: [
+      {
+        url: { type: String, required: true },
+        publicId: { type: String, required: true }, // ID de Cloudinary para borrar
+      },
+    ],
+    videos: [
+      {
+        url: { type: String, required: true },
+        publicId: { type: String, required: true },
+      },
+    ],
     categoria: {
       type: String,
       enum: {
@@ -46,7 +54,7 @@ const productoSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // agrega createdAt y updatedAt automáticamente
+    timestamps: true,
   }
 );
 

@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const conectarDB = require('./config/db');
 const productRoutes = require('./routes/productRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // Inicializar Express
 const app = express();
@@ -23,6 +25,8 @@ app.use(
 
 // ─── Rutas ─────────────────────────────────────────────
 app.use('/api/products', productRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/auth', authRoutes);
 
 // Ruta de estado / health check
 app.get('/api/status', (_req, res) => {
@@ -39,6 +43,24 @@ app.get('/', (_req, res) => {
     mensaje: 'Bienvenido a la API de Tienda Matecitos',
     documentacion: '/api/status',
   });
+});
+
+// ─── Manejo de errores de Multer ───────────────────────
+app.use((err, _req, res, _next) => {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({
+      exito: false,
+      mensaje: 'El archivo supera el tamaño máximo permitido (50 MB).',
+    });
+  }
+  if (err.message && err.message.includes('Tipo de archivo no permitido')) {
+    return res.status(400).json({
+      exito: false,
+      mensaje: err.message,
+    });
+  }
+  console.error('Error no manejado:', err);
+  res.status(500).json({ exito: false, mensaje: 'Error interno del servidor' });
 });
 
 // ─── Iniciar servidor ──────────────────────────────────
