@@ -141,7 +141,6 @@ function NavTienda() {
 function HeroCarousel() {
   const [slides, setSlides] = useState([]);
   const [indice, setIndice] = useState(0);
-  const [esMobile, setEsMobile] = useState(window.innerWidth <= 768);
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -150,13 +149,6 @@ function HeroCarousel() {
         if (res.exito && res.datos) setSlides(res.datos);
       })
       .catch(() => {});
-  }, []);
-
-  // Detectar cambio de tamaño para ajustar slideWidth
-  useEffect(() => {
-    const handleResize = () => setEsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const total = slides.length;
@@ -202,14 +194,17 @@ function HeroCarousel() {
     );
   }
 
-  // En mobile (<=768px) los slides ocupan 100%, en desktop 87% para efecto peek
-  const slideWidth = total > 1 ? (esMobile ? 100 : 87) : 100;
+  // Desktop: 87% para efecto peek. Mobile: CSS sobreescribe a 100% con !important
+  const slideWidth = total > 1 ? 87 : 100;
 
   return (
     <section className="hero-carousel">
       <div
         className="carousel-track"
-        style={{ transform: `translateX(-${indice * slideWidth}%)` }}
+        style={{
+          transform: `translateX(-${indice * slideWidth}%)`,
+          '--slide-idx': indice,
+        }}
       >
         {slides.map((slide) => (
           <div
