@@ -38,7 +38,6 @@ function SubidaArchivos({ imagenes = [], videos = [], onChange }) {
       setProgreso(`Error: ${err.message}`);
     } finally {
       setSubiendo(false);
-      // Resetear input para poder subir el mismo archivo de nuevo
       if (inputRef.current) inputRef.current.value = '';
     }
   };
@@ -67,7 +66,7 @@ function SubidaArchivos({ imagenes = [], videos = [], onChange }) {
 
   return (
     <div className="subida-archivos">
-      <label className="subida-label">Imágenes y Videos</label>
+      <label className="subida-label">Imagenes y Videos</label>
 
       <div
         className={`subida-zona ${subiendo ? 'subiendo' : ''}`}
@@ -78,7 +77,6 @@ function SubidaArchivos({ imagenes = [], videos = [], onChange }) {
           type="file"
           multiple
           accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm"
-          capture="environment"
           onChange={handleSeleccion}
           style={{ display: 'none' }}
         />
@@ -90,8 +88,8 @@ function SubidaArchivos({ imagenes = [], videos = [], onChange }) {
         ) : (
           <div className="subida-placeholder">
             <span className="subida-icono">📷</span>
-            <span className="subida-texto-principal">Tocá para sacar una foto o elegir archivos</span>
-            <span className="subida-hint">JPG, PNG, WebP, MP4, MOV — Máx. 50 MB</span>
+            <span className="subida-texto-principal">Toca para sacar una foto o elegir archivos</span>
+            <span className="subida-hint">JPG, PNG, WebP, MP4, MOV - Max. 50 MB</span>
           </div>
         )}
       </div>
@@ -100,10 +98,9 @@ function SubidaArchivos({ imagenes = [], videos = [], onChange }) {
         <p className="subida-error">{progreso}</p>
       )}
 
-      {/* Previsualizaciones de imágenes */}
       {imagenes.length > 0 && (
         <div className="subida-previews">
-          <span className="subida-seccion-titulo">Imágenes ({imagenes.length})</span>
+          <span className="subida-seccion-titulo">Imagenes ({imagenes.length})</span>
           <div className="previews-grid">
             {imagenes.map((img, i) => (
               <div key={img.publicId} className="preview-item">
@@ -123,7 +120,6 @@ function SubidaArchivos({ imagenes = [], videos = [], onChange }) {
         </div>
       )}
 
-      {/* Previsualizaciones de videos */}
       {videos.length > 0 && (
         <div className="subida-previews">
           <span className="subida-seccion-titulo">Videos ({videos.length})</span>

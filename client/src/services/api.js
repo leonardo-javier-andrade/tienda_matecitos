@@ -102,7 +102,7 @@ export const obtenerFavoritos = async () => {
   return res.json();
 };
 
-// ─── Productos (público) ──────────────────────────────
+// ─── Productos (publico) ──────────────────────────────
 
 export const obtenerProductos = async (filtros = {}) => {
   const params = new URLSearchParams(filtros).toString();
@@ -148,6 +148,50 @@ export const actualizarProducto = async (id, producto) => {
 
 export const eliminarProducto = async (id) => {
   const res = await fetch(`${API_URL}/api/products/${id}`, {
+    method: 'DELETE',
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+// ─── Categorias (publico) ─────────────────────────────
+
+export const obtenerCategorias = async () => {
+  const res = await fetch(`${API_URL}/api/categories`);
+  if (!res.ok) throw new Error('Error al obtener categorias');
+  return res.json();
+};
+
+// ─── Categorias (admin) ──────────────────────────────
+
+export const obtenerTodasCategorias = async () => {
+  const res = await fetch(`${API_URL}/api/categories/admin/todas`, {
+    headers: headersConAuth(),
+  });
+  if (!res.ok) throw new Error('Error al obtener categorias');
+  return res.json();
+};
+
+export const crearCategoria = async (categoria) => {
+  const res = await fetch(`${API_URL}/api/categories`, {
+    method: 'POST',
+    headers: headersConAuth(),
+    body: JSON.stringify(categoria),
+  });
+  return res.json();
+};
+
+export const actualizarCategoria = async (id, categoria) => {
+  const res = await fetch(`${API_URL}/api/categories/${id}`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify(categoria),
+  });
+  return res.json();
+};
+
+export const eliminarCategoria = async (id) => {
+  const res = await fetch(`${API_URL}/api/categories/${id}`, {
     method: 'DELETE',
     headers: headersConAuth(),
   });

@@ -6,6 +6,8 @@ const conectarDB = require('./config/db');
 const productRoutes = require('./routes/productRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const authRoutes = require('./routes/authRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const Categoria = require('./models/Category');
 
 // Inicializar Express
 const app = express();
@@ -13,6 +15,28 @@ const PORT = process.env.PORT || 10000;
 
 // Conectar a MongoDB
 conectarDB();
+
+// ─── Seed de categorías por defecto ───────────────────
+const seedCategorias = async () => {
+  try {
+    const count = await Categoria.countDocuments();
+    if (count === 0) {
+      const defaults = [
+        { nombre: 'Mates', orden: 1 },
+        { nombre: 'Bombillas', orden: 2 },
+        { nombre: 'Termos', orden: 3 },
+        { nombre: 'Yerberas', orden: 4 },
+        { nombre: 'Kits', orden: 5 },
+        { nombre: 'Accesorios', orden: 6 },
+      ];
+      await Categoria.insertMany(defaults);
+      console.log('✅ Categorías por defecto creadas');
+    }
+  } catch (error) {
+    console.error('Error al crear categorías por defecto:', error.message);
+  }
+};
+seedCategorias();
 
 // ─── Middlewares ────────────────────────────────────────
 app.use(express.json());
@@ -27,6 +51,7 @@ app.use(
 app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Ruta de estado / health check
 app.get('/api/status', (_req, res) => {

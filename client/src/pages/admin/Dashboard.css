@@ -36,6 +36,10 @@
   font-size: 0.85rem;
   font-weight: 500;
   white-space: nowrap;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dash-btn-logout {
@@ -47,6 +51,10 @@
   cursor: pointer;
   font-size: 0.85rem;
   white-space: nowrap;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ─── Stats ──────────────────────────── */
@@ -93,6 +101,11 @@
   flex-wrap: wrap;
 }
 
+.dash-toolbar-btns {
+  display: flex;
+  gap: 0.75rem;
+}
+
 .dash-btn-nuevo {
   padding: 0.7rem 1.5rem;
   background: #6c5b3e;
@@ -112,6 +125,29 @@
 
 .dash-btn-nuevo:hover {
   background: #5a4a32;
+}
+
+.dash-btn-categorias {
+  padding: 0.7rem 1.5rem;
+  background: transparent;
+  border: 2px solid #6c5b3e;
+  color: #6c5b3e;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  transition: all 0.2s;
+  text-align: center;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dash-btn-categorias:hover {
+  background: #6c5b3e;
+  color: #fff;
 }
 
 .dash-busqueda {
@@ -333,7 +369,7 @@
   display: none;
 }
 
-/* ─── Vacío ──────────────────────────── */
+/* ─── Vacio ──────────────────────────── */
 
 .dash-mensaje {
   text-align: center;
@@ -368,10 +404,6 @@
   .dash-btn-logout {
     flex: 1;
     text-align: center;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 
@@ -407,8 +439,16 @@
     align-items: stretch;
   }
 
-  .dash-btn-nuevo {
-    width: 100%;
+  .dash-toolbar-btns {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .dash-btn-nuevo,
+  .dash-btn-categorias {
+    flex: 1;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.75rem;
   }
 
   .dash-busqueda {
@@ -494,8 +534,9 @@
   .card-meta {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     margin-top: 0.15rem;
+    flex-wrap: wrap;
   }
 
   .card-precio {
@@ -506,7 +547,7 @@
 
   .card-bottom {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     border-top: 1px solid #f0f0f0;
     padding-top: 0.75rem;
@@ -515,13 +556,16 @@
   .card-acciones {
     display: flex;
     gap: 0.5rem;
+    width: 100%;
   }
 
   .card-acciones .btn-editar,
   .card-acciones .btn-eliminar {
+    flex: 1;
     min-height: 40px;
     padding: 0.4rem 1rem;
     font-size: 0.85rem;
+    justify-content: center;
   }
 }
 
@@ -537,5 +581,9 @@
   .card-thumb {
     width: 50px;
     height: 50px;
+  }
+
+  .dash-toolbar-btns {
+    flex-direction: column;
   }
 }

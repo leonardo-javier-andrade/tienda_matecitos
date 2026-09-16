@@ -1,16 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   crearProducto,
   actualizarProducto,
   obtenerProductoPorId,
-  subirArchivos,
-  eliminarArchivo,
+  obtenerTodasCategorias,
 } from '../../services/api';
 import SubidaArchivos from '../../components/SubidaArchivos';
 import './FormularioProducto.css';
-
-const CATEGORIAS = ['Mates', 'Bombillas', 'Termos', 'Yerberas', 'Kits', 'Accesorios'];
 
 const productoVacio = {
   nombre: '',
@@ -19,10 +16,10 @@ const productoVacio = {
   stock: 0,
   imagenes: [],
   videos: [],
-  imagenHero: null,
-  categoria: 'Mates',
+  categoria: '',
   destacado: false,
   promocionCentro: false,
+  imagenHero: null,
   activo: true,
 };
 
@@ -32,16 +29,20 @@ function FormularioProducto() {
   const esEdicion = Boolean(id);
 
   const [producto, setProducto] = useState(productoVacio);
+  const [categorias, setCategorias] = useState([]);
   const [errores, setErrores] = useState([]);
   const [guardando, setGuardando] = useState(false);
-  const [cargando, setCargando] = useState(esEdicion);
-  const [subiendoHero, setSubiendoHero] = useState(false);
-  const heroInputRef = useRef(null);
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    if (esEdicion) {
-      obtenerProductoPorId(id)
-        .then(({ datos }) => {
+    const cargarDatos = async () => {
+      try {
+        const resCat = await obtenerTodasCategorias();
+        const cats = resCat.datos || [];
+        setCategorias(cats);
+
+        if (esEdicion) {
+          const { datos } = await obtenerProductoPorId(id);
           setProducto({
             nombre: datos.nombre,
             descripcion: datos.descripcion || '',
@@ -49,16 +50,26 @@ function FormularioProducto() {
             stock: datos.stock,
             imagenes: datos.imagenes || [],
             videos: datos.videos || [],
-            imagenHero: datos.imagenHero || null,
             categoria: datos.categoria,
             destacado: datos.destacado,
             promocionCentro: datos.promocionCentro || false,
+            imagenHero: datos.imagenHero || null,
             activo: datos.activo,
           });
-        })
-        .catch(() => setErrores(['No se pudo cargar el producto.']))
-        .finally(() => setCargando(false));
-    }
+        } else {
+          const activas = cats.filter((c) => c.activo);
+          if (activas.length > 0) {
+            setProducto((prev) => ({ ...prev, categoria: activas[0].nombre }));
+          }
+        }
+      } catch {
+        setErrores(['No se pudo cargar los datos.']);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarDatos();
   }, [id, esEdicion]);
 
   const handleChange = (e) => {
@@ -73,40 +84,6 @@ function FormularioProducto() {
     setProducto((prev) => ({ ...prev, imagenes, videos }));
   };
 
-  // ─── Hero Image Upload ───────────────────────────────
-  const handleHeroSeleccion = async (e) => {
-    const archivos = Array.from(e.target.files);
-    if (archivos.length === 0) return;
-
-    setSubiendoHero(true);
-    try {
-      const resultado = await subirArchivos(archivos);
-      if (resultado.exito && resultado.datos.length > 0) {
-        const item = resultado.datos[0];
-        setProducto((prev) => ({
-          ...prev,
-          imagenHero: { url: item.url, publicId: item.publicId },
-        }));
-      }
-    } catch (err) {
-      console.error('Error subiendo imagen hero:', err);
-    } finally {
-      setSubiendoHero(false);
-      if (heroInputRef.current) heroInputRef.current.value = '';
-    }
-  };
-
-  const handleEliminarHero = async () => {
-    if (!producto.imagenHero) return;
-    try {
-      await eliminarArchivo(producto.imagenHero.publicId, 'imagen');
-      setProducto((prev) => ({ ...prev, imagenHero: null }));
-    } catch (err) {
-      console.error('Error eliminando imagen hero:', err);
-    }
-  };
-
-  // ─── Submit ──────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrores([]);
@@ -129,7 +106,7 @@ function FormularioProducto() {
         setErrores(resultado.errores || [resultado.mensaje]);
       }
     } catch {
-      setErrores(['Error de conexión con el servidor.']);
+      setErrores(['Error de conexion con el servidor.']);
     } finally {
       setGuardando(false);
     }
@@ -138,10 +115,12 @@ function FormularioProducto() {
   if (cargando) {
     return (
       <div className="form-container">
-        <p className="form-cargando">Cargando producto...</p>
+        <p className="form-cargando">Cargando...</p>
       </div>
     );
   }
+
+  const categoriasActivas = categorias.filter((c) => c.activo);
 
   return (
     <div className="form-container">
@@ -174,13 +153,13 @@ function FormularioProducto() {
         </div>
 
         <div className="form-grupo">
-          <label htmlFor="descripcion">Descripción</label>
+          <label htmlFor="descripcion">Descripcion</label>
           <textarea
             id="descripcion"
             name="descripcion"
             value={producto.descripcion}
             onChange={handleChange}
-            placeholder="Descripción del producto..."
+            placeholder="Descripcion del producto..."
             rows={3}
           />
         </div>
@@ -214,16 +193,16 @@ function FormularioProducto() {
           </div>
 
           <div className="form-grupo">
-            <label htmlFor="categoria">Categoría *</label>
+            <label htmlFor="categoria">Categoria *</label>
             <select
               id="categoria"
               name="categoria"
               value={producto.categoria}
               onChange={handleChange}
             >
-              {CATEGORIAS.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+              {categoriasActivas.map((cat) => (
+                <option key={cat._id} value={cat.nombre}>
+                  {cat.nombre}
                 </option>
               ))}
             </select>
@@ -244,7 +223,6 @@ function FormularioProducto() {
               checked={producto.destacado}
               onChange={handleChange}
             />
-            <span className="check-icono">⭐</span>
             Producto destacado
           </label>
 
@@ -255,8 +233,7 @@ function FormularioProducto() {
               checked={producto.promocionCentro}
               onChange={handleChange}
             />
-            <span className="check-icono">🎯</span>
-            Promoción Centro Pág
+            Promocion Centro Pag (Hero)
           </label>
 
           <label className="check-label">
@@ -266,70 +243,9 @@ function FormularioProducto() {
               checked={producto.activo}
               onChange={handleChange}
             />
-            <span className="check-icono">✅</span>
             Activo (visible en la tienda)
           </label>
         </div>
-
-        {/* ─── Hero Image Upload (only when promocionCentro is active) ─── */}
-        {producto.promocionCentro && (
-          <div className="hero-upload-section">
-            <div className="hero-upload-header">
-              <h3 className="hero-upload-titulo">
-                🖼️ Imagen del Hero (Carrusel Principal)
-              </h3>
-              <p className="hero-upload-desc">
-                Esta imagen se usará como fondo del carrusel en la página principal. Recomendado: 1920×600px o mayor, formato horizontal.
-              </p>
-            </div>
-
-            {producto.imagenHero ? (
-              <div className="hero-preview">
-                <img
-                  src={producto.imagenHero.url}
-                  alt="Imagen hero"
-                  className="hero-preview-img"
-                />
-                <button
-                  type="button"
-                  className="hero-preview-eliminar"
-                  onClick={handleEliminarHero}
-                >
-                  ✕ Eliminar
-                </button>
-              </div>
-            ) : (
-              <div
-                className={`hero-upload-zona ${subiendoHero ? 'subiendo' : ''}`}
-                onClick={() => !subiendoHero && heroInputRef.current?.click()}
-              >
-                <input
-                  ref={heroInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={handleHeroSeleccion}
-                  style={{ display: 'none' }}
-                />
-                {subiendoHero ? (
-                  <div className="hero-upload-spinner">
-                    <div className="spinner" />
-                    <span>Subiendo imagen...</span>
-                  </div>
-                ) : (
-                  <div className="hero-upload-placeholder">
-                    <span className="hero-upload-icono">🌄</span>
-                    <span className="hero-upload-texto">
-                      Hacé click para subir la imagen del Hero
-                    </span>
-                    <span className="hero-upload-hint">
-                      JPG, PNG, WebP — Formato horizontal recomendado
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
 
         <div className="form-acciones">
           <button

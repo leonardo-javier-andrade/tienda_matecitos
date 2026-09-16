@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
-import { obtenerProductos } from '../services/api';
+import { obtenerProductos, obtenerCategorias } from '../services/api';
 import TarjetaProducto from './TarjetaProducto';
 import './ListaProductos.css';
 
-const CATEGORIAS = ['Todas', 'Mates', 'Bombillas', 'Termos', 'Yerberas', 'Kits', 'Accesorios'];
-
 function ListaProductos() {
   const [productos, setProductos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [categoriaActiva, setCategoriaActiva] = useState('Todas');
+
+  useEffect(() => {
+    obtenerCategorias()
+      .then(({ datos }) => setCategorias(datos || []))
+      .catch(() => setCategorias([]));
+  }, []);
 
   useEffect(() => {
     const cargarProductos = async () => {
@@ -29,15 +34,17 @@ function ListaProductos() {
     cargarProductos();
   }, [categoriaActiva]);
 
+  const nombresCategorias = ['Todas', ...categorias.map((c) => c.nombre)];
+
   return (
     <section className="lista-productos">
       <div className="lista-header reveal-on-scroll">
-        <h2>Nuestra Colección</h2>
-        <p className="lista-subtitulo">Piezas que combinan tradición artesanal con diseño contemporáneo</p>
+        <h2>Nuestra Coleccion</h2>
+        <p className="lista-subtitulo">Piezas que combinan tradicion artesanal con diseno contemporaneo</p>
       </div>
 
       <div className="filtros-categoria reveal-on-scroll">
-        {CATEGORIAS.map((cat) => (
+        {nombresCategorias.map((cat) => (
           <button
             key={cat}
             className={`filtro-btn ${categoriaActiva === cat ? 'activo' : ''}`}
@@ -60,7 +67,7 @@ function ListaProductos() {
       {!cargando && !error && productos.length === 0 && (
         <div className="estado-vacio">
           <span className="vacio-icon">🧉</span>
-          <p>No se encontraron productos en esta categoría</p>
+          <p>No se encontraron productos en esta categoria</p>
         </div>
       )}
 

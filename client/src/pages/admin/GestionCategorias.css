@@ -1,0 +1,397 @@
+.gestion-cat {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+/* ─── Header ─────────────────────────── */
+
+.gestion-cat-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.gestion-cat-volver {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid #b2bec3;
+  border-radius: 8px;
+  color: #636e72;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.gestion-cat-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #2d3436;
+}
+
+/* ─── Form card ──────────────────────── */
+
+.gestion-cat-form-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.gestion-cat-form-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  color: #2d3436;
+}
+
+.gestion-cat-form-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.gestion-cat-grupo {
+  flex: 1;
+  min-width: 150px;
+}
+
+.gestion-cat-grupo label {
+  display: block;
+  font-size: 0.85rem;
+  color: #636e72;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.gestion-cat-grupo input[type="text"],
+.gestion-cat-grupo input[type="number"] {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 2px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.gestion-cat-grupo input:focus {
+  outline: none;
+  border-color: #6c5b3e;
+}
+
+.gestion-cat-grupo-sm {
+  flex: 0 0 90px;
+  min-width: 90px;
+}
+
+.gestion-cat-grupo-check {
+  flex: 0 0 auto;
+  min-width: auto;
+  display: flex;
+  align-items: center;
+}
+
+.gestion-cat-check-label {
+  display: flex !important;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #2d3436;
+  min-height: 44px;
+}
+
+.gestion-cat-check-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6c5b3e;
+}
+
+.gestion-cat-error {
+  color: #e17055;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+
+.gestion-cat-form-acciones {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.gestion-cat-btn-guardar {
+  padding: 0.6rem 1.5rem;
+  background: #6c5b3e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-height: 44px;
+  transition: background 0.2s;
+}
+
+.gestion-cat-btn-guardar:hover:not(:disabled) {
+  background: #5a4a32;
+}
+
+.gestion-cat-btn-guardar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gestion-cat-btn-cancelar {
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  border: 2px solid #b2bec3;
+  border-radius: 8px;
+  color: #636e72;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-height: 44px;
+}
+
+/* ─── Tabla (desktop) ────────────────── */
+
+.gestion-cat-tabla-wrapper {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.gestion-cat-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.gestion-cat-tabla th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  color: #636e72;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #f0f0f0;
+  white-space: nowrap;
+}
+
+.gestion-cat-tabla td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f5f5f5;
+  vertical-align: middle;
+}
+
+.gestion-cat-tabla tbody tr:hover {
+  background: #faf8f5;
+}
+
+.fila-inactiva {
+  opacity: 0.55;
+}
+
+.gestion-cat-nombre {
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.gestion-cat-estado {
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gestion-cat-estado.activo {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.gestion-cat-estado.inactivo {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.gestion-cat-acciones {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.gestion-cat-acciones .btn-editar {
+  padding: 0.35rem 0.75rem;
+  background: #6c5b3e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.gestion-cat-acciones .btn-eliminar {
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  border: 1px solid #e17055;
+  color: #e17055;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.gestion-cat-acciones .btn-eliminar:hover:not(:disabled) {
+  background: #e17055;
+  color: #fff;
+}
+
+/* ─── Cards mobile (ocultas en desktop) ── */
+
+.gestion-cat-cards-mobile {
+  display: none;
+}
+
+.gestion-cat-mensaje {
+  text-align: center;
+  color: #636e72;
+  padding: 2rem;
+}
+
+/* ─── Responsive ─────────────────────── */
+
+@media (max-width: 768px) {
+  .gestion-cat {
+    padding: 1rem 0.75rem;
+  }
+
+  .gestion-cat-header h1 {
+    font-size: 1.15rem;
+  }
+
+  .gestion-cat-form-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .gestion-cat-grupo,
+  .gestion-cat-grupo-sm {
+    flex: none;
+    width: 100%;
+    min-width: auto;
+  }
+
+  .gestion-cat-grupo-check {
+    flex: none;
+    width: 100%;
+  }
+
+  .gestion-cat-form-acciones {
+    flex-direction: column;
+  }
+
+  .gestion-cat-btn-guardar,
+  .gestion-cat-btn-cancelar {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Ocultar tabla, mostrar cards */
+  .gestion-cat-tabla-wrapper {
+    display: none;
+  }
+
+  .gestion-cat-cards-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .gestion-cat-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .gestion-cat-card.card-inactiva {
+    opacity: 0.55;
+  }
+
+  .gestion-cat-card-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .gestion-cat-card-nombre {
+    font-weight: 600;
+    color: #2d3436;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .gestion-cat-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .gestion-cat-card-orden {
+    font-size: 0.8rem;
+    color: #636e72;
+  }
+
+  .gestion-cat-card-acciones {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .gestion-cat-card-acciones .btn-editar,
+  .gestion-cat-card-acciones .btn-eliminar {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    min-height: 40px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .gestion-cat-card-acciones .btn-editar {
+    background: #6c5b3e;
+    color: #fff;
+  }
+
+  .gestion-cat-card-acciones .btn-eliminar {
+    background: transparent;
+    border: 1px solid #e17055;
+    color: #e17055;
+  }
+}
+
+@media (max-width: 360px) {
+  .gestion-cat-header h1 {
+    font-size: 1rem;
+  }
+}

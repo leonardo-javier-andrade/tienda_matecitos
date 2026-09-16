@@ -36,17 +36,10 @@ const productoSchema = new mongoose.Schema(
         publicId: { type: String, required: true },
       },
     ],
-    imagenHero: {
-      url: { type: String },
-      publicId: { type: String },
-    },
     categoria: {
       type: String,
-      enum: {
-        values: ['Mates', 'Bombillas', 'Termos', 'Yerberas', 'Kits', 'Accesorios'],
-        message: '{VALUE} no es una categoría válida',
-      },
       required: [true, 'La categoría es obligatoria'],
+      trim: true,
     },
     destacado: {
       type: Boolean,
@@ -55,6 +48,10 @@ const productoSchema = new mongoose.Schema(
     promocionCentro: {
       type: Boolean,
       default: false,
+    },
+    imagenHero: {
+      url: { type: String },
+      publicId: { type: String },
     },
     activo: {
       type: Boolean,

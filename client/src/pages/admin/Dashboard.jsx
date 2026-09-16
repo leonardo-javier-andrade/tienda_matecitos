@@ -4,18 +4,24 @@ import {
   obtenerTodosProductos,
   eliminarProducto,
   logoutUsuario,
+  obtenerTodasCategorias,
 } from '../../services/api';
 import './Dashboard.css';
 
-const CATEGORIAS = ['Todas', 'Mates', 'Bombillas', 'Termos', 'Yerberas', 'Kits', 'Accesorios'];
-
 function Dashboard() {
   const [productos, setProductos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [filtroCategoria, setFiltroCategoria] = useState('Todas');
   const [busqueda, setBusqueda] = useState('');
   const [eliminando, setEliminando] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    obtenerTodasCategorias()
+      .then(({ datos }) => setCategorias(datos || []))
+      .catch(() => setCategorias([]));
+  }, []);
 
   const cargarProductos = async () => {
     setCargando(true);
@@ -43,7 +49,7 @@ function Dashboard() {
   };
 
   const handleEliminar = async (id, nombre) => {
-    if (!window.confirm(`¿Seguro que querés eliminar "${nombre}"? Esta acción no se puede deshacer.`)) {
+    if (!window.confirm(`¿Seguro que queres eliminar "${nombre}"? Esta accion no se puede deshacer.`)) {
       return;
     }
 
@@ -68,24 +74,25 @@ function Dashboard() {
   const formatearPrecio = (precio) =>
     precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
 
-  // Estadísticas rápidas
   const totalProductos = productos.length;
   const productosActivos = productos.filter((p) => p.activo).length;
   const sinStock = productos.filter((p) => p.stock === 0).length;
+
+  const nombresCategorias = ['Todas', ...categorias.filter((c) => c.activo).map((c) => c.nombre)];
 
   return (
     <div className="dashboard">
       {/* Header */}
       <header className="dash-header">
         <div className="dash-header-izq">
-          <h1>🧉 Panel de Administración</h1>
+          <h1>Panel de Administracion</h1>
         </div>
         <div className="dash-header-der">
           <a href="/" className="dash-btn-tienda" target="_blank" rel="noopener">
-            Ver tienda ↗
+            Ver tienda
           </a>
           <button className="dash-btn-logout" onClick={handleLogout}>
-            Cerrar sesión
+            Cerrar sesion
           </button>
         </div>
       </header>
@@ -108,9 +115,14 @@ function Dashboard() {
 
       {/* Toolbar */}
       <div className="dash-toolbar">
-        <Link to="/admin/nuevo" className="dash-btn-nuevo">
-          + Nuevo Producto
-        </Link>
+        <div className="dash-toolbar-btns">
+          <Link to="/admin/nuevo" className="dash-btn-nuevo">
+            + Nuevo Producto
+          </Link>
+          <Link to="/admin/categorias" className="dash-btn-categorias">
+            Categorias
+          </Link>
+        </div>
 
         <form className="dash-busqueda" onSubmit={handleBuscar}>
           <input
@@ -125,7 +137,7 @@ function Dashboard() {
 
       {/* Filtros */}
       <div className="dash-filtros">
-        {CATEGORIAS.map((cat) => (
+        {nombresCategorias.map((cat) => (
           <button
             key={cat}
             className={`filtro-chip ${filtroCategoria === cat ? 'activo' : ''}`}
@@ -136,26 +148,26 @@ function Dashboard() {
         ))}
       </div>
 
-      {/* Contenido */}
+      {/* Tabla de productos */}
       {cargando ? (
         <p className="dash-mensaje">Cargando productos...</p>
       ) : productos.length === 0 ? (
         <div className="dash-vacio">
-          <p>No hay productos todavía.</p>
+          <p>No hay productos todavia.</p>
           <Link to="/admin/nuevo" className="dash-btn-nuevo">
             Crear el primero
           </Link>
         </div>
       ) : (
         <>
-          {/* Tabla de productos (desktop) */}
+          {/* Desktop table */}
           <div className="dash-tabla-wrapper">
             <table className="dash-tabla">
               <thead>
                 <tr>
                   <th>Imagen</th>
                   <th>Nombre</th>
-                  <th>Categoría</th>
+                  <th>Categoria</th>
                   <th>Precio</th>
                   <th>Stock</th>
                   <th>Estado</th>
@@ -212,7 +224,7 @@ function Dashboard() {
             </table>
           </div>
 
-          {/* Cards de productos (mobile) */}
+          {/* Mobile cards */}
           <div className="dash-cards-mobile">
             {productos.map((prod) => (
               <div key={prod._id} className={`dash-card ${!prod.activo ? 'card-inactiva' : ''}`}>
@@ -225,23 +237,22 @@ function Dashboard() {
                     )}
                   </div>
                   <div className="card-info">
-                    <h3 className="card-nombre">
-                      {prod.nombre}
-                      {prod.destacado && ' ⭐'}
-                    </h3>
-                    <span className="tabla-categoria">{prod.categoria}</span>
+                    <h3 className="card-nombre">{prod.nombre}</h3>
                     <div className="card-meta">
                       <span className="card-precio">{formatearPrecio(prod.precio)}</span>
+                      <span className="tabla-categoria">{prod.categoria}</span>
+                    </div>
+                    <div className="card-meta">
                       <span className={`tabla-stock ${prod.stock === 0 ? 'sin-stock' : ''}`}>
                         Stock: {prod.stock}
+                      </span>
+                      <span className={`tabla-estado ${prod.activo ? 'activo' : 'inactivo'}`}>
+                        {prod.activo ? 'Activo' : 'Inactivo'}
                       </span>
                     </div>
                   </div>
                 </div>
                 <div className="card-bottom">
-                  <span className={`tabla-estado ${prod.activo ? 'activo' : 'inactivo'}`}>
-                    {prod.activo ? 'Activo' : 'Inactivo'}
-                  </span>
                   <div className="card-acciones">
                     <Link to={`/admin/editar/${prod._id}`} className="btn-editar">
                       Editar
