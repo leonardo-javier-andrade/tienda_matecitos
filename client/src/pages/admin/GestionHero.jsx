@@ -21,6 +21,7 @@ function GestionHero() {
   const [orden, setOrden] = useState(0);
   const [activo, setActivo] = useState(true);
   const [imagenFondo, setImagenFondo] = useState(null);
+  const [tipoMedia, setTipoMedia] = useState('imagen');
   const [guardando, setGuardando] = useState(false);
   const [subiendo, setSubiendo] = useState(false);
   const [error, setError] = useState('');
@@ -69,6 +70,7 @@ function GestionHero() {
     setOrden(0);
     setActivo(true);
     setImagenFondo(null);
+    setTipoMedia('imagen');
     setError('');
     setEstiloAbierto(false);
     setEstiloTitulo({ fontSize: '', color: '', fontFamily: '', fontWeight: '' });
@@ -84,6 +86,7 @@ function GestionHero() {
     setOrden(slide.orden);
     setActivo(slide.activo);
     setImagenFondo(slide.imagenFondo || null);
+    setTipoMedia(slide.tipoMedia || 'imagen');
     setError('');
     const et = slide.estiloTitulo || {};
     const ed = slide.estiloDescripcion || {};
@@ -115,6 +118,7 @@ function GestionHero() {
       if (resultado.exito && resultado.datos.length > 0) {
         const img = resultado.datos[0];
         setImagenFondo({ url: img.url, publicId: img.publicId });
+        setTipoMedia(img.tipo === 'video' ? 'video' : 'imagen');
       } else {
         setError(resultado.mensaje || 'Error al subir imagen');
       }
@@ -129,12 +133,13 @@ function GestionHero() {
   const handleQuitarImagen = async () => {
     if (imagenFondo && imagenFondo.publicId) {
       try {
-        await eliminarArchivo(imagenFondo.publicId, 'imagen');
+        await eliminarArchivo(imagenFondo.publicId, tipoMedia === 'video' ? 'video' : 'imagen');
       } catch (err) {
         console.error('Error eliminando imagen:', err);
       }
     }
     setImagenFondo(null);
+    setTipoMedia('imagen');
   };
 
   const handleGuardar = async (e) => {
@@ -144,7 +149,7 @@ function GestionHero() {
       return;
     }
     if (!imagenFondo) {
-      setError('La imagen de fondo es obligatoria');
+      setError('La imagen o video de fondo es obligatorio');
       return;
     }
 
@@ -160,6 +165,7 @@ function GestionHero() {
         orden: Number(orden),
         activo,
         imagenFondo,
+        tipoMedia,
         estiloTitulo,
         estiloDescripcion,
       };
@@ -421,14 +427,19 @@ function GestionHero() {
             )}
           </div>
 
-          {/* Imagen de fondo */}
+          {/* Imagen o Video de fondo */}
           <div className="gestion-hero-grupo">
-            <label>Imagen de fondo *</label>
+            <label>Imagen o Video de fondo *</label>
             {imagenFondo ? (
               <div className="hero-img-preview">
-                <img src={imagenFondo.url} alt="Fondo del hero" />
+                {tipoMedia === 'video' ? (
+                  <video src={imagenFondo.url} autoPlay loop muted playsInline style={{ width: '100%', borderRadius: '8px' }} />
+                ) : (
+                  <img src={imagenFondo.url} alt="Fondo del hero" />
+                )}
+                <span className="hero-media-badge">{tipoMedia === 'video' ? '🎬 Video' : '🖼️ Imagen'}</span>
                 <button type="button" className="hero-img-quitar" onClick={handleQuitarImagen}>
-                  Quitar imagen
+                  Quitar {tipoMedia === 'video' ? 'video' : 'imagen'}
                 </button>
               </div>
             ) : (
@@ -439,7 +450,7 @@ function GestionHero() {
                 <input
                   ref={inputRef}
                   type="file"
-                  accept="image/jpeg,image/png,image/webp"
+                  accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"
                   onChange={handleSubirImagen}
                   style={{ display: 'none' }}
                 />
@@ -449,7 +460,7 @@ function GestionHero() {
                   <div className="hero-img-upload-placeholder">
                     <span className="hero-img-upload-icon">🖼️</span>
                     <span>Toca para subir imagen de fondo</span>
-                    <span className="hero-img-upload-hint">JPG, PNG, WebP — Recomendado: 1920x800px</span>
+                    <span className="hero-img-upload-hint">JPG, PNG, WebP, MP4, WebM — Recomendado: 1920x800px</span>
                   </div>
                 )}
               </div>
@@ -482,7 +493,11 @@ function GestionHero() {
             <div key={slide._id} className={`gestion-hero-slide-card ${!slide.activo ? 'card-inactiva' : ''}`}>
               <div className="hero-slide-thumb">
                 {slide.imagenFondo?.url ? (
-                  <img src={slide.imagenFondo.url} alt={slide.titulo} />
+                  slide.tipoMedia === 'video' ? (
+                    <video src={slide.imagenFondo.url} muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <img src={slide.imagenFondo.url} alt={slide.titulo} />
+                  )
                 ) : (
                   <span className="hero-slide-thumb-placeholder">🖼️</span>
                 )}

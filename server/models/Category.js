@@ -17,6 +17,11 @@ const categoriaSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    fondoMedia: {
+      url: { type: String, default: '' },
+      publicId: { type: String, default: '' },
+      tipo: { type: String, enum: ['', 'imagen', 'video'], default: '' },
+    },
   },
   {
     timestamps: true,

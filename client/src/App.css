@@ -360,6 +360,12 @@
   transition: transform 8s ease;
 }
 
+.slide-bg-video {
+  object-fit: cover;
+  /* No Ken Burns on video — it already has motion */
+  transition: none;
+}
+
 /* Subtle Ken Burns zoom on active slide */
 .carousel-slide:first-child .slide-bg,
 .carousel-slide .slide-bg {

@@ -6,6 +6,49 @@
   padding: 2rem 0 4rem;
 }
 
+/* ─── Header wrap con fondo dinámico ────────────── */
+
+.lista-header-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  transition: background-color 0.5s ease;
+}
+
+.lista-header-wrap.con-fondo {
+  padding: 2rem 0 0;
+  margin-bottom: 0;
+}
+
+/* Background media (image or video) */
+.lista-header-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.lista-header-bg-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.lista-header-bg-overlay {
+  position: absolute;
+  inset: 0;
+  /* Capa pastel/opaca sutil — permite leer el texto */
+  background: rgba(245, 240, 235, 0.82);
+  backdrop-filter: blur(2px);
+}
+
+/* Make header/filter content sit above the background */
+.lista-header-wrap .lista-header,
+.lista-header-wrap .filtros-categoria {
+  position: relative;
+  z-index: 1;
+}
+
 .lista-header {
   text-align: center;
   margin-bottom: 2.5rem;
@@ -66,6 +109,18 @@
   border-color: var(--mate-brown);
   color: #fff;
   box-shadow: 0 4px 15px rgba(108, 91, 62, 0.3);
+}
+
+/* When there's a background, adjust filter buttons for contrast */
+.lista-header-wrap.con-fondo .filtro-btn {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(108, 91, 62, 0.3);
+}
+
+.lista-header-wrap.con-fondo .filtro-btn.activo {
+  background: var(--mate-brown);
+  border-color: var(--mate-brown);
+  color: #fff;
 }
 
 /* ─── Grid de productos ─────────────────────────── */
@@ -180,6 +235,16 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
     padding: 0 0.75rem;
+  }
+
+  /* On mobile, hide video background for performance */
+  .lista-header-bg video.lista-header-bg-media {
+    display: none;
+  }
+
+  .lista-header-bg {
+    /* Show a still overlay tint instead */
+    background: var(--mate-cream, #f5f0eb);
   }
 }
 

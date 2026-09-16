@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Categoria = require('../models/Category');
 const { verificarAdmin } = require('../middleware/auth');
+const cloudinary = require('../config/cloudinary');
 
 // ─── RUTAS PÚBLICAS ────────────────────────────────────
 
@@ -93,13 +94,23 @@ router.put('/:id', verificarAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/categories/:id — Eliminar una categoría
+// DELETE /api/categories/:id — Eliminar una categoría (y su media de Cloudinary)
 router.delete('/:id', verificarAdmin, async (req, res) => {
   try {
     const categoria = await Categoria.findById(req.params.id);
 
     if (!categoria) {
       return res.status(404).json({ exito: false, mensaje: 'Categoría no encontrada.' });
+    }
+
+    // Eliminar media de fondo de Cloudinary si existe
+    if (categoria.fondoMedia && categoria.fondoMedia.publicId) {
+      try {
+        const resourceType = categoria.fondoMedia.tipo === 'video' ? 'video' : 'image';
+        await cloudinary.uploader.destroy(categoria.fondoMedia.publicId, { resource_type: resourceType });
+      } catch (e) {
+        console.error(`Error eliminando media ${categoria.fondoMedia.publicId}:`, e.message);
+      }
     }
 
     await Categoria.findByIdAndDelete(req.params.id);

@@ -88,7 +88,7 @@ router.put('/:id', verificarAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/hero/:id — Eliminar un slide (y su imagen de Cloudinary)
+// DELETE /api/hero/:id — Eliminar un slide (y su media de Cloudinary)
 router.delete('/:id', verificarAdmin, async (req, res) => {
   try {
     const slide = await Hero.findById(req.params.id);
@@ -97,12 +97,13 @@ router.delete('/:id', verificarAdmin, async (req, res) => {
       return res.status(404).json({ exito: false, mensaje: 'Slide no encontrado.' });
     }
 
-    // Eliminar imagen de Cloudinary
+    // Eliminar media de Cloudinary (imagen o video)
     if (slide.imagenFondo && slide.imagenFondo.publicId) {
       try {
-        await cloudinary.uploader.destroy(slide.imagenFondo.publicId, { resource_type: 'image' });
+        const resourceType = slide.tipoMedia === 'video' ? 'video' : 'image';
+        await cloudinary.uploader.destroy(slide.imagenFondo.publicId, { resource_type: resourceType });
       } catch (e) {
-        console.error(`Error eliminando imagen ${slide.imagenFondo.publicId}:`, e.message);
+        console.error(`Error eliminando media ${slide.imagenFondo.publicId}:`, e.message);
       }
     }
 

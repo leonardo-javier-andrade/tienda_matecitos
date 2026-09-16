@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   obtenerTodasCategorias,
   crearCategoria,
   actualizarCategoria,
   eliminarCategoria,
+  subirArchivos,
+  eliminarArchivo,
 } from '../../services/api';
 import './GestionCategorias.css';
 
@@ -15,9 +17,12 @@ function GestionCategorias() {
   const [nombre, setNombre] = useState('');
   const [orden, setOrden] = useState(0);
   const [activo, setActivo] = useState(true);
+  const [fondoMedia, setFondoMedia] = useState(null);
+  const [subiendo, setSubiendo] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
   const [eliminando, setEliminando] = useState(null);
+  const inputRef = useRef(null);
   const navigate = useNavigate();
 
   const cargarCategorias = async () => {
@@ -41,6 +46,7 @@ function GestionCategorias() {
     setNombre('');
     setOrden(0);
     setActivo(true);
+    setFondoMedia(null);
     setError('');
   };
 
@@ -49,7 +55,44 @@ function GestionCategorias() {
     setNombre(cat.nombre);
     setOrden(cat.orden);
     setActivo(cat.activo);
+    setFondoMedia(cat.fondoMedia && cat.fondoMedia.url ? cat.fondoMedia : null);
     setError('');
+  };
+
+  const handleSubirMedia = async (e) => {
+    const archivos = Array.from(e.target.files);
+    if (archivos.length === 0) return;
+
+    setSubiendo(true);
+    try {
+      const resultado = await subirArchivos(archivos);
+      if (resultado.exito && resultado.datos.length > 0) {
+        const media = resultado.datos[0];
+        setFondoMedia({
+          url: media.url,
+          publicId: media.publicId,
+          tipo: media.tipo === 'video' ? 'video' : 'imagen',
+        });
+      } else {
+        setError(resultado.mensaje || 'Error al subir archivo');
+      }
+    } catch {
+      setError('Error al subir archivo');
+    } finally {
+      setSubiendo(false);
+      if (inputRef.current) inputRef.current.value = '';
+    }
+  };
+
+  const handleQuitarMedia = async () => {
+    if (fondoMedia && fondoMedia.publicId) {
+      try {
+        await eliminarArchivo(fondoMedia.publicId, fondoMedia.tipo === 'video' ? 'video' : 'imagen');
+      } catch (err) {
+        console.error('Error eliminando media:', err);
+      }
+    }
+    setFondoMedia(null);
   };
 
   const handleGuardar = async (e) => {
@@ -63,7 +106,12 @@ function GestionCategorias() {
     setError('');
 
     try {
-      const datos = { nombre: nombre.trim(), orden: Number(orden), activo };
+      const datos = {
+        nombre: nombre.trim(),
+        orden: Number(orden),
+        activo,
+        fondoMedia: fondoMedia || { url: '', publicId: '', tipo: '' },
+      };
       let resultado;
 
       if (editando) {
@@ -152,6 +200,51 @@ function GestionCategorias() {
             </div>
           </div>
 
+          {/* Fondo media (imagen o video) */}
+          <div className="gestion-cat-grupo">
+            <label>Fondo de categoria (opcional)</label>
+            <p className="gestion-cat-media-hint">
+              Imagen o video que aparecera como fondo al seleccionar esta categoria en la tienda.
+            </p>
+            {fondoMedia ? (
+              <div className="cat-media-preview">
+                {fondoMedia.tipo === 'video' ? (
+                  <video src={fondoMedia.url} autoPlay loop muted playsInline className="cat-media-thumb" />
+                ) : (
+                  <img src={fondoMedia.url} alt="Fondo de categoria" className="cat-media-thumb" />
+                )}
+                <div className="cat-media-preview-info">
+                  <span className="cat-media-badge">{fondoMedia.tipo === 'video' ? '🎬 Video' : '🖼️ Imagen'}</span>
+                  <button type="button" className="cat-media-quitar" onClick={handleQuitarMedia}>
+                    Quitar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`cat-media-upload ${subiendo ? 'subiendo' : ''}`}
+                onClick={() => !subiendo && inputRef.current?.click()}
+              >
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"
+                  onChange={handleSubirMedia}
+                  style={{ display: 'none' }}
+                />
+                {subiendo ? (
+                  <span>Subiendo...</span>
+                ) : (
+                  <div className="cat-media-upload-placeholder">
+                    <span>📷</span>
+                    <span>Subir imagen o video de fondo</span>
+                    <span className="cat-media-upload-hint">JPG, PNG, WebP, MP4, WebM</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           {error && <p className="gestion-cat-error">{error}</p>}
 
           <div className="gestion-cat-form-acciones">
@@ -180,6 +273,7 @@ function GestionCategorias() {
               <thead>
                 <tr>
                   <th>Nombre</th>
+                  <th>Fondo</th>
                   <th>Orden</th>
                   <th>Estado</th>
                   <th>Acciones</th>
@@ -189,6 +283,15 @@ function GestionCategorias() {
                 {categorias.map((cat) => (
                   <tr key={cat._id} className={!cat.activo ? 'fila-inactiva' : ''}>
                     <td className="gestion-cat-nombre">{cat.nombre}</td>
+                    <td>
+                      {cat.fondoMedia?.url ? (
+                        <span className="cat-media-badge-sm">
+                          {cat.fondoMedia.tipo === 'video' ? '🎬' : '🖼️'}
+                        </span>
+                      ) : (
+                        <span className="cat-media-badge-sm cat-sin-fondo">—</span>
+                      )}
+                    </td>
                     <td>{cat.orden}</td>
                     <td>
                       <span className={`gestion-cat-estado ${cat.activo ? 'activo' : 'inactivo'}`}>
@@ -223,7 +326,14 @@ function GestionCategorias() {
             {categorias.map((cat) => (
               <div key={cat._id} className={`gestion-cat-card ${!cat.activo ? 'card-inactiva' : ''}`}>
                 <div className="gestion-cat-card-info">
-                  <span className="gestion-cat-card-nombre">{cat.nombre}</span>
+                  <div className="gestion-cat-card-nombre-row">
+                    <span className="gestion-cat-card-nombre">{cat.nombre}</span>
+                    {cat.fondoMedia?.url && (
+                      <span className="cat-media-badge-sm">
+                        {cat.fondoMedia.tipo === 'video' ? '🎬' : '🖼️'}
+                      </span>
+                    )}
+                  </div>
                   <div className="gestion-cat-card-meta">
                     <span className="gestion-cat-card-orden">Orden: {cat.orden}</span>
                     <span className={`gestion-cat-estado ${cat.activo ? 'activo' : 'inactivo'}`}>

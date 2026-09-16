@@ -25,6 +25,11 @@ const heroSchema = new mongoose.Schema(
       url: { type: String, required: true },
       publicId: { type: String, required: true },
     },
+    tipoMedia: {
+      type: String,
+      enum: ['imagen', 'video'],
+      default: 'imagen',
+    },
     enlace: {
       type: String,
       trim: true,

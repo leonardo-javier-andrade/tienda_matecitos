@@ -226,12 +226,23 @@ function HeroCarousel() {
             className="carousel-slide"
           >
             {slide.imagenFondo?.url ? (
-              <img
-                className="slide-bg"
-                src={slide.imagenFondo.url}
-                alt={slide.titulo}
-                loading="lazy"
-              />
+              slide.tipoMedia === 'video' ? (
+                <video
+                  className="slide-bg slide-bg-video"
+                  src={slide.imagenFondo.url}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                <img
+                  className="slide-bg"
+                  src={slide.imagenFondo.url}
+                  alt={slide.titulo}
+                  loading="lazy"
+                />
+              )
             ) : (
               <div className="slide-bg-fallback" />
             )}

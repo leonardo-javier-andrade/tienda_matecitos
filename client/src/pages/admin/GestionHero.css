@@ -526,3 +526,13 @@
     font-size: 1rem;
   }
 }
+
+/* ─── Media badge (image/video indicator) ─── */
+
+.hero-media-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c5b3e;
+  margin-top: 0.5rem;
+}
