@@ -194,23 +194,18 @@ function HeroCarousel() {
     );
   }
 
-  // Desktop: 87% para efecto peek. Mobile: CSS sobreescribe a 100% con !important
-  const slideWidth = total > 1 ? 87 : 100;
-
   return (
     <section className="hero-carousel">
       <div
         className="carousel-track"
         style={{
-          transform: `translateX(-${indice * slideWidth}%)`,
-          '--slide-idx': indice,
+          transform: `translateX(calc(-${indice} * var(--slide-advance)))`,
         }}
       >
         {slides.map((slide) => (
           <div
             key={slide._id}
             className="carousel-slide"
-            style={{ minWidth: `${slideWidth}%` }}
           >
             {slide.imagenFondo?.url ? (
               <img
