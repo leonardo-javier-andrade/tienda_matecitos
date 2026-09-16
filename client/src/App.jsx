@@ -8,7 +8,8 @@ import {
 } from './services/api';
 import ListaProductos from './components/ListaProductos';
 import DetalleProducto from './components/DetalleProducto';
-import Login from './pages/admin/Login';
+import LoginAuth from './pages/auth/Login';
+import Registro from './pages/auth/Registro';
 import Dashboard from './pages/admin/Dashboard';
 import FormularioProducto from './pages/admin/FormularioProducto';
 import GestionCategorias from './pages/admin/GestionCategorias';
@@ -36,7 +37,7 @@ function RutaProtegida({ children }) {
     );
   }
 
-  return autenticado ? children : <Navigate to="/admin/login" replace />;
+  return autenticado ? children : <Navigate to="/ingresar" replace />;
 }
 
 // ─── NavTienda ────────────────────────────────────────
@@ -117,7 +118,7 @@ function NavTienda() {
               </div>
             </div>
           ) : (
-            <Link to="/admin/login" className="nav-link-ingresar">
+            <Link to="/ingresar" className="nav-link-ingresar">
               Ingresar
             </Link>
           )}
@@ -380,6 +381,23 @@ function HomePage() {
   );
 }
 
+// ─── LoginWrapper ─────────────────────────────────────
+function LoginWrapper() {
+  const navigate = useNavigate();
+
+  const handleLogin = (usuario, token) => {
+    // loginUsuario ya guarda token y usuario en localStorage
+    // solo navegamos segun el rol
+    if (usuario.rol === 'admin') {
+      navigate('/admin');
+    } else {
+      navigate('/');
+    }
+  };
+
+  return <LoginAuth onLogin={handleLogin} />;
+}
+
 // ─── App ──────────────────────────────────────────────
 function App() {
   return (
@@ -399,8 +417,13 @@ function App() {
           }
         />
 
+        {/* Auth */}
+        <Route path="/ingresar" element={<LoginWrapper />} />
+        <Route path="/registro" element={<Registro />} />
+        {/* Redirigir ruta vieja de admin/login */}
+        <Route path="/admin/login" element={<Navigate to="/ingresar" replace />} />
+
         {/* Admin */}
-        <Route path="/admin/login" element={<Login />} />
         <Route
           path="/admin"
           element={
