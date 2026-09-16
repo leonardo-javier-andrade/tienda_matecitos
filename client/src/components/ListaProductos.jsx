@@ -39,7 +39,13 @@ function ListaProductos() {
   // Update background media when category changes
   useEffect(() => {
     if (categoriaActiva === 'Todas') {
-      setFondoActual(null);
+      // Buscar fondo general (categoría especial _todas)
+      const fondoGeneral = categorias.find((c) => c.nombre === '_todas');
+      if (fondoGeneral && fondoGeneral.fondoMedia && fondoGeneral.fondoMedia.url) {
+        setFondoActual(fondoGeneral.fondoMedia);
+      } else {
+        setFondoActual(null);
+      }
       return;
     }
     const cat = categorias.find((c) => c.nombre === categoriaActiva);
@@ -58,7 +64,7 @@ function ListaProductos() {
     }
   }, [fondoActual]);
 
-  const nombresCategorias = ['Todas', ...categorias.map((c) => c.nombre)];
+  const nombresCategorias = ['Todas', ...categorias.filter((c) => c.nombre !== '_todas').map((c) => c.nombre)];
 
   return (
     <section className="lista-productos">

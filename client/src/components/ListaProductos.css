@@ -12,12 +12,13 @@
   position: relative;
   overflow: hidden;
   border-radius: 0;
-  transition: background-color 0.5s ease;
+  transition: background-color 0.5s ease, border-radius 0.4s ease;
 }
 
 .lista-header-wrap.con-fondo {
-  padding: 2rem 0 0;
-  margin-bottom: 0;
+  padding: 2.5rem 0 0.5rem;
+  margin: 0 1rem 0;
+  border-radius: 20px;
 }
 
 /* Background media (image or video) */
@@ -32,14 +33,26 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 20px;
 }
 
 .lista-header-bg-overlay {
   position: absolute;
   inset: 0;
   /* Capa pastel/opaca sutil — permite leer el texto */
-  background: rgba(245, 240, 235, 0.82);
+  background: rgba(245, 240, 235, 0.78);
   backdrop-filter: blur(2px);
+}
+
+/* Difuminado suave en los bordes (vignette) */
+.lista-header-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  box-shadow: inset 0 0 40px 20px rgba(245, 240, 235, 0.9);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Make header/filter content sit above the background */

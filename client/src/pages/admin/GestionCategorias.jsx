@@ -22,6 +22,9 @@ function GestionCategorias() {
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
   const [eliminando, setEliminando] = useState(null);
+  const [fondoTodas, setFondoTodas] = useState(null);
+  const [subiendoTodas, setSubiendoTodas] = useState(false);
+  const inputTodasRef = useRef(null);
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -40,6 +43,60 @@ function GestionCategorias() {
   useEffect(() => {
     cargarCategorias();
   }, []);
+
+  // Sync fondoTodas from the _todas category
+  useEffect(() => {
+    const todas = categorias.find((c) => c.nombre === '_todas');
+    if (todas && todas.fondoMedia && todas.fondoMedia.url) {
+      setFondoTodas({ ...todas.fondoMedia, _id: todas._id });
+    } else {
+      setFondoTodas(null);
+    }
+  }, [categorias]);
+
+  const handleSubirMediaTodas = async (e) => {
+    const archivos = Array.from(e.target.files);
+    if (archivos.length === 0) return;
+    setSubiendoTodas(true);
+    try {
+      const resultado = await subirArchivos(archivos);
+      if (resultado.exito && resultado.datos.length > 0) {
+        const media = resultado.datos[0];
+        const fondoData = {
+          url: media.url,
+          publicId: media.publicId,
+          tipo: media.tipo === 'video' ? 'video' : 'imagen',
+        };
+        // Check if _todas category exists
+        const todas = categorias.find((c) => c.nombre === '_todas');
+        if (todas) {
+          await actualizarCategoria(todas._id, { fondoMedia: fondoData });
+        } else {
+          await crearCategoria({ nombre: '_todas', orden: 9999, activo: true, fondoMedia: fondoData });
+        }
+        cargarCategorias();
+      }
+    } catch {
+      setError('Error al subir fondo de Todas');
+    } finally {
+      setSubiendoTodas(false);
+      if (inputTodasRef.current) inputTodasRef.current.value = '';
+    }
+  };
+
+  const handleQuitarMediaTodas = async () => {
+    if (fondoTodas && fondoTodas.publicId) {
+      try {
+        await eliminarArchivo(fondoTodas.publicId, fondoTodas.tipo === 'video' ? 'video' : 'imagen');
+      } catch (err) {
+        console.error('Error eliminando media:', err);
+      }
+    }
+    if (fondoTodas && fondoTodas._id) {
+      await actualizarCategoria(fondoTodas._id, { fondoMedia: { url: '', publicId: '', tipo: '' } });
+      cargarCategorias();
+    }
+  };
 
   const limpiarForm = () => {
     setEditando(null);
@@ -260,6 +317,51 @@ function GestionCategorias() {
         </form>
       </div>
 
+      {/* Fondo general "Todas" */}
+      <div className="gestion-cat-form-card gestion-cat-todas-card">
+        <h2>Fondo de &quot;Todas&quot;</h2>
+        <p className="gestion-cat-media-hint">
+          Imagen o video de fondo que se muestra cuando el usuario tiene seleccionada la categoria &quot;Todas&quot;.
+        </p>
+        {fondoTodas && fondoTodas.url ? (
+          <div className="cat-media-preview">
+            {fondoTodas.tipo === 'video' ? (
+              <video src={fondoTodas.url} autoPlay loop muted playsInline className="cat-media-thumb" />
+            ) : (
+              <img src={fondoTodas.url} alt="Fondo Todas" className="cat-media-thumb" />
+            )}
+            <div className="cat-media-preview-info">
+              <span className="cat-media-badge">{fondoTodas.tipo === 'video' ? '🎬 Video' : '🖼️ Imagen'}</span>
+              <button type="button" className="cat-media-quitar" onClick={handleQuitarMediaTodas}>
+                Quitar
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div
+            className={`cat-media-upload ${subiendoTodas ? 'subiendo' : ''}`}
+            onClick={() => !subiendoTodas && inputTodasRef.current?.click()}
+          >
+            <input
+              ref={inputTodasRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"
+              onChange={handleSubirMediaTodas}
+              style={{ display: 'none' }}
+            />
+            {subiendoTodas ? (
+              <span>Subiendo...</span>
+            ) : (
+              <div className="cat-media-upload-placeholder">
+                <span>📷</span>
+                <span>Subir imagen o video</span>
+                <span className="cat-media-upload-hint">JPG, PNG, WebP, MP4, WebM</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Lista de categorias */}
       {cargando ? (
         <p className="gestion-cat-mensaje">Cargando categorias...</p>
@@ -280,7 +382,7 @@ function GestionCategorias() {
                 </tr>
               </thead>
               <tbody>
-                {categorias.map((cat) => (
+                {categorias.filter((c) => c.nombre !== '_todas').map((cat) => (
                   <tr key={cat._id} className={!cat.activo ? 'fila-inactiva' : ''}>
                     <td className="gestion-cat-nombre">{cat.nombre}</td>
                     <td>
@@ -323,7 +425,7 @@ function GestionCategorias() {
 
           {/* Mobile cards */}
           <div className="gestion-cat-cards-mobile">
-            {categorias.map((cat) => (
+            {categorias.filter((c) => c.nombre !== '_todas').map((cat) => (
               <div key={cat._id} className={`gestion-cat-card ${!cat.activo ? 'card-inactiva' : ''}`}>
                 <div className="gestion-cat-card-info">
                   <div className="gestion-cat-card-nombre-row">

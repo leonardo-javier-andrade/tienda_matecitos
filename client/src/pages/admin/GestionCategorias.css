@@ -505,3 +505,15 @@
     font-size: 1rem;
   }
 }
+
+/* ─── Card especial "Fondo de Todas" ─── */
+
+.gestion-cat-todas-card {
+  border-left: 4px solid #6c5b3e;
+}
+
+.gestion-cat-todas-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
