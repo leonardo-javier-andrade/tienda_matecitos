@@ -1,0 +1,407 @@
+.gestion-hero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.gestion-hero-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.gestion-hero-volver {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid #b2bec3;
+  border-radius: 8px;
+  color: #636e72;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.gestion-hero-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #2d3436;
+}
+
+/* Form card */
+.gestion-hero-form-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.gestion-hero-form-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  color: #2d3436;
+}
+
+.gestion-hero-grupo {
+  margin-bottom: 1rem;
+}
+
+.gestion-hero-grupo label {
+  display: block;
+  font-size: 0.85rem;
+  color: #636e72;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.gestion-hero-grupo input[type="text"],
+.gestion-hero-grupo input[type="number"],
+.gestion-hero-grupo textarea {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 2px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  min-height: 44px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.gestion-hero-grupo textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.gestion-hero-grupo input:focus,
+.gestion-hero-grupo textarea:focus {
+  outline: none;
+  border-color: #6c5b3e;
+}
+
+.gestion-hero-fila {
+  display: flex;
+  gap: 1rem;
+}
+
+.gestion-hero-fila .gestion-hero-grupo {
+  flex: 1;
+}
+
+.gestion-hero-grupo-sm {
+  flex: 0 0 100px !important;
+}
+
+.gestion-hero-grupo-check {
+  flex: 0 0 auto !important;
+  display: flex;
+  align-items: flex-end;
+}
+
+.gestion-hero-check-label {
+  display: flex !important;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #2d3436;
+  min-height: 44px;
+}
+
+.gestion-hero-check-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6c5b3e;
+}
+
+/* Image upload */
+.hero-img-upload {
+  border: 2px dashed #dfe6e9;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  background: #fafafa;
+}
+
+.hero-img-upload:hover {
+  border-color: #6c5b3e;
+}
+
+.hero-img-upload.subiendo {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.hero-img-upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: #636e72;
+  font-size: 0.9rem;
+}
+
+.hero-img-upload-icon {
+  font-size: 2rem;
+}
+
+.hero-img-upload-hint {
+  font-size: 0.75rem;
+  color: #b2bec3;
+}
+
+.hero-img-preview {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 250px;
+}
+
+.hero-img-preview img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+}
+
+.hero-img-quitar {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  padding: 0.4rem 1rem;
+  background: rgba(225, 112, 85, 0.9);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.gestion-hero-error {
+  color: #e17055;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
+.gestion-hero-form-acciones {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.gestion-hero-btn-guardar {
+  padding: 0.6rem 1.5rem;
+  background: #6c5b3e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-height: 44px;
+  transition: background 0.2s;
+}
+
+.gestion-hero-btn-guardar:hover:not(:disabled) {
+  background: #5a4a32;
+}
+
+.gestion-hero-btn-guardar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gestion-hero-btn-cancelar {
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  border: 2px solid #b2bec3;
+  border-radius: 8px;
+  color: #636e72;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-height: 44px;
+}
+
+/* Slides list */
+.gestion-hero-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.gestion-hero-slide-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.gestion-hero-slide-card.card-inactiva {
+  opacity: 0.55;
+}
+
+.hero-slide-thumb {
+  width: 140px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f5f0e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hero-slide-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-slide-thumb-placeholder {
+  font-size: 1.5rem;
+}
+
+.hero-slide-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-slide-titulo {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.hero-slide-desc {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  color: #636e72;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hero-slide-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-slide-orden {
+  font-size: 0.75rem;
+  color: #b2bec3;
+}
+
+.hero-slide-acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.hero-slide-acciones .btn-editar,
+.hero-slide-acciones .btn-eliminar {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.hero-slide-acciones .btn-editar {
+  background: #6c5b3e;
+  color: #fff;
+  border: none;
+  text-decoration: none;
+}
+
+.hero-slide-acciones .btn-eliminar {
+  background: transparent;
+  border: 1px solid #e17055;
+  color: #e17055;
+  transition: all 0.2s;
+}
+
+.hero-slide-acciones .btn-eliminar:hover:not(:disabled) {
+  background: #e17055;
+  color: #fff;
+}
+
+.gestion-hero-mensaje {
+  text-align: center;
+  color: #636e72;
+  padding: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gestion-hero {
+    padding: 1rem 0.75rem;
+  }
+
+  .gestion-hero-header h1 {
+    font-size: 1.15rem;
+  }
+
+  .gestion-hero-fila {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .gestion-hero-fila .gestion-hero-grupo,
+  .gestion-hero-grupo-sm,
+  .gestion-hero-grupo-check {
+    flex: none !important;
+    width: 100%;
+  }
+
+  .gestion-hero-form-acciones {
+    flex-direction: column;
+  }
+
+  .gestion-hero-btn-guardar,
+  .gestion-hero-btn-cancelar {
+    width: 100%;
+    text-align: center;
+  }
+
+  .gestion-hero-slide-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-slide-thumb {
+    width: 100%;
+    height: 140px;
+  }
+
+  .hero-slide-acciones {
+    width: 100%;
+  }
+
+  .hero-slide-acciones .btn-editar,
+  .hero-slide-acciones .btn-eliminar {
+    flex: 1;
+    justify-content: center;
+    min-height: 40px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .gestion-hero-header h1 {
+    font-size: 1rem;
+  }
+}

@@ -198,6 +198,50 @@ export const eliminarCategoria = async (id) => {
   return res.json();
 };
 
+// ─── Hero Slides (publico) ────────────────────────────
+
+export const obtenerHeroSlides = async () => {
+  const res = await fetch(`${API_URL}/api/hero`);
+  if (!res.ok) throw new Error('Error al obtener slides del hero');
+  return res.json();
+};
+
+// ─── Hero Slides (admin) ─────────────────────────────
+
+export const obtenerTodosHeroSlides = async () => {
+  const res = await fetch(`${API_URL}/api/hero/admin/todos`, {
+    headers: headersConAuth(),
+  });
+  if (!res.ok) throw new Error('Error al obtener slides del hero');
+  return res.json();
+};
+
+export const crearHeroSlide = async (slide) => {
+  const res = await fetch(`${API_URL}/api/hero`, {
+    method: 'POST',
+    headers: headersConAuth(),
+    body: JSON.stringify(slide),
+  });
+  return res.json();
+};
+
+export const actualizarHeroSlide = async (id, slide) => {
+  const res = await fetch(`${API_URL}/api/hero/${id}`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify(slide),
+  });
+  return res.json();
+};
+
+export const eliminarHeroSlide = async (id) => {
+  const res = await fetch(`${API_URL}/api/hero/${id}`, {
+    method: 'DELETE',
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
 // ─── Upload de archivos ───────────────────────────────
 
 export const subirArchivos = async (archivos) => {

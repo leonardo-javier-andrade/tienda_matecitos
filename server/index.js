@@ -7,6 +7,7 @@ const productRoutes = require('./routes/productRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const heroRoutes = require('./routes/heroRoutes');
 const Categoria = require('./models/Category');
 
 // Inicializar Express
@@ -16,7 +17,7 @@ const PORT = process.env.PORT || 10000;
 // Conectar a MongoDB
 conectarDB();
 
-// ─── Seed de categorías por defecto ───────────────────
+// ─── Seed de categorias por defecto ───────────────────
 const seedCategorias = async () => {
   try {
     const count = await Categoria.countDocuments();
@@ -30,10 +31,10 @@ const seedCategorias = async () => {
         { nombre: 'Accesorios', orden: 6 },
       ];
       await Categoria.insertMany(defaults);
-      console.log('✅ Categorías por defecto creadas');
+      console.log('Categorias por defecto creadas');
     }
   } catch (error) {
-    console.error('Error al crear categorías por defecto:', error.message);
+    console.error('Error al crear categorias por defecto:', error.message);
   }
 };
 seedCategorias();
@@ -52,17 +53,18 @@ app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/hero', heroRoutes);
 
 // Ruta de estado / health check
 app.get('/api/status', (_req, res) => {
   res.json({
     exito: true,
-    mensaje: '🧉 API de Tienda Matecitos funcionando correctamente',
+    mensaje: 'API de Tienda Matecitos funcionando correctamente',
     timestamp: new Date().toISOString(),
   });
 });
 
-// Ruta raíz
+// Ruta raiz
 app.get('/', (_req, res) => {
   res.json({
     mensaje: 'Bienvenido a la API de Tienda Matecitos',
@@ -75,7 +77,7 @@ app.use((err, _req, res, _next) => {
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({
       exito: false,
-      mensaje: 'El archivo supera el tamaño máximo permitido (50 MB).',
+      mensaje: 'El archivo supera el tamano maximo permitido (50 MB).',
     });
   }
   if (err.message && err.message.includes('Tipo de archivo no permitido')) {
@@ -90,5 +92,5 @@ app.use((err, _req, res, _next) => {
 
 // ─── Iniciar servidor ──────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🧉 Servidor corriendo en puerto ${PORT}`);
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 });
