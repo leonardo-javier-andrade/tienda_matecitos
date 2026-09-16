@@ -7,6 +7,7 @@ import {
   obtenerHeroSlides,
 } from './services/api';
 import ListaProductos from './components/ListaProductos';
+import DetalleProducto from './components/DetalleProducto';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 import FormularioProducto from './pages/admin/FormularioProducto';
@@ -386,6 +387,17 @@ function App() {
       <Routes>
         {/* Tienda publica */}
         <Route path="/" element={<HomePage />} />
+
+        {/* Detalle de producto (modal overlay) */}
+        <Route
+          path="/producto/:id"
+          element={
+            <>
+              <HomePage />
+              <DetalleProducto />
+            </>
+          }
+        />
 
         {/* Admin */}
         <Route path="/admin/login" element={<Login />} />
