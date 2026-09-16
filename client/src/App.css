@@ -569,11 +569,45 @@
   border-radius: 5px;
 }
 
+/* Bottom fade — transicion suave del hero al contenido */
+.hero-carousel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--mate-bg) 100%
+  );
+  z-index: 4;
+  pointer-events: none;
+}
+
+.hero-static::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--mate-bg) 100%
+  );
+  z-index: 4;
+  pointer-events: none;
+}
+
 /* ============================================
    Static Hero Fallback
    ============================================ */
 
 .hero-static {
+  position: relative;
   height: 520px;
   margin-top: 64px;
   background: linear-gradient(135deg, var(--mate-dark) 0%, var(--mate-brown) 60%, var(--mate-medium) 100%);
@@ -851,6 +885,9 @@
 .home-page {
   min-height: 100vh;
   background: var(--mate-bg);
+  /* Textura de ruido sutil tipo papel artesanal */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
 }
 
 /* ============================================

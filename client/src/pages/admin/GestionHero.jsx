@@ -25,8 +25,24 @@ function GestionHero() {
   const [subiendo, setSubiendo] = useState(false);
   const [error, setError] = useState('');
   const [eliminando, setEliminando] = useState(null);
+  const [estiloAbierto, setEstiloAbierto] = useState(false);
+  const [estiloTitulo, setEstiloTitulo] = useState({ fontSize: '', color: '', fontFamily: '', fontWeight: '' });
+  const [estiloDescripcion, setEstiloDescripcion] = useState({ fontSize: '', color: '', fontFamily: '', fontWeight: '' });
   const inputRef = useRef(null);
   const navigate = useNavigate();
+
+  const FONT_SIZES = ['', '1.2rem', '1.5rem', '1.8rem', '2rem', '2.4rem', '2.8rem', '3.2rem', '3.6rem'];
+  const FONT_SIZES_DESC = ['', '0.8rem', '0.9rem', '1rem', '1.1rem', '1.2rem', '1.4rem'];
+  const FONT_FAMILIES = [
+    { value: '', label: 'Por defecto' },
+    { value: "'Playfair Display', serif", label: 'Playfair Display' },
+    { value: "'Lora', serif", label: 'Lora' },
+    { value: "'Merriweather', serif", label: 'Merriweather' },
+    { value: "'Montserrat', sans-serif", label: 'Montserrat' },
+    { value: "'Raleway', sans-serif", label: 'Raleway' },
+    { value: "'Poppins', sans-serif", label: 'Poppins' },
+    { value: "'Oswald', sans-serif", label: 'Oswald' },
+  ];
 
   const cargarSlides = async () => {
     setCargando(true);
@@ -54,6 +70,9 @@ function GestionHero() {
     setActivo(true);
     setImagenFondo(null);
     setError('');
+    setEstiloAbierto(false);
+    setEstiloTitulo({ fontSize: '', color: '', fontFamily: '', fontWeight: '' });
+    setEstiloDescripcion({ fontSize: '', color: '', fontFamily: '', fontWeight: '' });
   };
 
   const handleEditar = (slide) => {
@@ -66,6 +85,24 @@ function GestionHero() {
     setActivo(slide.activo);
     setImagenFondo(slide.imagenFondo || null);
     setError('');
+    const et = slide.estiloTitulo || {};
+    const ed = slide.estiloDescripcion || {};
+    setEstiloTitulo({
+      fontSize: et.fontSize || '',
+      color: et.color || '',
+      fontFamily: et.fontFamily || '',
+      fontWeight: et.fontWeight || '',
+    });
+    setEstiloDescripcion({
+      fontSize: ed.fontSize || '',
+      color: ed.color || '',
+      fontFamily: ed.fontFamily || '',
+      fontWeight: ed.fontWeight || '',
+    });
+    // Si tiene estilos personalizados, abrir la seccion
+    const tieneEstilo = et.fontSize || et.color || et.fontFamily || et.fontWeight ||
+      ed.fontSize || ed.color || ed.fontFamily || ed.fontWeight;
+    setEstiloAbierto(!!tieneEstilo);
   };
 
   const handleSubirImagen = async (e) => {
@@ -123,6 +160,8 @@ function GestionHero() {
         orden: Number(orden),
         activo,
         imagenFondo,
+        estiloTitulo,
+        estiloDescripcion,
       };
 
       let resultado;
@@ -245,6 +284,141 @@ function GestionHero() {
                 Activo
               </label>
             </div>
+          </div>
+
+          {/* Estilo de texto (colapsable) */}
+          <div className="gestion-hero-estilo-section">
+            <button
+              type="button"
+              className="gestion-hero-estilo-toggle"
+              onClick={() => setEstiloAbierto(!estiloAbierto)}
+            >
+              <span>Personalizar tipografia</span>
+              <svg
+                className={`estilo-chevron ${estiloAbierto ? 'abierto' : ''}`}
+                width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
+              >
+                <path d="M4 6l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            {estiloAbierto && (
+              <div className="gestion-hero-estilo-contenido">
+                {/* Estilo del titulo */}
+                <p className="estilo-subtitulo">Titulo</p>
+                <div className="gestion-hero-fila">
+                  <div className="gestion-hero-grupo">
+                    <label>Tamaño</label>
+                    <select
+                      value={estiloTitulo.fontSize}
+                      onChange={(e) => setEstiloTitulo({ ...estiloTitulo, fontSize: e.target.value })}
+                    >
+                      <option value="">Por defecto</option>
+                      {FONT_SIZES.filter(Boolean).map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="gestion-hero-grupo">
+                    <label>Tipografia</label>
+                    <select
+                      value={estiloTitulo.fontFamily}
+                      onChange={(e) => setEstiloTitulo({ ...estiloTitulo, fontFamily: e.target.value })}
+                    >
+                      {FONT_FAMILIES.map((f) => (
+                        <option key={f.value} value={f.value}>{f.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="gestion-hero-fila">
+                  <div className="gestion-hero-grupo">
+                    <label>Color</label>
+                    <div className="estilo-color-wrap">
+                      <input
+                        type="color"
+                        value={estiloTitulo.color || '#ffffff'}
+                        onChange={(e) => setEstiloTitulo({ ...estiloTitulo, color: e.target.value })}
+                        className="estilo-color-input"
+                      />
+                      <span className="estilo-color-value">{estiloTitulo.color || 'Blanco (defecto)'}</span>
+                      {estiloTitulo.color && (
+                        <button type="button" className="estilo-color-reset" onClick={() => setEstiloTitulo({ ...estiloTitulo, color: '' })}>
+                          Resetear
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="gestion-hero-grupo gestion-hero-grupo-check">
+                    <label className="gestion-hero-check-label">
+                      <input
+                        type="checkbox"
+                        checked={estiloTitulo.fontWeight === 'bold'}
+                        onChange={(e) => setEstiloTitulo({ ...estiloTitulo, fontWeight: e.target.checked ? 'bold' : 'normal' })}
+                      />
+                      Negrita
+                    </label>
+                  </div>
+                </div>
+
+                {/* Estilo de la descripcion */}
+                <p className="estilo-subtitulo">Descripcion</p>
+                <div className="gestion-hero-fila">
+                  <div className="gestion-hero-grupo">
+                    <label>Tamaño</label>
+                    <select
+                      value={estiloDescripcion.fontSize}
+                      onChange={(e) => setEstiloDescripcion({ ...estiloDescripcion, fontSize: e.target.value })}
+                    >
+                      <option value="">Por defecto</option>
+                      {FONT_SIZES_DESC.filter(Boolean).map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="gestion-hero-grupo">
+                    <label>Tipografia</label>
+                    <select
+                      value={estiloDescripcion.fontFamily}
+                      onChange={(e) => setEstiloDescripcion({ ...estiloDescripcion, fontFamily: e.target.value })}
+                    >
+                      {FONT_FAMILIES.map((f) => (
+                        <option key={f.value} value={f.value}>{f.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="gestion-hero-fila">
+                  <div className="gestion-hero-grupo">
+                    <label>Color</label>
+                    <div className="estilo-color-wrap">
+                      <input
+                        type="color"
+                        value={estiloDescripcion.color || '#ffffff'}
+                        onChange={(e) => setEstiloDescripcion({ ...estiloDescripcion, color: e.target.value })}
+                        className="estilo-color-input"
+                      />
+                      <span className="estilo-color-value">{estiloDescripcion.color || 'Blanco (defecto)'}</span>
+                      {estiloDescripcion.color && (
+                        <button type="button" className="estilo-color-reset" onClick={() => setEstiloDescripcion({ ...estiloDescripcion, color: '' })}>
+                          Resetear
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="gestion-hero-grupo gestion-hero-grupo-check">
+                    <label className="gestion-hero-check-label">
+                      <input
+                        type="checkbox"
+                        checked={estiloDescripcion.fontWeight === 'bold'}
+                        onChange={(e) => setEstiloDescripcion({ ...estiloDescripcion, fontWeight: e.target.checked ? 'bold' : 'normal' })}
+                      />
+                      Negrita
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Imagen de fondo */}

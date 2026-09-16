@@ -224,9 +224,29 @@ function HeroCarousel() {
             <div className="slide-content">
               <div className="slide-texto">
                 <span className="slide-cat">Matecitos</span>
-                <h2 className="slide-titulo">{slide.titulo}</h2>
+                <h2
+                  className="slide-titulo"
+                  style={{
+                    ...(slide.estiloTitulo?.fontSize && { fontSize: slide.estiloTitulo.fontSize }),
+                    ...(slide.estiloTitulo?.color && { color: slide.estiloTitulo.color }),
+                    ...(slide.estiloTitulo?.fontFamily && { fontFamily: slide.estiloTitulo.fontFamily }),
+                    ...(slide.estiloTitulo?.fontWeight && { fontWeight: slide.estiloTitulo.fontWeight === 'bold' ? 700 : 400 }),
+                  }}
+                >
+                  {slide.titulo}
+                </h2>
                 {slide.descripcion && (
-                  <p className="slide-desc">{slide.descripcion}</p>
+                  <p
+                    className="slide-desc"
+                    style={{
+                      ...(slide.estiloDescripcion?.fontSize && { fontSize: slide.estiloDescripcion.fontSize }),
+                      ...(slide.estiloDescripcion?.color && { color: slide.estiloDescripcion.color }),
+                      ...(slide.estiloDescripcion?.fontFamily && { fontFamily: slide.estiloDescripcion.fontFamily }),
+                      ...(slide.estiloDescripcion?.fontWeight && { fontWeight: slide.estiloDescripcion.fontWeight === 'bold' ? 700 : 400 }),
+                    }}
+                  >
+                    {slide.descripcion}
+                  </p>
                 )}
                 {slide.enlace && (
                   <a href={slide.enlace} className="slide-cta">

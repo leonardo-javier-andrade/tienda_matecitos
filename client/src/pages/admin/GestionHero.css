@@ -114,6 +114,127 @@
   accent-color: #6c5b3e;
 }
 
+/* Estilo de texto — seccion colapsable */
+.gestion-hero-estilo-section {
+  margin-bottom: 1rem;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gestion-hero-estilo-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1rem;
+  background: #fafafa;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #636e72;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.gestion-hero-estilo-toggle:hover {
+  background: #f0f0f0;
+}
+
+.estilo-chevron {
+  transition: transform 0.25s ease;
+}
+
+.estilo-chevron.abierto {
+  transform: rotate(180deg);
+}
+
+.gestion-hero-estilo-contenido {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
+
+.estilo-subtitulo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6c5b3e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0.75rem 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #f0ebe3;
+}
+
+.estilo-subtitulo:first-child {
+  margin-top: 0;
+}
+
+.gestion-hero-estilo-contenido select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  min-height: 40px;
+  background: #fff;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.gestion-hero-estilo-contenido select:focus {
+  outline: none;
+  border-color: #6c5b3e;
+}
+
+.estilo-color-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.estilo-color-input {
+  width: 40px;
+  height: 36px;
+  padding: 2px;
+  border: 2px solid #dfe6e9;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.estilo-color-input::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+.estilo-color-input::-webkit-color-swatch {
+  border-radius: 3px;
+  border: none;
+}
+
+.estilo-color-value {
+  font-size: 0.8rem;
+  color: #636e72;
+  flex: 1;
+}
+
+.estilo-color-reset {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid #dfe6e9;
+  border-radius: 4px;
+  color: #636e72;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.estilo-color-reset:hover {
+  border-color: #e17055;
+  color: #e17055;
+}
+
 /* Image upload */
 .hero-img-upload {
   border: 2px dashed #dfe6e9;

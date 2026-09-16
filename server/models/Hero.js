@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 
+const estiloTextoSchema = {
+  fontSize: { type: String, trim: true, default: '' },
+  color: { type: String, trim: true, default: '' },
+  fontFamily: { type: String, trim: true, default: '' },
+  fontWeight: { type: String, enum: ['', 'normal', 'bold'], default: '' },
+};
+
 const heroSchema = new mongoose.Schema(
   {
     titulo: {
@@ -37,6 +44,8 @@ const heroSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    estiloTitulo: estiloTextoSchema,
+    estiloDescripcion: estiloTextoSchema,
   },
   {
     timestamps: true,
