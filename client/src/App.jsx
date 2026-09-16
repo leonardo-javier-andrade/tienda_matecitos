@@ -141,7 +141,9 @@ function NavTienda() {
 function HeroCarousel() {
   const [slides, setSlides] = useState([]);
   const [indice, setIndice] = useState(0);
+  const [avancePx, setAvancePx] = useState(0);
   const timerRef = useRef(null);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     obtenerHeroSlides()
@@ -150,6 +152,22 @@ function HeroCarousel() {
       })
       .catch(() => {});
   }, []);
+
+  // Measure actual slide width in pixels for bulletproof transforms
+  useEffect(() => {
+    const medir = () => {
+      const el = carouselRef.current;
+      if (!el) return;
+      const primerSlide = el.querySelector('.carousel-slide');
+      if (!primerSlide) return;
+      const style = getComputedStyle(primerSlide);
+      const w = primerSlide.offsetWidth + parseFloat(style.marginRight || 0);
+      setAvancePx(w);
+    };
+    medir();
+    window.addEventListener('resize', medir);
+    return () => window.removeEventListener('resize', medir);
+  }, [slides]);
 
   const total = slides.length;
 
@@ -195,11 +213,11 @@ function HeroCarousel() {
   }
 
   return (
-    <section className="hero-carousel">
+    <section className="hero-carousel" ref={carouselRef}>
       <div
         className="carousel-track"
         style={{
-          transform: `translateX(calc(-${indice} * var(--slide-advance)))`,
+          transform: avancePx ? `translateX(-${indice * avancePx}px)` : 'none',
         }}
       >
         {slides.map((slide) => (

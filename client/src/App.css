@@ -327,11 +327,6 @@
   margin-top: 64px;
   height: 520px;
   background: var(--mate-dark);
-
-  /* Control centralizado de tamaños del slider */
-  --slide-width: 87%;
-  --slide-margin: 0.5%;
-  --slide-advance: 87.5%;
 }
 
 .carousel-track {
@@ -342,8 +337,8 @@
 }
 
 .carousel-slide {
-  min-width: var(--slide-width);
-  margin-right: var(--slide-margin);
+  min-width: 87%;
+  margin-right: 0.5%;
   height: 100%;
   position: relative;
   display: flex;
@@ -986,10 +981,6 @@
   .hero-carousel {
     height: 420px;
     margin-top: 56px;
-    /* Sobreescribir variables: slides al 100%, sin peek */
-    --slide-width: 100%;
-    --slide-margin: 0%;
-    --slide-advance: 100%;
   }
 
   .hero-static {
@@ -998,6 +989,9 @@
   }
 
   .carousel-slide {
+    min-width: 100% !important;
+    width: 100% !important;
+    margin-right: 0 !important;
     border-radius: 0;
   }
 
