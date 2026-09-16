@@ -441,14 +441,17 @@
 
   .dash-toolbar-btns {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
   }
 
   .dash-btn-nuevo,
   .dash-btn-categorias {
-    flex: 1;
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
     font-size: 0.85rem;
     padding: 0.6rem 0.75rem;
+    text-align: center;
   }
 
   .dash-busqueda {
