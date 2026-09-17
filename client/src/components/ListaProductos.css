@@ -250,14 +250,9 @@
     padding: 0 0.75rem;
   }
 
-  /* On mobile, hide video background for performance */
+  /* Video de fondo visible en mobile */
   .lista-header-bg video.lista-header-bg-media {
-    display: none;
-  }
-
-  .lista-header-bg {
-    /* Show a still overlay tint instead */
-    background: var(--mate-cream, #f5f0eb);
+    display: block;
   }
 }
 
