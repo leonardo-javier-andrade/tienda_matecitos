@@ -16,6 +16,9 @@ function Carrito() {
   // ── Paso: 'carrito' o 'envio' ──
   const [paso, setPaso] = useState('carrito');
 
+  // ── Modo de entrega: 'envio' o 'coordinar' ──
+  const [modoEntrega, setModoEntrega] = useState('envio');
+
   // ── Datos de envío ──
   const [datosEnvio, setDatosEnvio] = useState({
     nombre: '', telefono: '', direccion: '',
@@ -36,6 +39,7 @@ function Carrito() {
       setOpciones([]);
       setEnvioSeleccionado(null);
       setError('');
+      setModoEntrega('envio');
     }
   }, [abierto]);
 
@@ -93,33 +97,51 @@ function Carrito() {
       return;
     }
 
-    if (!envioSeleccionado) {
-      setError('Seleccioná una opción de envío.');
-      return;
-    }
-
-    if (!datosEnvio.nombre || !datosEnvio.direccion || !datosEnvio.codigoPostal) {
-      setError('Completá los datos de envío obligatorios.');
-      return;
+    // Validaciones según modo de entrega
+    if (modoEntrega === 'envio') {
+      if (!envioSeleccionado) {
+        setError('Seleccioná una opción de envío.');
+        return;
+      }
+      if (!datosEnvio.nombre || !datosEnvio.direccion || !datosEnvio.codigoPostal) {
+        setError('Completá los datos de envío obligatorios.');
+        return;
+      }
+    } else {
+      // Coordinar entrega: solo nombre y teléfono obligatorios
+      if (!datosEnvio.nombre || !datosEnvio.telefono) {
+        setError('Completá tu nombre y teléfono para coordinar la entrega.');
+        return;
+      }
     }
 
     setProcesando(true);
     setError('');
 
     try {
+      const envioData = modoEntrega === 'coordinar'
+        ? {
+            costo: 0,
+            servicio: 'Coordinar con vendedor',
+            correo: '',
+            modalidad: 'coordinar',
+            horasEntrega: 0,
+          }
+        : {
+            costo: envioSeleccionado.valor,
+            servicio: envioSeleccionado.servicio,
+            correo: envioSeleccionado.correo,
+            modalidad: envioSeleccionado.modalidad,
+            horasEntrega: envioSeleccionado.horasEntrega,
+          };
+
       const resultado = await crearCheckout(items, {
         datosEnvio,
-        envio: {
-          costo: envioSeleccionado.valor,
-          servicio: envioSeleccionado.servicio,
-          correo: envioSeleccionado.correo,
-          modalidad: envioSeleccionado.modalidad,
-          horasEntrega: envioSeleccionado.horasEntrega,
-        },
+        envio: envioData,
       });
 
       if (resultado.exito) {
-        const url = resultado.datos.initPoint || resultado.datos.sandboxInitPoint;
+        const url = resultado.datos.sandboxInitPoint || resultado.datos.initPoint;
         window.location.href = url;
       } else {
         setError(resultado.mensaje || 'Error al procesar el pago');
@@ -142,6 +164,17 @@ function Carrito() {
       setEnvioSeleccionado(null);
     }
   };
+
+  const handleCambiarModo = (modo) => {
+    setModoEntrega(modo);
+    setEnvioSeleccionado(null);
+    setOpciones([]);
+    setError('');
+  };
+
+  // Costo de envío actual
+  const costoEnvio = modoEntrega === 'coordinar' ? 0 : (envioSeleccionado?.valor || 0);
+  const puedeCheckout = modoEntrega === 'coordinar' || envioSeleccionado;
 
   return (
     <>
@@ -228,8 +261,44 @@ function Carrito() {
           </>
         ) : (
           <>
-            {/* ── Paso 2: Datos de envío + cotización ── */}
+            {/* ── Paso 2: Modo de entrega + datos ── */}
             <div className="carrito-envio-form">
+
+              {/* ── Selector de modo de entrega ── */}
+              <div className="entrega-modo-selector">
+                <label
+                  className={`entrega-modo-opcion ${modoEntrega === 'envio' ? 'activo' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name="modoEntrega"
+                    checked={modoEntrega === 'envio'}
+                    onChange={() => handleCambiarModo('envio')}
+                  />
+                  <span className="entrega-modo-icon">🚚</span>
+                  <span className="entrega-modo-texto">Envío a domicilio</span>
+                </label>
+                <label
+                  className={`entrega-modo-opcion ${modoEntrega === 'coordinar' ? 'activo' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name="modoEntrega"
+                    checked={modoEntrega === 'coordinar'}
+                    onChange={() => handleCambiarModo('coordinar')}
+                  />
+                  <span className="entrega-modo-icon">🤝</span>
+                  <span className="entrega-modo-texto">Coordinar entrega</span>
+                </label>
+              </div>
+
+              {modoEntrega === 'coordinar' && (
+                <div className="entrega-coordinar-info">
+                  <p>Nos pondremos en contacto por WhatsApp para coordinar el punto de encuentro y horario de entrega.</p>
+                </div>
+              )}
+
+              {/* ── Campos comunes ── */}
               <div className="envio-campo">
                 <label>Nombre completo *</label>
                 <input
@@ -241,7 +310,7 @@ function Carrito() {
               </div>
 
               <div className="envio-campo">
-                <label>Teléfono</label>
+                <label>Teléfono {modoEntrega === 'coordinar' ? '*' : ''}</label>
                 <input
                   type="tel"
                   value={datosEnvio.telefono}
@@ -250,102 +319,120 @@ function Carrito() {
                 />
               </div>
 
-              <div className="envio-campo">
-                <label>Dirección *</label>
-                <input
-                  type="text"
-                  value={datosEnvio.direccion}
-                  onChange={(e) => handleInput('direccion', e.target.value)}
-                  placeholder="Av. Corrientes 1234, Piso 2"
-                />
-              </div>
+              {/* ── Campos solo para envío a domicilio ── */}
+              {modoEntrega === 'envio' && (
+                <>
+                  <div className="envio-campo">
+                    <label>Dirección *</label>
+                    <input
+                      type="text"
+                      value={datosEnvio.direccion}
+                      onChange={(e) => handleInput('direccion', e.target.value)}
+                      placeholder="Av. Corrientes 1234, Piso 2"
+                    />
+                  </div>
 
-              <div className="envio-fila">
-                <div className="envio-campo">
-                  <label>Provincia *</label>
-                  <select
-                    value={datosEnvio.provincia}
-                    onChange={(e) => handleInput('provincia', e.target.value)}
-                    disabled={cargandoProvincias}
-                  >
-                    <option value="">
-                      {cargandoProvincias ? 'Cargando...' : 'Seleccionar'}
-                    </option>
-                    {provincias.map((p) => (
-                      <option key={p.id || p.iso_id || p.nombre} value={p.id || p.iso_id}>
-                        {p.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                  <div className="envio-fila">
+                    <div className="envio-campo">
+                      <label>Provincia *</label>
+                      <select
+                        value={datosEnvio.provincia}
+                        onChange={(e) => handleInput('provincia', e.target.value)}
+                        disabled={cargandoProvincias}
+                      >
+                        <option value="">
+                          {cargandoProvincias ? 'Cargando...' : 'Seleccionar'}
+                        </option>
+                        {provincias.map((p) => (
+                          <option key={p.id || p.iso_id || p.nombre} value={p.id || p.iso_id}>
+                            {p.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                <div className="envio-campo">
-                  <label>Código Postal *</label>
-                  <input
-                    type="text"
-                    value={datosEnvio.codigoPostal}
-                    onChange={(e) => handleInput('codigoPostal', e.target.value)}
-                    placeholder="1234"
-                    maxLength={4}
-                  />
-                </div>
-              </div>
-
-              <div className="envio-campo">
-                <label>Ciudad</label>
-                <input
-                  type="text"
-                  value={datosEnvio.ciudad}
-                  onChange={(e) => handleInput('ciudad', e.target.value)}
-                  placeholder="Buenos Aires"
-                />
-              </div>
-
-              <div className="envio-campo">
-                <label>Notas (opcional)</label>
-                <textarea
-                  value={datosEnvio.notas}
-                  onChange={(e) => handleInput('notas', e.target.value)}
-                  placeholder="Timbre 3B, dejar en portería..."
-                  rows={2}
-                />
-              </div>
-
-              {/* Botón cotizar */}
-              <button
-                className="envio-btn-cotizar"
-                onClick={handleCotizar}
-                disabled={cotizando || !datosEnvio.provincia || !datosEnvio.codigoPostal}
-              >
-                {cotizando ? 'Cotizando...' : '📦 Calcular costo de envío'}
-              </button>
-
-              {/* Opciones de envío */}
-              {opciones.length > 0 && (
-                <div className="envio-opciones">
-                  <h4>Opciones de envío</h4>
-                  {opciones.map((op, i) => (
-                    <label
-                      key={i}
-                      className={`envio-opcion ${envioSeleccionado === op ? 'seleccionada' : ''}`}
-                    >
+                    <div className="envio-campo">
+                      <label>Código Postal *</label>
                       <input
-                        type="radio"
-                        name="envio"
-                        checked={envioSeleccionado === op}
-                        onChange={() => setEnvioSeleccionado(op)}
+                        type="text"
+                        value={datosEnvio.codigoPostal}
+                        onChange={(e) => handleInput('codigoPostal', e.target.value)}
+                        placeholder="1234"
+                        maxLength={4}
                       />
-                      <div className="envio-opcion-info">
-                        <span className="envio-opcion-nombre">
-                          {op.correo && `${op.correo} — `}{op.servicio}
-                        </span>
-                        <span className="envio-opcion-tiempo">
-                          {op.horasEntrega ? `${Math.ceil(op.horasEntrega / 24)} días hábiles` : ''}
-                        </span>
-                      </div>
-                      <span className="envio-opcion-precio">{formatPrecio(op.valor)}</span>
-                    </label>
-                  ))}
+                    </div>
+                  </div>
+
+                  <div className="envio-campo">
+                    <label>Ciudad</label>
+                    <input
+                      type="text"
+                      value={datosEnvio.ciudad}
+                      onChange={(e) => handleInput('ciudad', e.target.value)}
+                      placeholder="Buenos Aires"
+                    />
+                  </div>
+
+                  <div className="envio-campo">
+                    <label>Notas (opcional)</label>
+                    <textarea
+                      value={datosEnvio.notas}
+                      onChange={(e) => handleInput('notas', e.target.value)}
+                      placeholder="Timbre 3B, dejar en portería..."
+                      rows={2}
+                    />
+                  </div>
+
+                  {/* Botón cotizar */}
+                  <button
+                    className="envio-btn-cotizar"
+                    onClick={handleCotizar}
+                    disabled={cotizando || !datosEnvio.provincia || !datosEnvio.codigoPostal}
+                  >
+                    {cotizando ? 'Cotizando...' : '📦 Calcular costo de envío'}
+                  </button>
+
+                  {/* Opciones de envío */}
+                  {opciones.length > 0 && (
+                    <div className="envio-opciones">
+                      <h4>Opciones de envío</h4>
+                      {opciones.map((op, i) => (
+                        <label
+                          key={i}
+                          className={`envio-opcion ${envioSeleccionado === op ? 'seleccionada' : ''}`}
+                        >
+                          <input
+                            type="radio"
+                            name="envio"
+                            checked={envioSeleccionado === op}
+                            onChange={() => setEnvioSeleccionado(op)}
+                          />
+                          <div className="envio-opcion-info">
+                            <span className="envio-opcion-nombre">
+                              {op.correo && `${op.correo} — `}{op.servicio}
+                            </span>
+                            <span className="envio-opcion-tiempo">
+                              {op.horasEntrega ? `${Math.ceil(op.horasEntrega / 24)} días hábiles` : ''}
+                            </span>
+                          </div>
+                          <span className="envio-opcion-precio">{formatPrecio(op.valor)}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Notas para coordinar */}
+              {modoEntrega === 'coordinar' && (
+                <div className="envio-campo">
+                  <label>Notas (opcional)</label>
+                  <textarea
+                    value={datosEnvio.notas}
+                    onChange={(e) => handleInput('notas', e.target.value)}
+                    placeholder="Zona preferida, horario disponible..."
+                    rows={2}
+                  />
                 </div>
               )}
             </div>
@@ -357,23 +444,29 @@ function Carrito() {
                 <span>Productos</span>
                 <span>{formatPrecio(totalPrecio)}</span>
               </div>
-              {envioSeleccionado && (
+              {costoEnvio > 0 && (
                 <div className="carrito-total carrito-total-envio">
                   <span>Envío ({envioSeleccionado.servicio})</span>
-                  <span>{formatPrecio(envioSeleccionado.valor)}</span>
+                  <span>{formatPrecio(costoEnvio)}</span>
+                </div>
+              )}
+              {modoEntrega === 'coordinar' && (
+                <div className="carrito-total carrito-total-envio">
+                  <span>Envío</span>
+                  <span className="envio-gratis">A coordinar</span>
                 </div>
               )}
               <div className="carrito-total carrito-total-final">
                 <span>Total</span>
                 <span className="carrito-total-precio">
-                  {formatPrecio(totalPrecio + (envioSeleccionado?.valor || 0))}
+                  {formatPrecio(totalPrecio + costoEnvio)}
                 </span>
               </div>
 
               <button
                 className="carrito-btn-pagar"
                 onClick={handleCheckout}
-                disabled={procesando || !envioSeleccionado}
+                disabled={procesando || !puedeCheckout}
               >
                 {procesando ? 'Procesando...' : 'Pagar con MercadoPago'}
               </button>

@@ -126,7 +126,7 @@ router.post('/checkout', verificarToken, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error al crear checkout:', error);
+    console.error('Error al crear checkout:', error.message, error.cause || '', JSON.stringify(error.response?.data || ''));
     res.status(500).json({ exito: false, mensaje: 'Error al procesar el checkout.' });
   }
 });
