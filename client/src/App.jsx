@@ -14,6 +14,9 @@ import Dashboard from './pages/admin/Dashboard';
 import FormularioProducto from './pages/admin/FormularioProducto';
 import GestionCategorias from './pages/admin/GestionCategorias';
 import GestionHero from './pages/admin/GestionHero';
+import { CarritoProvider, useCarrito } from './context/CarritoContext';
+import Carrito from './components/Carrito';
+import ResultadoOrden from './pages/ResultadoOrden';
 import './App.css';
 
 // ─── Auth guard ───────────────────────────────────────
@@ -38,6 +41,17 @@ function RutaProtegida({ children }) {
   }
 
   return autenticado ? children : <Navigate to="/ingresar" replace />;
+}
+
+// ─── CartButton ───────────────────────────────────────
+function CartButton() {
+  const { totalItems, setAbierto } = useCarrito();
+  return (
+    <button className="nav-carrito-btn" onClick={() => setAbierto(true)} aria-label="Carrito">
+      🛒
+      {totalItems > 0 && <span className="nav-carrito-badge">{totalItems}</span>}
+    </button>
+  );
 }
 
 // ─── NavTienda ────────────────────────────────────────
@@ -90,6 +104,7 @@ function NavTienda() {
 
         {/* Right */}
         <div className="nav-derecha">
+          <CartButton />
           {usuario ? (
             <div className="nav-usuario-wrap" ref={dropdownRef}>
               <button
@@ -413,6 +428,7 @@ function HomePage() {
   return (
     <div className="home-page">
       <NavTienda />
+      <Carrito />
       <HeroCarousel />
 
       {/* Products */}
@@ -450,6 +466,7 @@ function LoginWrapper() {
 function App() {
   return (
     <BrowserRouter>
+      <CarritoProvider>
       <Routes>
         {/* Tienda publica */}
         <Route path="/" element={<HomePage />} />
@@ -513,9 +530,13 @@ function App() {
           }
         />
 
+        {/* Resultado de orden (MercadoPago redirect) */}
+        <Route path="/orden/resultado" element={<ResultadoOrden />} />
+
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </CarritoProvider>
     </BrowserRouter>
   );
 }

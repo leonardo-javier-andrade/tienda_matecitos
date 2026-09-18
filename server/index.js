@@ -8,6 +8,8 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const heroRoutes = require('./routes/heroRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const shippingRoutes = require('./routes/shippingRoutes');
 const Categoria = require('./models/Category');
 
 // Inicializar Express
@@ -54,6 +56,8 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/hero', heroRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/shipping', shippingRoutes);
 
 // Ruta de estado / health check
 app.get('/api/status', (_req, res) => {

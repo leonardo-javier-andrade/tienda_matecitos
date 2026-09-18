@@ -269,6 +269,75 @@ export const eliminarArchivo = async (publicId, tipo = 'imagen') => {
   return res.json();
 };
 
+
+
+// ─── Envíos (EnvioPack) ───────────────────────────────
+
+export const obtenerProvincias = async () => {
+  const res = await fetch(`${API_URL}/api/shipping/provincias`);
+  return res.json();
+};
+
+export const obtenerLocalidades = async (provinciaId) => {
+  const res = await fetch(`${API_URL}/api/shipping/localidades?provincia=${provinciaId}`);
+  return res.json();
+};
+
+export const cotizarEnvio = async ({ provincia, codigo_postal, peso }) => {
+  const params = new URLSearchParams({ provincia, codigo_postal, peso: peso.toString() });
+  const res = await fetch(`${API_URL}/api/shipping/cotizar?${params}`);
+  return res.json();
+};
+
+export const cotizarEnvioSucursal = async ({ provincia, localidad, peso }) => {
+  const params = new URLSearchParams({ provincia, localidad, peso: peso.toString() });
+  const res = await fetch(`${API_URL}/api/shipping/cotizar-sucursal?${params}`);
+  return res.json();
+};
+
+// ─── Checkout (MercadoPago) ───────────────────────────
+
+export const crearCheckout = async (items, { datosEnvio, envio } = {}) => {
+  const res = await fetch(`${API_URL}/api/orders/checkout`, {
+    method: 'POST',
+    headers: headersConAuth(),
+    body: JSON.stringify({ items, datosEnvio, envio }),
+  });
+  return res.json();
+};
+
+export const obtenerMisOrdenes = async () => {
+  const res = await fetch(`${API_URL}/api/orders/mis-ordenes`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerOrden = async (id) => {
+  const res = await fetch(`${API_URL}/api/orders/${id}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+// ─── Ordenes (admin) ──────────────────────────────────
+
+export const obtenerTodasOrdenes = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/orders/admin/todas?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const actualizarEstadoOrden = async (id, estado) => {
+  const res = await fetch(`${API_URL}/api/orders/admin/${id}/estado`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify({ estado }),
+  });
+  return res.json();
+};
 // ─── Admin seed ───────────────────────────────────────
 
 export const crearAdminInicial = async () => {
