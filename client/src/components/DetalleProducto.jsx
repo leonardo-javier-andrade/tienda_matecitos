@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useCarrito } from '../context/CarritoContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obtenerProductoPorId } from '../services/api';
+import { flyToCart } from '../utils/flyToCart';
 import './DetalleProducto.css';
 
 function DetalleProducto() {
@@ -12,11 +13,18 @@ function DetalleProducto() {
   const [mediaActivo, setMediaActivo] = useState(0);
   const [galeriaAbierta, setGaleriaAbierta] = useState(false);
   const overlayRef = useRef(null);
+  const mainImgRef = useRef(null);
   const { agregarItem } = useCarrito();
   const [agregado, setAgregado] = useState(false);
 
   const handleAgregarCarrito = () => {
     if (!producto || producto.stock <= 0) return;
+
+    // Fly-to-cart animation
+    if (mainImgRef.current) {
+      flyToCart(mainImgRef.current);
+    }
+
     agregarItem(producto);
     setAgregado(true);
     setTimeout(() => setAgregado(false), 1200);
@@ -116,7 +124,7 @@ function DetalleProducto() {
               <div className="galeria-principal" onClick={() => allMedia.length > 0 && setGaleriaAbierta(true)}>
                 {mediaActual ? (
                   mediaActual.tipo === 'imagen' ? (
-                    <img src={mediaActual.url} alt={nombre} className="galeria-img-principal" />
+                    <img ref={mainImgRef} src={mediaActual.url} alt={nombre} className="galeria-img-principal" />
                   ) : (
                     <video src={mediaActual.url} controls className="galeria-video-principal" playsInline />
                   )

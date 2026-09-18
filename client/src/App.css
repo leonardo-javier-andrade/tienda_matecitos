@@ -1198,3 +1198,15 @@
     font-size: 0.7rem;
   }
 }
+
+/* ── Fly-to-cart animation pulse ── */
+.nav-carrito-btn.cart-pulse {
+  animation: cartPulse 0.4s ease;
+}
+
+@keyframes cartPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}

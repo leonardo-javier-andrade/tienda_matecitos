@@ -56,6 +56,23 @@ function Carrito() {
     }
   }, [paso, provincias.length]);
 
+  // Auto-completar datos del usuario logueado
+  useEffect(() => {
+    if (paso === 'envio') {
+      try {
+        const userData = localStorage.getItem('user_data');
+        if (userData) {
+          const user = JSON.parse(userData);
+          setDatosEnvio((prev) => ({
+            ...prev,
+            nombre: prev.nombre || user.nombre || '',
+            telefono: prev.telefono || user.telefono || '',
+          }));
+        }
+      } catch {}
+    }
+  }, [paso]);
+
   // Calcular peso estimado (0.5 kg por item como base)
   const pesoEstimado = items.reduce((sum, i) => sum + i.cantidad * 0.5, 0);
 

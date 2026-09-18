@@ -1,12 +1,14 @@
 import { useState, useRef } from 'react';
 import { useCarrito } from '../context/CarritoContext';
 import { useNavigate } from 'react-router-dom';
+import { flyToCart, flyToCartPlaceholder } from '../utils/flyToCart';
 import './TarjetaProducto.css';
 
 function TarjetaProducto({ producto }) {
   const { _id, nombre, descripcion, precio, stock, imagenes, videos, categoria } = producto;
   const [hovering, setHovering] = useState(false);
   const videoRef = useRef(null);
+  const imgRef = useRef(null);
   const navigate = useNavigate();
   const { agregarItem } = useCarrito();
   const [agregado, setAgregado] = useState(false);
@@ -14,6 +16,16 @@ function TarjetaProducto({ producto }) {
   const handleAgregar = (e) => {
     e.stopPropagation();
     if (stock <= 0) return;
+
+    // Fly-to-cart animation
+    const imgEl = imgRef.current;
+    if (imgEl) {
+      flyToCart(imgEl);
+    } else {
+      const placeholder = e.currentTarget.closest('.tarjeta-producto')?.querySelector('.imagen-placeholder');
+      if (placeholder) flyToCartPlaceholder(placeholder);
+    }
+
     agregarItem(producto);
     setAgregado(true);
     setTimeout(() => setAgregado(false), 1200);
@@ -58,6 +70,7 @@ function TarjetaProducto({ producto }) {
         {/* Imagen principal */}
         {imagenPrincipal ? (
           <img
+            ref={imgRef}
             src={imagenPrincipal}
             alt={nombre}
             loading="lazy"

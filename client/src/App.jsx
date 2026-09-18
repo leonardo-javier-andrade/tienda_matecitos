@@ -47,7 +47,7 @@ function RutaProtegida({ children }) {
 function CartButton() {
   const { totalItems, setAbierto } = useCarrito();
   return (
-    <button className="nav-carrito-btn" onClick={() => setAbierto(true)} aria-label="Carrito">
+    <button className="nav-carrito-btn" onClick={() => setAbierto(true)} aria-label="Carrito" data-cart-target>
       🛒
       {totalItems > 0 && <span className="nav-carrito-badge">{totalItems}</span>}
     </button>
