@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useCarrito } from '../context/CarritoContext';
 import { useNavigate } from 'react-router-dom';
 import './TarjetaProducto.css';
 
@@ -7,6 +8,16 @@ function TarjetaProducto({ producto }) {
   const [hovering, setHovering] = useState(false);
   const videoRef = useRef(null);
   const navigate = useNavigate();
+  const { agregarItem } = useCarrito();
+  const [agregado, setAgregado] = useState(false);
+
+  const handleAgregar = (e) => {
+    e.stopPropagation();
+    if (stock <= 0) return;
+    agregarItem(producto);
+    setAgregado(true);
+    setTimeout(() => setAgregado(false), 1200);
+  };
 
   const precioFormateado = precio.toLocaleString('es-AR', {
     style: 'currency',
@@ -96,6 +107,13 @@ function TarjetaProducto({ producto }) {
             {stock > 0 ? 'Disponible' : 'Sin stock'}
           </span>
         </div>
+        <button
+          className={`tarjeta-agregar-carrito ${agregado ? 'agregado' : ''}`}
+          onClick={handleAgregar}
+          disabled={stock <= 0}
+        >
+          {agregado ? '✓ Agregado' : '🛒 Agregar al carrito'}
+        </button>
       </div>
     </article>
   );
