@@ -3,6 +3,7 @@ const router = express.Router();
 const { MercadoPagoConfig, Preference, Payment } = require('mercadopago');
 const Orden = require('../models/Order');
 const Producto = require('../models/Product');
+const Usuario = require('../models/User');
 const { verificarToken, verificarAdmin } = require('../middleware/auth');
 
 // ─── Configurar MercadoPago ────────────────────────────
@@ -58,9 +59,15 @@ router.post('/checkout', verificarToken, async (req, res) => {
     const costoEnvio = envio?.costo || 0;
     const totalConEnvio = total + costoEnvio;
 
+    // Obtener datos completos del usuario
+    const usuarioDB = await Usuario.findById(req.usuario.id).select('nombre email telefono');
+    if (!usuarioDB) {
+      return res.status(401).json({ exito: false, mensaje: 'Usuario no encontrado.' });
+    }
+
     // Crear la orden en estado pendiente
     const orden = new Orden({
-      usuario: req.usuario._id,
+      usuario: req.usuario.id,
       items: itemsVerificados,
       total: totalConEnvio,
       costoEnvio,
@@ -91,8 +98,8 @@ router.post('/checkout', verificarToken, async (req, res) => {
           ...(item.imagen ? { picture_url: item.imagen } : {}),
         })),
         payer: {
-          name: req.usuario.nombre,
-          email: req.usuario.email,
+          name: usuarioDB.nombre,
+          email: usuarioDB.email,
         },
         back_urls: {
           success: `${clientUrl}/orden/resultado?status=approved`,
@@ -157,7 +164,7 @@ router.post('/checkout', verificarToken, async (req, res) => {
 // GET /api/orders/mis-ordenes — Obtener órdenes del usuario
 router.get('/mis-ordenes', verificarToken, async (req, res) => {
   try {
-    const ordenes = await Orden.find({ usuario: req.usuario._id })
+    const ordenes = await Orden.find({ usuario: req.usuario.id })
       .sort({ createdAt: -1 })
       .limit(20);
 
@@ -182,7 +189,7 @@ router.get('/:id', verificarToken, async (req, res) => {
     }
 
     // Solo el dueño o un admin pueden ver la orden
-    if (orden.usuario.toString() !== req.usuario._id.toString() && req.usuario.rol !== 'admin') {
+    if (orden.usuario.toString() !== req.usuario.id.toString() && req.usuario.rol !== 'admin') {
       return res.status(403).json({ exito: false, mensaje: 'No autorizado.' });
     }
 
