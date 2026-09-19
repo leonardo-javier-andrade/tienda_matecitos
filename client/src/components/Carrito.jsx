@@ -158,7 +158,7 @@ function Carrito() {
       });
 
       if (resultado.exito) {
-        const url = resultado.datos.sandboxInitPoint || resultado.datos.initPoint;
+        const url = resultado.datos.initPoint || resultado.datos.sandboxInitPoint;
         window.location.href = url;
       } else {
         setError(resultado.mensaje || 'Error al procesar el pago');
