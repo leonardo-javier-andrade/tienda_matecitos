@@ -281,6 +281,33 @@
   margin: 0.25rem 0;
 }
 
+/* ── Dropdown admin section ── */
+
+.nav-dropdown-section {
+  display: block;
+  padding: 0.3rem 1rem 0.15rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #999;
+  font-weight: 600;
+}
+
+.nav-dd-admin {
+  color: #6c5b3e !important;
+  font-weight: 600 !important;
+}
+
+.nav-dd-ordenes {
+  color: #0077b6 !important;
+  font-weight: 600 !important;
+}
+
+.nav-dd-analytics {
+  color: #2d6a4f !important;
+  font-weight: 600 !important;
+}
+
 /* ── Mobile Hamburger ── */
 
 .nav-hamburger {

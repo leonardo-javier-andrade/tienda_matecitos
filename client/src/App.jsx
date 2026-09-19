@@ -130,9 +130,19 @@ function NavTienda() {
                   Mis Ordenes
                 </Link>
                 {usuario.rol === 'admin' && (
-                  <Link to="/admin" onClick={() => setDropdownAbierto(false)}>
-                    Panel Admin
-                  </Link>
+                  <>
+                    <div className="nav-dropdown-divider" />
+                    <span className="nav-dropdown-section">Administracion</span>
+                    <Link to="/admin" className="nav-dd-admin" onClick={() => setDropdownAbierto(false)}>
+                      Panel Admin
+                    </Link>
+                    <Link to="/admin/ordenes" className="nav-dd-ordenes" onClick={() => setDropdownAbierto(false)}>
+                      Ordenes
+                    </Link>
+                    <Link to="/admin/analytics" className="nav-dd-analytics" onClick={() => setDropdownAbierto(false)}>
+                      Analytics
+                    </Link>
+                  </>
                 )}
                 <div className="nav-dropdown-divider" />
                 <button onClick={handleLogout}>Cerrar sesion</button>
