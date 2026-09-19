@@ -5,6 +5,7 @@ const Orden = require('../models/Order');
 const Producto = require('../models/Product');
 const Usuario = require('../models/User');
 const { verificarToken, verificarAdmin } = require('../middleware/auth');
+const { enviarNotificacionCompra } = require('../services/emailService');
 
 // ─── Configurar MercadoPago ────────────────────────────
 const mpClient = new MercadoPagoConfig({
@@ -118,6 +119,9 @@ router.post('/checkout', verificarToken, async (req, res) => {
           notification_url: `${process.env.API_URL}/api/orders/webhook`,
         } : {}),
         statement_descriptor: 'MATECITOS',
+        payment_methods: {
+          installments: 12,
+        },
       },
     });
 
@@ -251,6 +255,14 @@ router.post('/webhook', async (req, res) => {
 
           await orden.save();
           console.log(`Orden ${ordenId} actualizada: ${paymentData.status}`);
+
+            // Enviar email de notificación si fue aprobado
+            if (paymentData.status === 'approved') {
+              const compradorDB = await Usuario.findById(orden.usuario).select('nombre email telefono');
+              enviarNotificacionCompra(orden, compradorDB).catch(err =>
+                console.error('Error enviando email de compra:', err.message)
+              );
+            }
         }
       }
     }

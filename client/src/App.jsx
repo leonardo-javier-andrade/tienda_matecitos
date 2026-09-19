@@ -14,6 +14,7 @@ import Dashboard from './pages/admin/Dashboard';
 import FormularioProducto from './pages/admin/FormularioProducto';
 import GestionCategorias from './pages/admin/GestionCategorias';
 import GestionHero from './pages/admin/GestionHero';
+import Analytics from './pages/admin/Analytics';
 import { CarritoProvider, useCarrito } from './context/CarritoContext';
 import Carrito from './components/Carrito';
 import ResultadoOrden from './pages/ResultadoOrden';
@@ -367,7 +368,7 @@ function SeccionWhatsApp() {
         <h2>¿Tenes alguna consulta?</h2>
         <p>Escribinos por WhatsApp y te ayudamos a elegir el mate perfecto para vos.</p>
         <a
-          href="https://wa.me/5491100000000"
+          href="https://wa.me/5491178166636"
           target="_blank"
           rel="noopener noreferrer"
           className="whatsapp-btn"
@@ -520,6 +521,10 @@ function App() {
               <GestionCategorias />
             </RutaProtegida>
           }
+        />
+        <Route
+          path="/admin/analytics"
+          element={usuario?.rol === 'admin' ? <Analytics /> : <Navigate to="/" />}
         />
         <Route
           path="/admin/hero"

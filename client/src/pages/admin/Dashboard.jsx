@@ -125,6 +125,9 @@ function Dashboard() {
           <Link to="/admin/hero" className="dash-btn-categorias">
             Hero / Banner
           </Link>
+          <Link to="/admin/analytics" className="dash-btn-analytics">
+            Analytics
+          </Link>
         </div>
 
         <form className="dash-busqueda" onSubmit={handleBuscar}>

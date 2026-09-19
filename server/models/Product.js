@@ -53,6 +53,10 @@ const productoSchema = new mongoose.Schema(
       url: { type: String },
       publicId: { type: String },
     },
+    visitas: {
+      type: Number,
+      default: 0,
+    },
     activo: {
       type: Boolean,
       default: true,

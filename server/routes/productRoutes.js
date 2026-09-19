@@ -73,6 +73,26 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// POST /api/products/:id/visita — Registrar una visita al producto
+router.post('/:id/visita', async (req, res) => {
+  try {
+    const producto = await Producto.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { visitas: 1 } },
+      { new: true, select: 'visitas' }
+    );
+    if (!producto) {
+      return res.status(404).json({ exito: false, mensaje: 'Producto no encontrado' });
+    }
+    res.json({ exito: true, visitas: producto.visitas });
+  } catch (error) {
+    if (error.kind === 'ObjectId') {
+      return res.status(400).json({ exito: false, mensaje: 'ID inválido' });
+    }
+    res.status(500).json({ exito: false, mensaje: 'Error al registrar visita' });
+  }
+});
+
 // ─── RUTAS PROTEGIDAS (ADMIN) ──────────────────────────
 
 // GET /api/products/admin/todos — Obtener TODOS los productos (activos e inactivos)

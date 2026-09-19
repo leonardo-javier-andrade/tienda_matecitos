@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useCarrito } from '../context/CarritoContext';
 import { useParams, useNavigate } from 'react-router-dom';
-import { obtenerProductoPorId } from '../services/api';
+import { obtenerProductoPorId, registrarVisita } from '../services/api';
 import { flyToCart } from '../utils/flyToCart';
 import './DetalleProducto.css';
 
@@ -29,6 +29,11 @@ function DetalleProducto() {
     setAgregado(true);
     setTimeout(() => setAgregado(false), 1200);
   };
+
+  // Registrar visita al abrir el producto
+  useEffect(() => {
+    if (id) registrarVisita(id);
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -103,7 +108,7 @@ function DetalleProducto() {
 
   const handleWhatsApp = () => {
     const msg = encodeURIComponent(`Hola! Me interesa el producto: ${nombre} (${precioFormateado}). ¿Está disponible?`);
-    window.open(`https://wa.me/5491100000000?text=${msg}`, '_blank');
+    window.open(`https://wa.me/5491178166636?text=${msg}`, '_blank');
   };
 
   return (

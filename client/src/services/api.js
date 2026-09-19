@@ -354,3 +354,57 @@ export const verificarEstadoAPI = async () => {
   const res = await fetch(`${API_URL}/api/status`);
   return res.json();
 };
+
+// ─── Registrar visita a producto ──────────────────────
+export const registrarVisita = async (productoId) => {
+  try {
+    await fetch(`${API_URL}/api/products/${productoId}/visita`, { method: 'POST' });
+  } catch {
+    // Silencioso — no bloquear la UX por un error de tracking
+  }
+};
+
+// ─── Analytics (Admin) ────────────────────────────────
+
+export const obtenerResumenAnalytics = async () => {
+  const res = await fetch(`${API_URL}/api/analytics/resumen`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return res.json();
+};
+
+export const obtenerProductosVendidos = async (periodo = 'todo') => {
+  const res = await fetch(`${API_URL}/api/analytics/productos-vendidos?periodo=${periodo}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return res.json();
+};
+
+export const obtenerProductosVisitados = async () => {
+  const res = await fetch(`${API_URL}/api/analytics/productos-visitados`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return res.json();
+};
+
+export const obtenerMenosVendidos = async () => {
+  const res = await fetch(`${API_URL}/api/analytics/menos-vendidos`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return res.json();
+};
+
+export const obtenerVentasPorDia = async (dias = 30) => {
+  const res = await fetch(`${API_URL}/api/analytics/ventas-por-dia?dias=${dias}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return res.json();
+};
+
+export const enviarInformeEmail = async () => {
+  const res = await fetch(`${API_URL}/api/analytics/enviar-informe`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return res.json();
+};
