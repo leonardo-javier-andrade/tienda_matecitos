@@ -1,0 +1,545 @@
+.go-page {
+  min-height: 100vh;
+  background: #faf8f5;
+  padding: 1.5rem 1rem;
+}
+
+.go-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ─── Header ─────────────────────────── */
+
+.go-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.go-header-izq {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.go-volver {
+  color: #6c5b3e;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.go-volver:hover {
+  text-decoration: underline;
+}
+
+.go-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #2d3436;
+}
+
+/* ─── Filtros ────────────────────────── */
+
+.go-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.go-filtro-chip {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid #dfe6e9;
+  background: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #636e72;
+  transition: all 0.2s;
+  min-height: 36px;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.go-filtro-chip.activo {
+  background: #6c5b3e;
+  color: #fff;
+  border-color: #6c5b3e;
+}
+
+/* ─── Cargando / Vacio ───────────────── */
+
+.go-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem 1rem;
+  color: #636e72;
+}
+
+.cargando-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e0d6c8;
+  border-top-color: #6c5b3e;
+  border-radius: 50%;
+  animation: go-spin 0.7s linear infinite;
+}
+
+@keyframes go-spin {
+  to { transform: rotate(360deg); }
+}
+
+.go-vacio {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #636e72;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ─── Lista ──────────────────────────── */
+
+.go-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* ─── Card ───────────────────────────── */
+
+.go-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.go-card.expandida {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.go-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  gap: 1rem;
+}
+
+.go-card-header:hover {
+  background: #faf8f5;
+}
+
+.go-card-col1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 120px;
+}
+
+.go-orden-id {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: #2d3436;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+.go-orden-fecha {
+  font-size: 0.75rem;
+  color: #636e72;
+}
+
+.go-card-col2 {
+  flex: 1;
+  min-width: 0;
+}
+
+.go-cliente {
+  font-size: 0.85rem;
+  color: #2d3436;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.go-card-col3 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.go-estado-badge {
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.go-estado-pendiente {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.go-estado-aprobado {
+  background: #d4edda;
+  color: #155724;
+}
+
+.go-estado-enviado {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.go-estado-entregado {
+  background: #d4edda;
+  color: #155724;
+}
+
+.go-estado-rechazado {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.go-estado-cancelado {
+  background: #f5f5f5;
+  color: #636e72;
+}
+
+.go-orden-total {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #2d3436;
+  white-space: nowrap;
+}
+
+.go-chevron {
+  color: #636e72;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.go-chevron.abierto {
+  transform: rotate(180deg);
+}
+
+/* ─── Detalle expandido ──────────────── */
+
+.go-detalle {
+  padding: 0 1.25rem 1.25rem;
+  border-top: 1px solid #f0ede8;
+}
+
+.go-detalle h4 {
+  margin: 1rem 0 0.4rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #636e72;
+}
+
+.go-detalle h4:first-child {
+  margin-top: 0.75rem;
+}
+
+/* Cliente info */
+
+.go-cliente-info {
+  padding: 0.75rem 1rem;
+  background: #f5f0e8;
+  border-radius: 8px;
+  margin-top: 0.75rem;
+}
+
+.go-cliente-info h4 {
+  margin-top: 0;
+}
+
+.go-cliente-info p {
+  margin: 0.15rem 0;
+  font-size: 0.85rem;
+  color: #2d3436;
+}
+
+/* Items */
+
+.go-items {
+  margin-top: 0.5rem;
+}
+
+.go-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+}
+
+.go-item-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f5f0e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.go-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.go-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.go-item-nombre {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #2d3436;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.go-item-meta {
+  font-size: 0.78rem;
+  color: #636e72;
+}
+
+.go-item-subtotal {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #2d3436;
+  white-space: nowrap;
+}
+
+/* Totales */
+
+.go-linea-envio,
+.go-linea-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.88rem;
+  border-top: 1px solid #f0ede8;
+}
+
+.go-linea-envio {
+  color: #636e72;
+  margin-top: 0.5rem;
+}
+
+.go-linea-total {
+  font-weight: 700;
+  color: #2d3436;
+  font-size: 1rem;
+}
+
+/* Envio */
+
+.go-envio-datos {
+  padding: 0.75rem 1rem;
+  background: #faf8f5;
+  border-radius: 8px;
+}
+
+.go-envio-datos p {
+  margin: 0.15rem 0;
+  font-size: 0.83rem;
+  color: #2d3436;
+}
+
+.go-envio-servicio {
+  font-size: 0.8rem;
+  color: #636e72;
+  padding: 0.4rem 0;
+}
+
+/* MP info */
+
+.go-mp-info {
+  padding: 0.75rem 1rem;
+  background: #e8f4fd;
+  border-radius: 8px;
+}
+
+.go-mp-info p {
+  margin: 0.15rem 0;
+  font-size: 0.83rem;
+  color: #2d3436;
+  font-family: 'Courier New', monospace;
+}
+
+/* Cambiar estado */
+
+.go-cambiar-estado {
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f0ede8;
+}
+
+.go-estado-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.go-estado-btn {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #dfe6e9;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: #636e72;
+  font-family: inherit;
+  transition: all 0.2s;
+  min-height: 34px;
+}
+
+.go-estado-btn:hover:not(:disabled) {
+  border-color: #6c5b3e;
+  color: #6c5b3e;
+}
+
+.go-estado-btn.current {
+  background: #6c5b3e;
+  color: #fff;
+  border-color: #6c5b3e;
+  cursor: default;
+}
+
+.go-estado-btn:disabled {
+  opacity: 0.6;
+}
+
+/* ─── Paginacion ─────────────────────── */
+
+.go-paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+}
+
+.go-pag-btn {
+  padding: 0.5rem 1rem;
+  background: #fff;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #6c5b3e;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-height: 40px;
+}
+
+.go-pag-btn:hover:not(:disabled) {
+  background: #6c5b3e;
+  color: #fff;
+  border-color: #6c5b3e;
+}
+
+.go-pag-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.go-pag-info {
+  font-size: 0.85rem;
+  color: #636e72;
+}
+
+/* ─── Responsive ─────────────────────── */
+
+@media (max-width: 768px) {
+  .go-page {
+    padding: 1rem 0.75rem;
+  }
+
+  .go-header h1 {
+    font-size: 1.15rem;
+  }
+
+  .go-filtros {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .go-filtro-chip {
+    flex-shrink: 0;
+  }
+
+  .go-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .go-card-col2 {
+    width: 100%;
+  }
+
+  .go-card-col3 {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .go-detalle {
+    padding: 0 1rem 1rem;
+  }
+
+  .go-estado-btns {
+    gap: 0.35rem;
+  }
+
+  .go-estado-btn {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.55rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .go-estado-btns {
+    flex-direction: column;
+  }
+
+  .go-estado-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -15,6 +15,8 @@ import FormularioProducto from './pages/admin/FormularioProducto';
 import GestionCategorias from './pages/admin/GestionCategorias';
 import GestionHero from './pages/admin/GestionHero';
 import Analytics from './pages/admin/Analytics';
+import MisOrdenes from './pages/usuario/MisOrdenes';
+import GestionOrdenes from './pages/admin/GestionOrdenes';
 import { CarritoProvider, useCarrito } from './context/CarritoContext';
 import Carrito from './components/Carrito';
 import ResultadoOrden from './pages/ResultadoOrden';
@@ -124,6 +126,9 @@ function NavTienda() {
                   <span className="nav-user-name">{usuario.nombre}</span>
                   <span className="nav-user-email">{usuario.email}</span>
                 </div>
+                <Link to="/mis-ordenes" onClick={() => setDropdownAbierto(false)}>
+                  Mis Ordenes
+                </Link>
                 {usuario.rol === 'admin' && (
                   <Link to="/admin" onClick={() => setDropdownAbierto(false)}>
                     Panel Admin
@@ -531,6 +536,26 @@ function App() {
           element={
             <RutaProtegida>
               <GestionHero />
+            </RutaProtegida>
+          }
+        />
+
+        {/* Mis Ordenes (usuario) */}
+        <Route
+          path="/mis-ordenes"
+          element={
+            <RutaProtegida>
+              <MisOrdenes />
+            </RutaProtegida>
+          }
+        />
+
+        {/* Gestion de ordenes (admin) */}
+        <Route
+          path="/admin/ordenes"
+          element={
+            <RutaProtegida>
+              <GestionOrdenes />
             </RutaProtegida>
           }
         />

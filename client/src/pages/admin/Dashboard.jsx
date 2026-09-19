@@ -128,6 +128,9 @@ function Dashboard() {
           <Link to="/admin/analytics" className="dash-btn-analytics">
             Analytics
           </Link>
+          <Link to="/admin/ordenes" className="dash-btn-ordenes">
+            Ordenes
+          </Link>
         </div>
 
         <form className="dash-busqueda" onSubmit={handleBuscar}>
