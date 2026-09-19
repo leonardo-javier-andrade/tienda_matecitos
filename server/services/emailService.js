@@ -1,32 +1,15 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const Orden = require('../models/Order');
 const Producto = require('../models/Product');
 
 const TIENDA_EMAIL = 'tiendamatecitos@gmail.com';
 
-// Crear transporter (usa Gmail SMTP o lo que esté configurado)
-const crearTransporter = () => {
-  // Si hay credenciales SMTP configuradas, usar esas
-  if (process.env.SMTP_HOST) {
-    return nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+// Crear cliente de Resend
+const getResend = () => {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY no configurada');
   }
-
-  // Por defecto: Gmail
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER || TIENDA_EMAIL,
-      pass: process.env.EMAIL_PASS, // App Password de Gmail
-    },
-  });
+  return new Resend(process.env.RESEND_API_KEY);
 };
 
 // ─── Formatear precio en ARS ───
@@ -36,7 +19,7 @@ const formatPrecio = (n) =>
 // ─── Notificación de nueva compra ───
 const enviarNotificacionCompra = async (orden, usuario) => {
   try {
-    const transporter = crearTransporter();
+    const resend = getResend();
 
     const itemsHTML = orden.items
       .map(
@@ -97,9 +80,9 @@ const enviarNotificacionCompra = async (orden, usuario) => {
       </div>
     `;
 
-    await transporter.sendMail({
-      from: `"Tienda Matecitos" <${process.env.EMAIL_USER || TIENDA_EMAIL}>`,
-      to: TIENDA_EMAIL,
+    await resend.emails.send({
+      from: 'Tienda Matecitos <onboarding@resend.dev>',
+      to: [TIENDA_EMAIL],
       subject: `Nueva venta #${orden._id.toString().slice(-8).toUpperCase()} - ${formatPrecio(orden.total)}`,
       html,
     });
@@ -107,13 +90,12 @@ const enviarNotificacionCompra = async (orden, usuario) => {
     console.log(`Email de compra enviado para orden ${orden._id}`);
   } catch (error) {
     console.error('Error al enviar email de compra:', error.message);
-    // No lanzamos error para no interrumpir el flujo de la orden
   }
 };
 
 // ─── Informe de ventas ───
 const enviarInformeVentas = async () => {
-  const transporter = crearTransporter();
+  const resend = getResend();
 
   // Productos más vendidos
   const masVendidos = await Orden.aggregate([
@@ -137,7 +119,7 @@ const enviarInformeVentas = async () => {
     .limit(10)
     .select('nombre visitas precio');
 
-  // Productos menos vendidos (activos con menos ventas)
+  // Productos menos vendidos
   const productos = await Producto.find({ activo: true }).select('nombre precio stock');
   const ventas = await Orden.aggregate([
     { $match: { estado: { $in: ['aprobado', 'enviado', 'entregado'] } } },
@@ -151,7 +133,7 @@ const enviarInformeVentas = async () => {
     .sort((a, b) => a.vendidos - b.vendidos)
     .slice(0, 10);
 
-  // Ingresos totales y del mes
+  // Ingresos
   const ingresosTotales = await Orden.aggregate([
     { $match: { estado: { $in: ['aprobado', 'enviado', 'entregado'] } } },
     { $group: { _id: null, total: { $sum: '$total' }, cantidad: { $sum: 1 } } },
@@ -184,37 +166,37 @@ const enviarInformeVentas = async () => {
         <p style="color:#d4b896;margin:6px 0 0;font-size:14px;">${new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
       </div>
       <div style="padding:24px;">
-        <!-- Resumen -->
-        <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:140px;background:#faf5ef;border-radius:10px;padding:16px;text-align:center;">
-            <div style="font-size:24px;font-weight:bold;color:#6b4226;">${formatPrecio(ingresosTotales[0]?.total || 0)}</div>
-            <div style="font-size:12px;color:#999;margin-top:4px;">Ingresos totales</div>
-          </div>
-          <div style="flex:1;min-width:140px;background:#faf5ef;border-radius:10px;padding:16px;text-align:center;">
-            <div style="font-size:24px;font-weight:bold;color:#6b4226;">${formatPrecio(ingresosMes[0]?.total || 0)}</div>
-            <div style="font-size:12px;color:#999;margin-top:4px;">Ingresos del mes</div>
-          </div>
-          <div style="flex:1;min-width:140px;background:#faf5ef;border-radius:10px;padding:16px;text-align:center;">
-            <div style="font-size:24px;font-weight:bold;color:#6b4226;">${ingresosTotales[0]?.cantidad || 0}</div>
-            <div style="font-size:12px;color:#999;margin-top:4px;">Ventas totales</div>
-          </div>
-        </div>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+          <tr>
+            <td style="padding:16px;background:#faf5ef;border-radius:10px;text-align:center;width:33%;">
+              <div style="font-size:24px;font-weight:bold;color:#6b4226;">${formatPrecio(ingresosTotales[0]?.total || 0)}</div>
+              <div style="font-size:12px;color:#999;margin-top:4px;">Ingresos totales</div>
+            </td>
+            <td style="width:12px;"></td>
+            <td style="padding:16px;background:#faf5ef;border-radius:10px;text-align:center;width:33%;">
+              <div style="font-size:24px;font-weight:bold;color:#6b4226;">${formatPrecio(ingresosMes[0]?.total || 0)}</div>
+              <div style="font-size:12px;color:#999;margin-top:4px;">Ingresos del mes</div>
+            </td>
+            <td style="width:12px;"></td>
+            <td style="padding:16px;background:#faf5ef;border-radius:10px;text-align:center;width:33%;">
+              <div style="font-size:24px;font-weight:bold;color:#6b4226;">${ingresosTotales[0]?.cantidad || 0}</div>
+              <div style="font-size:12px;color:#999;margin-top:4px;">Ventas totales</div>
+            </td>
+          </tr>
+        </table>
 
-        <!-- Más vendidos -->
         <h2 style="color:#6b4226;font-size:18px;border-bottom:2px solid #e8ddd0;padding-bottom:8px;">Productos mas vendidos</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
           <thead><tr style="background:#f5ebe0;"><th style="padding:8px 10px;text-align:left;">#</th><th style="padding:8px 10px;text-align:left;">Producto</th><th style="padding:8px 10px;text-align:center;">Vendidos</th><th style="padding:8px 10px;text-align:right;">Ingreso</th></tr></thead>
           <tbody>${filasVendidos || '<tr><td colspan="4" style="padding:12px;text-align:center;color:#999;">Sin datos todavia</td></tr>'}</tbody>
         </table>
 
-        <!-- Más visitados -->
         <h2 style="color:#6b4226;font-size:18px;border-bottom:2px solid #e8ddd0;padding-bottom:8px;">Productos mas visitados</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
           <thead><tr style="background:#f5ebe0;"><th style="padding:8px 10px;text-align:left;">#</th><th style="padding:8px 10px;text-align:left;">Producto</th><th style="padding:8px 10px;text-align:center;">Visitas</th></tr></thead>
           <tbody>${filasVisitados || '<tr><td colspan="3" style="padding:12px;text-align:center;color:#999;">Sin datos todavia</td></tr>'}</tbody>
         </table>
 
-        <!-- Menos vendidos -->
         <h2 style="color:#6b4226;font-size:18px;border-bottom:2px solid #e8ddd0;padding-bottom:8px;">Productos menos vendidos</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
           <thead><tr style="background:#f5ebe0;"><th style="padding:8px 10px;text-align:left;">#</th><th style="padding:8px 10px;text-align:left;">Producto</th><th style="padding:8px 10px;text-align:center;">Vendidos</th><th style="padding:8px 10px;text-align:center;">Stock</th></tr></thead>
@@ -227,9 +209,9 @@ const enviarInformeVentas = async () => {
     </div>
   `;
 
-  await transporter.sendMail({
-    from: `"Tienda Matecitos" <${process.env.EMAIL_USER || TIENDA_EMAIL}>`,
-    to: TIENDA_EMAIL,
+  await resend.emails.send({
+    from: 'Tienda Matecitos <onboarding@resend.dev>',
+    to: [TIENDA_EMAIL],
     subject: `Informe de ventas — ${new Date().toLocaleDateString('es-AR')}`,
     html,
   });
