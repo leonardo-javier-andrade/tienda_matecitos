@@ -80,14 +80,18 @@ const enviarNotificacionCompra = async (orden, usuario) => {
       </div>
     `;
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Tienda Matecitos <onboarding@resend.dev>',
       to: [TIENDA_EMAIL],
       subject: `Nueva venta #${orden._id.toString().slice(-8).toUpperCase()} - ${formatPrecio(orden.total)}`,
       html,
     });
 
-    console.log(`Email de compra enviado para orden ${orden._id}`);
+    if (result.error) {
+      console.error('Error de Resend (compra):', JSON.stringify(result.error));
+    } else {
+      console.log(`Email de compra enviado para orden ${orden._id}, ID: ${result.data?.id}`);
+    }
   } catch (error) {
     console.error('Error al enviar email de compra:', error.message);
   }
@@ -95,6 +99,8 @@ const enviarNotificacionCompra = async (orden, usuario) => {
 
 // ─── Informe de ventas ───
 const enviarInformeVentas = async () => {
+  console.log('Iniciando envio de informe de ventas...');
+  console.log('RESEND_API_KEY presente:', !!process.env.RESEND_API_KEY);
   const resend = getResend();
 
   // Productos más vendidos
@@ -209,14 +215,20 @@ const enviarInformeVentas = async () => {
     </div>
   `;
 
-  await resend.emails.send({
+  console.log('Enviando informe a:', TIENDA_EMAIL);
+  const result = await resend.emails.send({
     from: 'Tienda Matecitos <onboarding@resend.dev>',
     to: [TIENDA_EMAIL],
     subject: `Informe de ventas — ${new Date().toLocaleDateString('es-AR')}`,
     html,
   });
 
-  console.log('Informe de ventas enviado');
+  if (result.error) {
+    console.error('Error de Resend:', JSON.stringify(result.error));
+    throw new Error(result.error.message || 'Error de Resend: ' + JSON.stringify(result.error));
+  }
+
+  console.log('Informe de ventas enviado, ID:', result.data?.id);
 };
 
 module.exports = { enviarNotificacionCompra, enviarInformeVentas };
