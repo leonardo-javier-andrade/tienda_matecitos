@@ -85,10 +85,10 @@ router.post('/checkout', verificarToken, async (req, res) => {
         items: itemsVerificados.map((item) => ({
           id: item.producto.toString(),
           title: item.nombre,
-          quantity: item.cantidad,
-          unit_price: item.precio,
+          quantity: Number(item.cantidad),
+          unit_price: Number(parseFloat(item.precio).toFixed(2)),
           currency_id: 'ARS',
-          picture_url: item.imagen,
+          ...(item.imagen ? { picture_url: item.imagen } : {}),
         })),
         payer: {
           name: req.usuario.nombre,
@@ -126,8 +126,29 @@ router.post('/checkout', verificarToken, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error al crear checkout:', error.message, error.cause || '', JSON.stringify(error.response?.data || ''));
-    res.status(500).json({ exito: false, mensaje: 'Error al procesar el checkout.' });
+    // Log detallado del error de MercadoPago
+    console.error('=== ERROR CHECKOUT ===');
+    console.error('Mensaje:', error.message);
+    console.error('Status:', error.status || error.statusCode || 'N/A');
+    console.error('Cause:', JSON.stringify(error.cause || 'N/A'));
+    console.error('Response:', JSON.stringify(error.response || 'N/A'));
+    console.error('Error completo:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    console.error('=== FIN ERROR ===');
+
+    const mensajeError = error.cause?.[0]?.description
+      || error.message
+      || 'Error al procesar el checkout.';
+
+    res.status(500).json({
+      exito: false,
+      mensaje: mensajeError,
+      // En desarrollo, enviar más detalle
+      detalle: process.env.NODE_ENV !== 'production' ? {
+        mpStatus: error.status,
+        mpCause: error.cause,
+        message: error.message,
+      } : undefined,
+    });
   }
 });
 
@@ -231,6 +252,54 @@ router.post('/webhook', async (req, res) => {
     console.error('Error en webhook MP:', error.message);
     // Siempre responder 200 para que MP no reintente infinitamente
     res.sendStatus(200);
+  }
+});
+
+
+// GET /api/orders/test-mp — Verificar conexión con MercadoPago (admin)
+router.get('/test-mp', verificarAdmin, async (req, res) => {
+  try {
+    const preference = new Preference(mpClient);
+
+    const testPref = await preference.create({
+      body: {
+        items: [{
+          id: 'test-item',
+          title: 'Test de conexión',
+          quantity: 1,
+          unit_price: 100,
+          currency_id: 'ARS',
+        }],
+        back_urls: {
+          success: `${process.env.CLIENT_URL || 'http://localhost:5173'}/orden/resultado?status=approved`,
+          failure: `${process.env.CLIENT_URL || 'http://localhost:5173'}/orden/resultado?status=rejected`,
+          pending: `${process.env.CLIENT_URL || 'http://localhost:5173'}/orden/resultado?status=pending`,
+        },
+        external_reference: 'test-connection',
+      },
+    });
+
+    res.json({
+      exito: true,
+      mensaje: 'Conexión con MercadoPago OK',
+      datos: {
+        preferenceId: testPref.id,
+        initPoint: testPref.init_point,
+        sandboxInitPoint: testPref.sandbox_init_point,
+        tokenPrefix: process.env.MP_ACCESS_TOKEN?.substring(0, 15) + '...',
+      },
+    });
+  } catch (error) {
+    console.error('Test MP error:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    res.status(500).json({
+      exito: false,
+      mensaje: 'Error al conectar con MercadoPago',
+      detalle: {
+        message: error.message,
+        status: error.status,
+        cause: error.cause,
+      },
+    });
   }
 });
 
