@@ -529,7 +529,11 @@ function App() {
         />
         <Route
           path="/admin/analytics"
-          element={usuario?.rol === 'admin' ? <Analytics /> : <Navigate to="/" />}
+          element={
+            <RutaProtegida>
+              <Analytics />
+            </RutaProtegida>
+          }
         />
         <Route
           path="/admin/hero"
