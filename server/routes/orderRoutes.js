@@ -107,7 +107,9 @@ router.post('/checkout', verificarToken, async (req, res) => {
           },
         }),
         external_reference: orden._id.toString(),
-        notification_url: `${process.env.API_URL || 'http://localhost:5000'}/api/orders/webhook`,
+        ...(process.env.API_URL ? {
+          notification_url: `${process.env.API_URL}/api/orders/webhook`,
+        } : {}),
         statement_descriptor: 'MATECITOS',
       },
     });
