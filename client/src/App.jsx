@@ -21,6 +21,7 @@ import Gastos from './pages/admin/Gastos';
 import VentaManual from './pages/admin/VentaManual';
 import Finanzas from './pages/admin/Finanzas';
 import Campanas from './pages/admin/Campanas';
+import Documentos from './pages/admin/Documentos';
 import { CarritoProvider, useCarrito } from './context/CarritoContext';
 import Carrito from './components/Carrito';
 import ResultadoOrden from './pages/ResultadoOrden';
@@ -157,6 +158,9 @@ function NavTienda() {
                     </Link>
                     <Link to="/admin/campanas" onClick={() => setDropdownAbierto(false)}>
                       Campañas
+                    </Link>
+                    <Link to="/admin/documentos" onClick={() => setDropdownAbierto(false)}>
+                      Documentos
                     </Link>
                   </>
                 )}
@@ -623,6 +627,14 @@ function App() {
           element={
             <RutaProtegida>
               <Campanas />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="/admin/documentos"
+          element={
+            <RutaProtegida>
+              <Documentos />
             </RutaProtegida>
           }
         />
