@@ -408,3 +408,166 @@ export const enviarInformeEmail = async () => {
   });
   return res.json();
 };
+
+// ─── Gastos (Admin) ───────────────────────────────────
+
+export const obtenerGastos = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/gastos?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerResumenGastos = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/gastos/resumen?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const crearGasto = async (gasto) => {
+  const res = await fetch(`${API_URL}/api/gastos`, {
+    method: 'POST',
+    headers: headersConAuth(),
+    body: JSON.stringify(gasto),
+  });
+  return res.json();
+};
+
+export const actualizarGasto = async (id, gasto) => {
+  const res = await fetch(`${API_URL}/api/gastos/${id}`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify(gasto),
+  });
+  return res.json();
+};
+
+export const eliminarGasto = async (id) => {
+  const res = await fetch(`${API_URL}/api/gastos/${id}`, {
+    method: 'DELETE',
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+// ─── Configuración (Admin) ────────────────────────────
+
+export const obtenerConfiguracion = async () => {
+  const res = await fetch(`${API_URL}/api/configuracion`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const actualizarConfiguracion = async (config) => {
+  const res = await fetch(`${API_URL}/api/configuracion`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify(config),
+  });
+  return res.json();
+};
+
+// ─── Finanzas (Admin) ─────────────────────────────────
+
+export const obtenerBalance = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/finanzas/balance?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerMargenes = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/finanzas/margenes?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerTendencia = async (meses = 6) => {
+  const res = await fetch(`${API_URL}/api/finanzas/tendencia?meses=${meses}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerCanales = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/finanzas/canales?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+// ─── Venta Manual (Admin) ─────────────────────────────
+
+export const registrarVentaManual = async (venta) => {
+  const res = await fetch(`${API_URL}/api/orders/manual`, {
+    method: 'POST',
+    headers: headersConAuth(),
+    body: JSON.stringify(venta),
+  });
+  return res.json();
+};
+
+// ─── Campañas (Admin) ─────────────────────────────────
+
+export const obtenerCampanas = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/campanas?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerCampana = async (id) => {
+  const res = await fetch(`${API_URL}/api/campanas/${id}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const crearCampana = async (campana) => {
+  const res = await fetch(`${API_URL}/api/campanas`, {
+    method: 'POST',
+    headers: headersConAuth(),
+    body: JSON.stringify(campana),
+  });
+  return res.json();
+};
+
+export const actualizarCampana = async (id, campana) => {
+  const res = await fetch(`${API_URL}/api/campanas/${id}`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify(campana),
+  });
+  return res.json();
+};
+
+export const eliminarCampana = async (id) => {
+  const res = await fetch(`${API_URL}/api/campanas/${id}`, {
+    method: 'DELETE',
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerResultadosCampana = async (id) => {
+  const res = await fetch(`${API_URL}/api/campanas/${id}/resultados`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const compararCampanas = async (ids) => {
+  const res = await fetch(`${API_URL}/api/campanas/accion/comparar?ids=${ids.join(',')}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};

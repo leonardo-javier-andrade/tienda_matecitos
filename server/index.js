@@ -11,6 +11,10 @@ const heroRoutes = require('./routes/heroRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const shippingRoutes = require('./routes/shippingRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
+const gastoRoutes = require('./routes/gastoRoutes');
+const configuracionRoutes = require('./routes/configuracionRoutes');
+const finanzasRoutes = require('./routes/finanzasRoutes');
+const campanaRoutes = require('./routes/campanaRoutes');
 const Categoria = require('./models/Category');
 
 // Inicializar Express
@@ -60,6 +64,10 @@ app.use('/api/hero', heroRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/shipping', shippingRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/gastos', gastoRoutes);
+app.use('/api/configuracion', configuracionRoutes);
+app.use('/api/finanzas', finanzasRoutes);
+app.use('/api/campanas', campanaRoutes);
 
 // Ruta de estado / health check
 app.get('/api/status', (_req, res) => {

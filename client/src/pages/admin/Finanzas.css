@@ -1,0 +1,310 @@
+.finanzas-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.finanzas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.finanzas-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #2d3436;
+}
+
+.finanzas-header-btns {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.finanzas-btn-volver {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid #b2bec3;
+  border-radius: 8px;
+  color: #636e72;
+  text-decoration: none;
+  font-size: 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Tabs */
+.finanzas-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.5rem;
+  background: #f1f2f6;
+  border-radius: 10px;
+  padding: 0.25rem;
+  overflow-x: auto;
+}
+
+.finanzas-tab {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #636e72;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.finanzas-tab.activo {
+  background: #fff;
+  color: #2d3436;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* Periodo selector */
+.finanzas-periodo {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.finanzas-periodo select,
+.finanzas-periodo input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  background: #fff;
+}
+
+/* Cards */
+.finanzas-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.finanzas-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.finanzas-card-monto {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.finanzas-card-monto.ingreso { color: #00b894; }
+.finanzas-card-monto.gasto { color: #d63031; }
+.finanzas-card-monto.ganancia { color: #0984e3; }
+.finanzas-card-monto.neutro { color: #2d3436; }
+
+.finanzas-card-label {
+  font-size: 0.8rem;
+  color: #636e72;
+  margin-top: 0.25rem;
+}
+
+/* Desglose */
+.finanzas-desglose {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 1.5rem;
+}
+
+.finanzas-desglose h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: #2d3436;
+}
+
+.finanzas-desglose-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f2f6;
+  font-size: 0.85rem;
+}
+
+.finanzas-desglose-item:last-child { border-bottom: none; }
+
+/* Tabla de margenes */
+.finanzas-tabla-wrap {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 1.5rem;
+}
+
+.finanzas-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+
+.finanzas-tabla th {
+  text-align: left;
+  padding: 0.75rem 0.75rem;
+  border-bottom: 2px solid #dfe6e9;
+  color: #636e72;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.finanzas-tabla td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid #f1f2f6;
+  color: #2d3436;
+}
+
+.finanzas-tabla tr:hover { background: #fafafa; }
+
+.finanzas-alerta {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.finanzas-alerta.sin-costo {
+  background: #ffeaa7;
+  color: #856404;
+}
+
+.finanzas-alerta.negativo {
+  background: #ffeaea;
+  color: #d63031;
+}
+
+/* Config MP */
+.finanzas-config {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+}
+
+.finanzas-config h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: #2d3436;
+}
+
+.finanzas-config-grupo {
+  margin-bottom: 1rem;
+}
+
+.finanzas-config-grupo label {
+  display: block;
+  font-size: 0.8rem;
+  color: #636e72;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.finanzas-config-grupo input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.finanzas-config-btn {
+  padding: 0.5rem 1.25rem;
+  background: #6c5b3e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.finanzas-config-btn:hover { background: #5a4a33; }
+
+/* Canales */
+.finanzas-canales-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.finanzas-canal-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.finanzas-canal-card h4 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  text-transform: capitalize;
+  color: #2d3436;
+}
+
+.finanzas-canal-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.83rem;
+  padding: 0.3rem 0;
+  color: #636e72;
+}
+
+.finanzas-canal-stat span:last-child {
+  font-weight: 600;
+  color: #2d3436;
+}
+
+/* Tendencia */
+.finanzas-tendencia-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+
+.finanzas-tendencia-tabla th {
+  text-align: left;
+  padding: 0.65rem;
+  border-bottom: 2px solid #dfe6e9;
+  color: #636e72;
+  font-weight: 600;
+}
+
+.finanzas-tendencia-tabla td {
+  padding: 0.65rem;
+  border-bottom: 1px solid #f1f2f6;
+}
+
+.finanzas-vacio {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #b2bec3;
+}
+
+@media (max-width: 768px) {
+  .finanzas-cards { grid-template-columns: repeat(2, 1fr); }
+  .finanzas-tabs { overflow-x: auto; }
+  .finanzas-header { flex-direction: column; align-items: stretch; }
+}

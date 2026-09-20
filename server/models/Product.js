@@ -24,6 +24,11 @@ const productoSchema = new mongoose.Schema(
       default: 0,
       min: [0, 'El stock no puede ser negativo'],
     },
+    costoUnitario: {
+      type: Number,
+      default: 0,
+      min: [0, 'El costo no puede ser negativo'],
+    },
     imagenes: [
       {
         url: { type: String, required: true },

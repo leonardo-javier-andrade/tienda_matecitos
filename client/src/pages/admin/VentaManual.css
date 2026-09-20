@@ -1,0 +1,254 @@
+.venta-manual-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.venta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.venta-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #2d3436;
+}
+
+.venta-btn-volver {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid #b2bec3;
+  border-radius: 8px;
+  color: #636e72;
+  text-decoration: none;
+  font-size: 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Buscador */
+.venta-buscador {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.venta-buscador input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #dfe6e9;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.venta-buscador input:focus {
+  outline: none;
+  border-color: #6c5b3e;
+}
+
+.venta-sugerencias {
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  background: #fff;
+  border: 1px solid #dfe6e9;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  z-index: 10;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.venta-sugerencia-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.venta-sugerencia-item:hover { background: #f8f8f8; }
+
+.venta-sug-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.venta-sug-info {
+  flex: 1;
+}
+
+.venta-sug-nombre {
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.venta-sug-detalle {
+  font-size: 0.75rem;
+  color: #636e72;
+}
+
+/* Items agregados */
+.venta-items {
+  margin-bottom: 1.5rem;
+}
+
+.venta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom: 0.5rem;
+}
+
+.venta-item-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.venta-item-info { flex: 1; }
+.venta-item-nombre { font-weight: 600; font-size: 0.9rem; color: #2d3436; }
+.venta-item-precio { font-size: 0.8rem; color: #636e72; }
+
+.venta-item-cant {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.venta-item-cant button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.venta-item-cant span {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.venta-item-subtotal {
+  font-weight: 700;
+  color: #2d3436;
+  min-width: 80px;
+  text-align: right;
+}
+
+.venta-item-quitar {
+  background: none;
+  border: none;
+  color: #d63031;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.25rem;
+}
+
+/* Resumen y opciones */
+.venta-opciones {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.venta-form-grupo {
+  margin-bottom: 1rem;
+}
+
+.venta-form-grupo label {
+  display: block;
+  font-size: 0.8rem;
+  color: #636e72;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.venta-form-grupo select,
+.venta-form-grupo textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.venta-totales {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-top: 2px solid #f1f2f6;
+  margin-top: 1rem;
+}
+
+.venta-total-label { font-size: 1rem; color: #636e72; }
+.venta-total-monto { font-size: 1.5rem; font-weight: 700; color: #2d3436; }
+
+.venta-margen-info {
+  font-size: 0.8rem;
+  color: #00b894;
+  margin-top: 0.25rem;
+}
+
+.venta-btn-registrar {
+  width: 100%;
+  padding: 0.85rem;
+  background: #6c5b3e;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  min-height: 48px;
+}
+
+.venta-btn-registrar:hover { background: #5a4a33; }
+.venta-btn-registrar:disabled { background: #b2bec3; cursor: not-allowed; }
+
+.venta-exito {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.venta-exito h2 { color: #00b894; margin-bottom: 0.5rem; }
+
+.venta-items-vacio {
+  text-align: center;
+  padding: 2rem;
+  color: #b2bec3;
+  background: #fff;
+  border-radius: 12px;
+}
+
+@media (max-width: 600px) {
+  .venta-item { flex-wrap: wrap; }
+  .venta-item-subtotal { min-width: auto; }
+}

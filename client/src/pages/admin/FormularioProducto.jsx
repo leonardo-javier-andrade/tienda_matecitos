@@ -14,6 +14,7 @@ const productoVacio = {
   descripcion: '',
   precio: '',
   stock: 0,
+  costoUnitario: '',
   imagenes: [],
   videos: [],
   categoria: '',
@@ -48,6 +49,7 @@ function FormularioProducto() {
             descripcion: datos.descripcion || '',
             precio: datos.precio,
             stock: datos.stock,
+            costoUnitario: datos.costoUnitario || '',
             imagenes: datos.imagenes || [],
             videos: datos.videos || [],
             categoria: datos.categoria,
@@ -93,6 +95,7 @@ function FormularioProducto() {
       ...producto,
       precio: Number(producto.precio),
       stock: Number(producto.stock),
+      costoUnitario: Number(producto.costoUnitario) || 0,
     };
 
     try {
@@ -190,6 +193,25 @@ function FormularioProducto() {
               value={producto.stock}
               onChange={handleChange}
             />
+          </div>
+
+          <div className="form-grupo">
+            <label htmlFor="costoUnitario">Costo unitario (ARS)</label>
+            <input
+              id="costoUnitario"
+              name="costoUnitario"
+              type="number"
+              min="0"
+              step="0.01"
+              value={producto.costoUnitario}
+              onChange={handleChange}
+              placeholder="0.00"
+            />
+            {producto.precio && producto.costoUnitario ? (
+              <small style={{ color: Number(producto.precio) - Number(producto.costoUnitario) > 0 ? '#00b894' : '#d63031', marginTop: '0.25rem', display: 'block' }}>
+                Margen: ${(Number(producto.precio) - Number(producto.costoUnitario)).toFixed(2)} ({((Number(producto.precio) - Number(producto.costoUnitario)) / Number(producto.precio) * 100).toFixed(1)}%)
+              </small>
+            ) : null}
           </div>
 
           <div className="form-grupo">

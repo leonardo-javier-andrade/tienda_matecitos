@@ -17,6 +17,10 @@ import GestionHero from './pages/admin/GestionHero';
 import Analytics from './pages/admin/Analytics';
 import MisOrdenes from './pages/usuario/MisOrdenes';
 import GestionOrdenes from './pages/admin/GestionOrdenes';
+import Gastos from './pages/admin/Gastos';
+import VentaManual from './pages/admin/VentaManual';
+import Finanzas from './pages/admin/Finanzas';
+import Campanas from './pages/admin/Campanas';
 import { CarritoProvider, useCarrito } from './context/CarritoContext';
 import Carrito from './components/Carrito';
 import ResultadoOrden from './pages/ResultadoOrden';
@@ -141,6 +145,18 @@ function NavTienda() {
                     </Link>
                     <Link to="/admin/analytics" className="nav-dd-analytics" onClick={() => setDropdownAbierto(false)}>
                       Analytics
+                    </Link>
+                    <Link to="/admin/finanzas" onClick={() => setDropdownAbierto(false)}>
+                      Finanzas
+                    </Link>
+                    <Link to="/admin/gastos" onClick={() => setDropdownAbierto(false)}>
+                      Gastos
+                    </Link>
+                    <Link to="/admin/venta-manual" onClick={() => setDropdownAbierto(false)}>
+                      Venta Manual
+                    </Link>
+                    <Link to="/admin/campanas" onClick={() => setDropdownAbierto(false)}>
+                      Campañas
                     </Link>
                   </>
                 )}
@@ -576,6 +592,40 @@ function App() {
 
         {/* Resultado de orden (MercadoPago redirect) */}
         <Route path="/orden/resultado" element={<ResultadoOrden />} />
+
+        {/* Finanzas */}
+        <Route
+          path="/admin/finanzas"
+          element={
+            <RutaProtegida>
+              <Finanzas />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="/admin/gastos"
+          element={
+            <RutaProtegida>
+              <Gastos />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="/admin/venta-manual"
+          element={
+            <RutaProtegida>
+              <VentaManual />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="/admin/campanas"
+          element={
+            <RutaProtegida>
+              <Campanas />
+            </RutaProtegida>
+          }
+        />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

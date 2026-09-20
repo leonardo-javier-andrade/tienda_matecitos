@@ -47,6 +47,29 @@ const ordenSchema = new mongoose.Schema(
       enum: ['pendiente', 'aprobado', 'rechazado', 'enviado', 'entregado', 'cancelado'],
       default: 'pendiente',
     },
+    // Canal y método de pago
+    canal: {
+      type: String,
+      enum: ['online', 'whatsapp', 'presencial', 'otro'],
+      default: 'online',
+    },
+    metodoPago: {
+      type: String,
+      enum: ['mercadopago', 'efectivo', 'transferencia', 'otro'],
+      default: 'mercadopago',
+    },
+    comisionMP: {
+      type: Number,
+      default: 0,
+    },
+    costoProductos: {
+      type: Number,
+      default: 0,
+    },
+    notasVenta: {
+      type: String,
+      default: '',
+    },
     // MercadoPago
     mpPreferenceId: {
       type: String,

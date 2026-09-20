@@ -5,7 +5,9 @@ const Orden = require('../models/Order');
 const Producto = require('../models/Product');
 const Usuario = require('../models/User');
 const { verificarToken, verificarAdmin } = require('../middleware/auth');
+const Configuracion = require('../models/Configuracion');
 const { enviarNotificacionCompra } = require('../services/emailService');
+const { notificarCompraPorWhatsApp } = require('../services/whatsappService');
 
 // ─── Configurar MercadoPago ────────────────────────────
 const mpClient = new MercadoPagoConfig({
@@ -232,11 +234,29 @@ router.post('/webhook', async (req, res) => {
           switch (paymentData.status) {
             case 'approved':
               orden.estado = 'aprobado';
-              // Descontar stock
+              // Descontar stock y calcular costos
+              let costoTotal = 0;
               for (const item of orden.items) {
+                const prod = await Producto.findById(item.producto).select('costoUnitario');
+                if (prod) {
+                  costoTotal += (prod.costoUnitario || 0) * item.cantidad;
+                }
                 await Producto.findByIdAndUpdate(item.producto, {
                   $inc: { stock: -item.cantidad },
                 });
+              }
+              orden.costoProductos = costoTotal;
+
+              // Calcular comisión de MercadoPago
+              if (orden.metodoPago === 'mercadopago' || orden.canal === 'online') {
+                try {
+                  const config = await Configuracion.getConfig();
+                  const comisionBase = orden.total * (config.comisionMP / 100);
+                  const ivaComision = comisionBase * (config.ivaComision / 100);
+                  orden.comisionMP = Math.round((comisionBase + ivaComision) * 100) / 100;
+                } catch (e) {
+                  console.error('Error calculando comisión MP:', e.message);
+                }
               }
               break;
             case 'rejected':
@@ -261,6 +281,9 @@ router.post('/webhook', async (req, res) => {
               const compradorDB = await Usuario.findById(orden.usuario).select('nombre email telefono');
               enviarNotificacionCompra(orden, compradorDB).catch(err =>
                 console.error('Error enviando email de compra:', err.message)
+              );
+              notificarCompraPorWhatsApp(orden, compradorDB).catch(err =>
+                console.error('Error enviando WhatsApp de compra:', err.message)
               );
             }
         }
@@ -321,6 +344,87 @@ router.get('/test-mp', verificarAdmin, async (req, res) => {
         cause: error.cause,
       },
     });
+  }
+});
+
+
+// ─── VENTA MANUAL / EXTERNA ───────────────────────────
+
+// POST /api/orders/manual — Registrar venta externa (admin)
+router.post('/manual', verificarAdmin, async (req, res) => {
+  try {
+    const { items, canal, metodoPago, notasVenta, datosEnvio } = req.body;
+
+    if (!items || items.length === 0) {
+      return res.status(400).json({ exito: false, mensaje: 'Debe incluir al menos un producto.' });
+    }
+
+    const canalValido = ['whatsapp', 'presencial', 'otro'].includes(canal) ? canal : 'presencial';
+    const metodoValido = ['efectivo', 'transferencia', 'otro'].includes(metodoPago) ? metodoPago : 'efectivo';
+
+    const itemsVerificados = [];
+    let total = 0;
+    let costoProductos = 0;
+
+    for (const item of items) {
+      const producto = await Producto.findById(item.productoId);
+
+      if (!producto || !producto.activo) {
+        return res.status(400).json({
+          exito: false,
+          mensaje: `Producto "${item.nombre || 'desconocido'}" no disponible.`,
+        });
+      }
+
+      if (producto.stock < item.cantidad) {
+        return res.status(400).json({
+          exito: false,
+          mensaje: `Stock insuficiente de "${producto.nombre}". Disponible: ${producto.stock}.`,
+        });
+      }
+
+      const subtotal = producto.precio * item.cantidad;
+      total += subtotal;
+      costoProductos += (producto.costoUnitario || 0) * item.cantidad;
+
+      itemsVerificados.push({
+        producto: producto._id,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        cantidad: item.cantidad,
+        imagen: producto.imagenes?.[0]?.url || '',
+      });
+
+      // Descontar stock
+      await Producto.findByIdAndUpdate(producto._id, {
+        $inc: { stock: -item.cantidad },
+      });
+    }
+
+    const orden = new Orden({
+      usuario: req.usuario.id,
+      items: itemsVerificados,
+      total,
+      costoEnvio: 0,
+      canal: canalValido,
+      metodoPago: metodoValido,
+      comisionMP: 0,
+      costoProductos,
+      notasVenta: notasVenta || '',
+      estado: 'entregado',
+      datosEnvio: datosEnvio || {},
+    });
+
+    await orden.save();
+
+    res.status(201).json({
+      exito: true,
+      mensaje: 'Venta manual registrada.',
+      datos: orden,
+    });
+  } catch (error) {
+    console.error('Error en venta manual:', error.message);
+    res.status(500).json({ exito: false, mensaje: 'Error al registrar venta manual.' });
   }
 });
 
