@@ -1,0 +1,448 @@
+.documentos-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.doc-header h1 { margin: 0; font-size: 1.4rem; color: #2d3436; }
+
+.doc-header-btns {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.doc-btn-volver {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid #b2bec3;
+  border-radius: 8px;
+  color: #636e72;
+  text-decoration: none;
+  font-size: 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.doc-btn-imprimir {
+  padding: 0.5rem 1.25rem;
+  background: #6c5b3e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.doc-btn-imprimir:hover { background: #5a4a33; }
+
+/* Tabs */
+.doc-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.5rem;
+  background: #f1f2f6;
+  border-radius: 10px;
+  padding: 0.25rem;
+}
+
+.doc-tab {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #636e72;
+  cursor: pointer;
+}
+
+.doc-tab.activo {
+  background: #fff;
+  color: #2d3436;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* Formulario de datos */
+.doc-form-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 1.5rem;
+}
+
+.doc-form-section h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: #2d3436;
+}
+
+.doc-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.doc-form-grupo {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-form-grupo label {
+  font-size: 0.75rem;
+  color: #636e72;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+}
+
+.doc-form-grupo input,
+.doc-form-grupo select,
+.doc-form-grupo textarea {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+/* Items table */
+.doc-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.doc-btn-agregar {
+  padding: 0.35rem 0.8rem;
+  background: #00b894;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.doc-items-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.doc-items-tabla th {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 2px solid #dfe6e9;
+  color: #636e72;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.doc-items-tabla td {
+  padding: 0.4rem 0.6rem;
+}
+
+.doc-items-tabla input {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  box-sizing: border-box;
+}
+
+.doc-items-tabla .doc-btn-quitar {
+  background: none;
+  border: none;
+  color: #d63031;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.doc-total-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d3436;
+}
+
+/* ─── Preview (imprimible) ────────────── */
+.doc-preview {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
+  color: #2d3436;
+}
+
+.doc-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1.5rem;
+  border-bottom: 3px solid #6c5b3e;
+  margin-bottom: 1.5rem;
+}
+
+.doc-logo-area {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.doc-logo-img {
+  height: 60px;
+  width: auto;
+}
+
+.doc-logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-logo-nombre {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #6c5b3e;
+  line-height: 1.1;
+}
+
+.doc-logo-slogan {
+  font-size: 0.7rem;
+  color: #b2bec3;
+  letter-spacing: 0.5px;
+}
+
+.doc-tipo-doc {
+  text-align: right;
+}
+
+.doc-tipo-titulo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #6c5b3e;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.doc-tipo-numero {
+  font-size: 0.9rem;
+  color: #636e72;
+  margin-top: 0.25rem;
+}
+
+.doc-tipo-fecha {
+  font-size: 0.85rem;
+  color: #636e72;
+}
+
+/* Datos emisor/cliente */
+.doc-datos-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.doc-datos-bloque h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6c5b3e;
+  font-weight: 700;
+}
+
+.doc-datos-bloque p {
+  margin: 0.15rem 0;
+  font-size: 0.83rem;
+  color: #2d3436;
+  line-height: 1.5;
+}
+
+/* Tabla de items en preview */
+.doc-preview-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.doc-preview-tabla thead th {
+  background: #6c5b3e;
+  color: #fff;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.doc-preview-tabla thead th:last-child,
+.doc-preview-tabla thead th:nth-child(3),
+.doc-preview-tabla thead th:nth-child(4) {
+  text-align: right;
+}
+
+.doc-preview-tabla tbody td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid #f1f2f6;
+  font-size: 0.83rem;
+}
+
+.doc-preview-tabla tbody td:last-child,
+.doc-preview-tabla tbody td:nth-child(3),
+.doc-preview-tabla tbody td:nth-child(4) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-preview-tabla tbody tr:hover { background: #fafafa; }
+
+/* Totales */
+.doc-preview-totales {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.doc-totales-tabla {
+  width: 250px;
+}
+
+.doc-totales-fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  font-size: 0.85rem;
+  color: #636e72;
+}
+
+.doc-totales-fila.total {
+  border-top: 2px solid #6c5b3e;
+  padding-top: 0.6rem;
+  margin-top: 0.3rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d3436;
+}
+
+/* Notas y firma */
+.doc-notas {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  color: #636e72;
+  min-height: 40px;
+}
+
+.doc-notas-label {
+  font-weight: 600;
+  color: #6c5b3e;
+  margin-bottom: 0.3rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.doc-firmas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.doc-firma-linea {
+  border-top: 1px solid #2d3436;
+  padding-top: 0.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #636e72;
+}
+
+.doc-preview-footer {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  font-size: 0.7rem;
+  color: #b2bec3;
+  margin-top: 2rem;
+}
+
+/* Cargar desde orden */
+.doc-cargar-orden {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.doc-cargar-orden select {
+  flex: 1;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.doc-btn-cargar {
+  padding: 0.5rem 1rem;
+  background: #0984e3;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ─── Print styles ─────────────────────── */
+@media print {
+  body * { visibility: hidden; }
+  .doc-preview, .doc-preview * { visibility: visible; }
+  .doc-preview {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    padding: 1.5cm;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .doc-header, .doc-tabs, .doc-form-section,
+  .doc-cargar-orden, .doc-header-btns,
+  .doc-btn-imprimir { display: none !important; }
+}
+
+@media (max-width: 600px) {
+  .doc-preview { padding: 1.25rem; }
+  .doc-datos-section { grid-template-columns: 1fr; gap: 1rem; }
+  .doc-firmas { grid-template-columns: 1fr; gap: 2rem; }
+  .doc-preview-header { flex-direction: column; gap: 1rem; }
+  .doc-tipo-doc { text-align: left; }
+}
