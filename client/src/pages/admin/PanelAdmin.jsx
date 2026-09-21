@@ -621,6 +621,7 @@ function TabLogistica() {
 
 /* ═══════════════════════════════════════════════════
    TAB: STOCK
+   ═══════════════════════════════════════════════════ */
 function TabStock() {
   const [productos, setProductos] = useState([]);
   const [kpis, setKpis] = useState({});
@@ -961,8 +962,6 @@ function TabStock() {
   );
 }
 
-  );
-}
 
 /* ═══════════════════════════════════════════════════
    TAB: CONFIG
