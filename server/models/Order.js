@@ -11,6 +11,7 @@ const itemOrdenSchema = new mongoose.Schema(
     precio: { type: Number, required: true },
     cantidad: { type: Number, required: true, min: 1 },
     imagen: { type: String, default: '' },
+    costoUnitario: { type: Number, default: 0 },
   },
   { _id: false }
 );
@@ -20,7 +21,6 @@ const ordenSchema = new mongoose.Schema(
     usuario: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Usuario',
-      required: true,
     },
     items: {
       type: [itemOrdenSchema],
@@ -47,7 +47,13 @@ const ordenSchema = new mongoose.Schema(
       enum: ['pendiente', 'aprobado', 'rechazado', 'enviado', 'entregado', 'cancelado'],
       default: 'pendiente',
     },
-    // Canal y método de pago
+
+    // ─── Origen y canal ─────────────────────────────────
+    origen: {
+      type: String,
+      enum: ['web', 'manual'],
+      default: 'web',
+    },
     canal: {
       type: String,
       enum: ['online', 'whatsapp', 'presencial', 'otro'],
@@ -58,6 +64,49 @@ const ordenSchema = new mongoose.Schema(
       enum: ['mercadopago', 'efectivo', 'transferencia', 'otro'],
       default: 'mercadopago',
     },
+
+    // ─── Despacho y logistica ───────────────────────────
+    estadoDespacho: {
+      type: String,
+      enum: ['pendiente', 'preparando', 'despachado', 'entregado'],
+      default: 'pendiente',
+    },
+    logisticaPagada: {
+      type: Boolean,
+      default: false,
+    },
+
+    // ─── Desglose financiero ────────────────────────────
+    subtotalProductos: {
+      type: Number,
+      default: 0,
+    },
+    envioCobradoAlCliente: {
+      type: Number,
+      default: 0,
+    },
+    comisionMPCalculada: {
+      type: Number,
+      default: 0,
+    },
+    ivaCalculado: {
+      type: Number,
+      default: 0,
+    },
+    totalPagadoCliente: {
+      type: Number,
+      default: 0,
+    },
+    costoTotalProductos: {
+      type: Number,
+      default: 0,
+    },
+    gananciaNetaEstimada: {
+      type: Number,
+      default: 0,
+    },
+
+    // ─── Campos legacy (compatibilidad) ─────────────────
     comisionMP: {
       type: Number,
       default: 0,
@@ -70,7 +119,8 @@ const ordenSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    // MercadoPago
+
+    // ─── MercadoPago ────────────────────────────────────
     mpPreferenceId: {
       type: String,
       default: '',
@@ -87,7 +137,8 @@ const ordenSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    // Datos de contacto/envío
+
+    // ─── Datos de contacto/envio ────────────────────────
     datosEnvio: {
       nombre: { type: String, default: '' },
       telefono: { type: String, default: '' },

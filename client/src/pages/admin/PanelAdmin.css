@@ -1,819 +1,1054 @@
-/* ==========================================================================
-   PanelAdmin.css — Matecitos Admin Dashboard
-   ========================================================================== */
+/* ═══════════════════════════════════════════════════
+   Dashboard Financiero — Dark Theme (marron oscuro)
+   ═══════════════════════════════════════════════════ */
 
-/* --- CSS Custom Properties --- */
 :root {
-  --pa-primary: #6c5b3e;
-  --pa-primary-light: #8b7a5e;
-  --pa-primary-dark: #564a32;
-  --pa-text: #2d3436;
-  --pa-text-secondary: #636e72;
-  --pa-bg: #f1f2f6;
-  --pa-white: #fff;
-  --pa-green: #00b894;
-  --pa-green-light: #e6f9f4;
-  --pa-red: #d63031;
-  --pa-red-light: #fce4e4;
-  --pa-border: #dfe6e9;
-  --pa-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --pa-radius: 12px;
-  --pa-radius-sm: 8px;
-  --pa-radius-pill: 999px;
-  --pa-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
-  --pa-transition: 0.2s ease;
+  --dash-bg: #111010;
+  --dash-surface: #1a1816;
+  --dash-surface-hover: #221f1b;
+  --dash-border: #2a2623;
+  --dash-border-light: #332e29;
+  --dash-text: #e8e2d9;
+  --dash-text-muted: #9a9088;
+  --dash-text-dim: #6b6259;
+  --dash-accent: #c9a96e;
+  --dash-accent-dim: rgba(201, 169, 110, 0.15);
+  --dash-green: #4ade80;
+  --dash-green-dim: rgba(74, 222, 128, 0.12);
+  --dash-red: #f87171;
+  --dash-red-dim: rgba(248, 113, 113, 0.12);
+  --dash-blue: #60a5fa;
+  --dash-blue-dim: rgba(96, 165, 250, 0.12);
+  --dash-orange: #fb923c;
+  --dash-orange-dim: rgba(251, 146, 60, 0.12);
 }
 
-/* --- 1. Main Container --- */
 .panel-admin {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 16px;
-  font-family: var(--pa-font);
-  color: var(--pa-text);
-  background: var(--pa-bg);
   min-height: 100vh;
-  box-sizing: border-box;
+  background: var(--dash-bg);
+  color: var(--dash-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.panel-admin *,
-.panel-admin *::before,
-.panel-admin *::after {
-  box-sizing: border-box;
-}
+/* ─── Header ─────────────────────────────────────── */
 
-/* --- 2. Header --- */
-.panel-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.panel-header-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--pa-primary);
-  margin: 0;
-}
-
-.panel-header-back {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 8px;
-  background: var(--pa-white);
-  border: 1px solid var(--pa-border);
-  border-radius: var(--pa-radius-sm);
-  color: var(--pa-primary);
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background var(--pa-transition), box-shadow var(--pa-transition);
-}
-
-.panel-header-back:hover {
-  background: var(--pa-bg);
-  box-shadow: var(--pa-shadow);
-}
-
-/* --- 3. Main Tabs (Ordenes, Analytics, Finanzas) --- */
-.panel-tabs {
-  display: flex;
-  gap: 4px;
-  background: var(--pa-bg);
-  border: 1px solid var(--pa-border);
-  border-radius: var(--pa-radius-pill);
-  padding: 4px;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.panel-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.panel-tab {
-  flex: 1 0 auto;
-  min-height: 44px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: var(--pa-radius-pill);
-  background: transparent;
-  color: var(--pa-text-secondary);
-  font-family: var(--pa-font);
-  font-size: 0.925rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background var(--pa-transition), color var(--pa-transition),
-    box-shadow var(--pa-transition);
-}
-
-.panel-tab:hover {
-  color: var(--pa-text);
-}
-
-.panel-tab.activo {
-  background: var(--pa-white);
-  color: var(--pa-primary);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-
-/* --- 4. Sub-tabs (Finanzas sections) --- */
-.panel-subtabs {
-  display: flex;
-  gap: 4px;
-  background: var(--pa-bg);
-  border: 1px solid var(--pa-border);
-  border-radius: var(--pa-radius-pill);
-  padding: 3px;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.panel-subtabs::-webkit-scrollbar {
-  display: none;
-}
-
-.panel-subtab {
-  flex: 0 0 auto;
-  min-height: 38px;
-  padding: 7px 16px;
-  border: none;
-  border-radius: var(--pa-radius-pill);
-  background: transparent;
-  color: var(--pa-text-secondary);
-  font-family: var(--pa-font);
-  font-size: 0.825rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background var(--pa-transition), color var(--pa-transition),
-    box-shadow var(--pa-transition);
-}
-
-.panel-subtab:hover {
-  color: var(--pa-text);
-}
-
-.panel-subtab.activo {
-  background: var(--pa-white);
-  color: var(--pa-primary);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-
-/* --- 5. Cards Grid --- */
-.panel-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-/* --- 6. Individual Stat Card --- */
-.panel-card {
-  background: var(--pa-white);
-  border-radius: var(--pa-radius);
-  box-shadow: var(--pa-shadow);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  transition: box-shadow var(--pa-transition), transform var(--pa-transition);
-}
-
-.panel-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
-}
-
-.panel-card-monto {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.panel-card-label {
-  font-size: 0.85rem;
-  color: var(--pa-text-secondary);
-  font-weight: 500;
-}
-
-/* --- 7. Color Classes --- */
-.ingreso .panel-card-monto,
-.ingreso {
-  color: var(--pa-green);
-}
-
-.gasto .panel-card-monto,
-.gasto {
-  color: var(--pa-red);
-}
-
-.ganancia .panel-card-monto,
-.ganancia {
-  color: var(--pa-green);
-}
-
-.neutro .panel-card-monto,
-.neutro {
-  color: var(--pa-primary);
-}
-
-/* --- 8. Table Wrapper --- */
-.panel-tabla-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin-bottom: 24px;
-  border-radius: var(--pa-radius);
-  background: var(--pa-white);
-  box-shadow: var(--pa-shadow);
-}
-
-/* --- 9. Data Table --- */
-.panel-tabla {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-}
-
-.panel-tabla thead {
-  background: var(--pa-bg);
-}
-
-.panel-tabla th {
-  padding: 14px 16px;
-  text-align: left;
-  font-weight: 600;
-  color: var(--pa-text-secondary);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  border-bottom: 2px solid var(--pa-border);
-}
-
-.panel-tabla td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--pa-border);
-  color: var(--pa-text);
-  vertical-align: middle;
-}
-
-.panel-tabla tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.panel-tabla tbody tr:hover {
-  background: #f8f9fa;
-}
-
-/* --- 10. Date/Period Filter Row --- */
-.panel-periodo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.panel-periodo input[type="date"],
-.panel-periodo select {
-  min-height: 44px;
-  padding: 8px 14px;
-  border: 1px solid var(--pa-border);
-  border-radius: var(--pa-radius-sm);
-  font-family: var(--pa-font);
-  font-size: 0.875rem;
-  color: var(--pa-text);
-  background: var(--pa-white);
-  transition: border-color var(--pa-transition);
-}
-
-.panel-periodo input[type="date"]:focus,
-.panel-periodo select:focus {
-  outline: none;
-  border-color: var(--pa-primary);
-  box-shadow: 0 0 0 3px rgba(108, 91, 62, 0.12);
-}
-
-/* --- 11. Filter Chips Row --- */
-.panel-filtros {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-/* --- 12. Filter Chip --- */
-.filtro-chip {
-  min-height: 44px;
-  padding: 8px 18px;
-  border: 1px solid var(--pa-border);
-  border-radius: var(--pa-radius-pill);
-  background: var(--pa-white);
-  color: var(--pa-text-secondary);
-  font-family: var(--pa-font);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all var(--pa-transition);
-}
-
-.filtro-chip:hover {
-  border-color: var(--pa-primary-light);
-  color: var(--pa-primary);
-}
-
-.filtro-chip.activo {
-  background: var(--pa-primary);
-  color: var(--pa-white);
-  border-color: var(--pa-primary);
-}
-
-/* --- 13. Order Status Badges --- */
-.estado-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: var(--pa-radius-pill);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.estado-badge.pendiente {
-  background: #ffeaa7;
-  color: #856404;
-}
-
-.estado-badge.aprobado {
-  background: #d4e6ff;
-  color: #1a5276;
-}
-
-.estado-badge.enviado {
-  background: #fde3cf;
-  color: #a84300;
-}
-
-.estado-badge.entregado {
-  background: var(--pa-green-light);
-  color: #0a6b50;
-}
-
-.estado-badge.cancelado {
-  background: var(--pa-red-light);
-  color: var(--pa-red);
-}
-
-/* --- 14 & 15. P&L Breakdown --- */
-.panel-desglose {
-  background: var(--pa-white);
-  border-radius: var(--pa-radius);
-  box-shadow: var(--pa-shadow);
-  padding: 20px;
-  margin-bottom: 24px;
-}
-
-.panel-desglose-item {
+.da-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--pa-border);
-  font-size: 0.9rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--dash-border);
+  background: var(--dash-surface);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.panel-desglose-item:last-child {
-  border-bottom: none;
+.da-header-izq {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.panel-desglose-item strong {
+.da-header h1 {
+  margin: 0;
+  font-size: 1.3rem;
   font-weight: 700;
+  color: var(--dash-text);
+  letter-spacing: -0.02em;
 }
 
-/* --- 16. MP Config Section --- */
-.panel-config {
-  background: var(--pa-white);
-  border-radius: var(--pa-radius);
-  box-shadow: var(--pa-shadow);
-  padding: 24px;
-  margin-bottom: 24px;
+.da-btn-volver {
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  color: var(--dash-text-muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: all 0.2s;
 }
 
-.panel-config h3 {
-  margin: 0 0 16px;
-  font-size: 1.1rem;
-  color: var(--pa-primary);
-  font-weight: 700;
+.da-btn-volver:hover {
+  border-color: var(--dash-accent);
+  color: var(--dash-accent);
 }
 
-.panel-config label {
-  display: block;
+.da-header-der {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.da-periodo-select {
+  padding: 0.45rem 0.75rem;
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  color: var(--dash-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.da-periodo-select:focus {
+  outline: none;
+  border-color: var(--dash-accent);
+}
+
+.da-btn-exportar {
+  padding: 0.45rem 1rem;
+  background: var(--dash-accent);
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.da-btn-exportar:hover {
+  opacity: 0.85;
+}
+
+/* ─── Tabs de navegacion ─────────────────────────── */
+
+.da-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--dash-border);
+  background: var(--dash-surface);
+  overflow-x: auto;
+}
+
+.da-tab {
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--dash-text-muted);
   font-size: 0.85rem;
-  color: var(--pa-text-secondary);
-  margin-bottom: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.da-tab:hover {
+  color: var(--dash-text);
+}
+
+.da-tab.activo {
+  color: var(--dash-accent);
+  border-bottom-color: var(--dash-accent);
+}
+
+/* ─── Contenido principal ────────────────────────── */
+
+.da-contenido {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ─── KPI Cards ──────────────────────────────────── */
+
+.da-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.da-kpi-card {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.da-kpi-card.destacada {
+  border-color: var(--dash-green);
+  background: linear-gradient(135deg, var(--dash-surface), var(--dash-green-dim));
+}
+
+.da-kpi-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--dash-text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.da-kpi-sublabel {
+  font-size: 0.7rem;
+  color: var(--dash-text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.da-kpi-valor {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--dash-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.da-kpi-card.destacada .da-kpi-valor {
+  color: var(--dash-green);
+}
+
+.da-kpi-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.1rem;
+  opacity: 0.4;
+}
+
+.da-kpi-badge {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background: var(--dash-orange-dim);
+  color: var(--dash-orange);
+}
+
+/* ─── Grid de dos columnas ───────────────────────── */
+
+.da-grid-2 {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ─── Panels / Cards ─────────────────────────────── */
+
+.da-panel {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.da-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--dash-text);
+}
+
+.da-panel-icon {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+/* ─── Donut Chart (CSS puro con conic-gradient) ──── */
+
+.da-donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.da-donut {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.da-donut-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--dash-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.da-donut-total {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--dash-text);
+}
+
+.da-donut-total-label {
+  font-size: 0.6rem;
+  color: var(--dash-text-dim);
+  text-transform: uppercase;
+}
+
+.da-leyenda {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.da-leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--dash-text-muted);
+}
+
+.da-leyenda-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.da-leyenda-valor {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--dash-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Alertas de Stock ───────────────────────────── */
+
+.da-alertas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.da-alerta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+  background: var(--dash-red-dim);
+  border: 1px solid rgba(248, 113, 113, 0.15);
+}
+
+.da-alerta-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--dash-border);
+}
+
+.da-alerta-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.da-alerta-nombre {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--dash-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.da-alerta-badge {
+  font-size: 0.7rem;
+  color: var(--dash-red);
   font-weight: 500;
 }
 
-.panel-config input[type="text"],
-.panel-config input[type="number"],
-.panel-config input[type="url"],
-.panel-config textarea {
-  width: 100%;
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 1px solid var(--pa-border);
-  border-radius: var(--pa-radius-sm);
-  font-family: var(--pa-font);
-  font-size: 0.875rem;
-  color: var(--pa-text);
-  margin-bottom: 16px;
-  transition: border-color var(--pa-transition);
+.da-alerta-datos {
+  text-align: right;
+  flex-shrink: 0;
 }
 
-.panel-config input:focus,
-.panel-config textarea:focus {
-  outline: none;
-  border-color: var(--pa-primary);
-  box-shadow: 0 0 0 3px rgba(108, 91, 62, 0.12);
-}
-
-/* --- 17. Channels Grid --- */
-.panel-canales-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-/* --- 18. Channel Card --- */
-.panel-canal-card {
-  background: var(--pa-white);
-  border-radius: var(--pa-radius);
-  box-shadow: var(--pa-shadow);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  border-left: 4px solid var(--pa-primary);
-  transition: box-shadow var(--pa-transition), transform var(--pa-transition);
-}
-
-.panel-canal-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
-}
-
-.panel-canal-card .canal-nombre {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--pa-text);
-}
-
-.panel-canal-card .canal-monto {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--pa-primary);
-}
-
-.panel-canal-card .canal-detalle {
-  font-size: 0.8rem;
-  color: var(--pa-text-secondary);
-}
-
-/* --- 19. Empty State --- */
-.panel-vacio {
-  text-align: center;
-  padding: 48px 24px;
-  color: var(--pa-text-secondary);
-  font-size: 0.95rem;
-}
-
-.panel-vacio::before {
-  content: "";
-  display: block;
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 16px;
-  background: var(--pa-bg);
-  border-radius: 50%;
-}
-
-/* --- 20. Alerts --- */
-.panel-alerta {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: var(--pa-radius-pill);
+.da-alerta-costo {
   font-size: 0.75rem;
-  font-weight: 600;
+  color: var(--dash-text-muted);
 }
 
-.panel-alerta.sin-costo {
-  background: #ffeaa7;
-  color: #856404;
-}
-
-.panel-alerta.negativo {
-  background: var(--pa-red-light);
-  color: var(--pa-red);
-}
-
-/* --- 21. Stock Table --- */
-.panel-stock-tabla {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-}
-
-.panel-stock-tabla thead {
-  background: var(--pa-bg);
-}
-
-.panel-stock-tabla th {
-  padding: 14px 16px;
-  text-align: left;
-  font-weight: 600;
-  color: var(--pa-text-secondary);
+.da-alerta-precio {
   font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  border-bottom: 2px solid var(--pa-border);
+  font-weight: 600;
+  color: var(--dash-text);
 }
 
-.panel-stock-tabla td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--pa-border);
-  color: var(--pa-text);
+/* ─── Tabla ──────────────────────────────────────── */
+
+.da-tabla-wrap {
+  overflow-x: auto;
+}
+
+.da-tabla {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8rem;
+}
+
+.da-tabla th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--dash-text-dim);
+  border-bottom: 1px solid var(--dash-border);
+  white-space: nowrap;
+}
+
+.da-tabla td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--dash-border);
+  color: var(--dash-text-muted);
   vertical-align: middle;
 }
 
-.panel-stock-tabla tbody tr:last-child td {
+.da-tabla tr:last-child td {
   border-bottom: none;
 }
 
-.panel-stock-tabla tbody tr:hover {
-  background: #f8f9fa;
+.da-tabla tr:hover td {
+  background: var(--dash-surface-hover);
 }
 
-/* --- 22. Action Buttons --- */
-.panel-btn-accion {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 10px 22px;
+.da-estado-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.da-estado-badge.pendiente {
+  background: var(--dash-orange-dim);
+  color: var(--dash-orange);
+}
+
+.da-estado-badge.preparando {
+  background: var(--dash-blue-dim);
+  color: var(--dash-blue);
+}
+
+.da-estado-badge.despachado {
+  background: var(--dash-green-dim);
+  color: var(--dash-green);
+}
+
+.da-estado-badge.pagada {
+  background: var(--dash-green-dim);
+  color: var(--dash-green);
+}
+
+.da-estado-badge.no-pagada {
+  background: var(--dash-red-dim);
+  color: var(--dash-red);
+}
+
+.da-btn-sm {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
   border: none;
-  border-radius: var(--pa-radius-sm);
-  font-family: var(--pa-font);
-  font-size: 0.875rem;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.da-btn-sm:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.da-btn-sm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.da-btn-sm.despachar {
+  background: var(--dash-accent);
+  color: #111;
+}
+
+.da-btn-sm.transferir {
+  background: var(--dash-blue);
+  color: #111;
+}
+
+.da-btn-sm.pagada {
+  background: var(--dash-green);
+  color: #111;
+}
+
+/* ─── Stock sub-dashboard ────────────────────────── */
+
+.da-stock-filtros {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.da-stock-filtros select,
+.da-stock-filtros input {
+  padding: 0.45rem 0.75rem;
+  background: var(--dash-bg);
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  color: var(--dash-text);
+  font-size: 0.8rem;
+  font-family: inherit;
+  min-height: 36px;
+}
+
+.da-stock-filtros select:focus,
+.da-stock-filtros input:focus {
+  outline: none;
+  border-color: var(--dash-accent);
+}
+
+.da-stock-filtros input {
+  flex: 1;
+  min-width: 180px;
+}
+
+.da-stock-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.da-stock-kpi {
+  background: var(--dash-bg);
+  border: 1px solid var(--dash-border);
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.da-stock-kpi-valor {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dash-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.da-stock-kpi-label {
+  font-size: 0.7rem;
+  color: var(--dash-text-dim);
+  margin-top: 0.2rem;
+}
+
+/* ─── Settings / Config ──────────────────────────── */
+
+.da-config-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.da-config-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.da-config-campo label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dash-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.da-config-campo input,
+.da-config-campo select {
+  padding: 0.5rem 0.75rem;
+  background: var(--dash-bg);
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  color: var(--dash-text);
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.da-config-campo input:focus {
+  outline: none;
+  border-color: var(--dash-accent);
+}
+
+.da-config-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 1.5rem;
+}
+
+.da-config-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--dash-accent);
+}
+
+.da-config-check label {
+  font-size: 0.85rem;
+  color: var(--dash-text);
+  cursor: pointer;
+}
+
+.da-btn-guardar {
+  margin-top: 1rem;
+  padding: 0.6rem 1.5rem;
+  background: var(--dash-accent);
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  white-space: nowrap;
-  transition: background var(--pa-transition), transform var(--pa-transition),
-    box-shadow var(--pa-transition);
+  transition: opacity 0.2s;
 }
 
-.panel-btn-accion:active {
-  transform: scale(0.97);
+.da-btn-guardar:hover:not(:disabled) {
+  opacity: 0.85;
 }
 
-/* Primary (brown) — default */
-.panel-btn-accion {
-  background: var(--pa-primary);
-  color: var(--pa-white);
+.da-btn-guardar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.panel-btn-accion:hover {
-  background: var(--pa-primary-dark);
-  box-shadow: 0 2px 8px rgba(108, 91, 62, 0.3);
-}
+/* ─── Modal de Venta Manual ──────────────────────── */
 
-/* Green variant */
-.panel-btn-accion.btn-verde {
-  background: var(--pa-green);
-  color: var(--pa-white);
-}
-
-.panel-btn-accion.btn-verde:hover {
-  background: #00a381;
-  box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
-}
-
-/* Blue variant */
-.panel-btn-accion.btn-azul {
-  background: #0984e3;
-  color: var(--pa-white);
-}
-
-.panel-btn-accion.btn-azul:hover {
-  background: #0773c5;
-  box-shadow: 0 2px 8px rgba(9, 132, 227, 0.3);
-}
-
-/* Outlined variant */
-.panel-btn-accion.btn-outlined {
-  background: transparent;
-  color: var(--pa-primary);
-  border: 1px solid var(--pa-border);
-}
-
-.panel-btn-accion.btn-outlined:hover {
-  background: var(--pa-bg);
-  border-color: var(--pa-primary-light);
-}
-
-/* --- 23. Modal --- */
-.panel-modal-overlay {
+.da-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 16px;
-  animation: pa-fade-in 0.2s ease;
+  z-index: 100;
+  padding: 1rem;
 }
 
-.panel-modal {
-  background: var(--pa-white);
-  border-radius: var(--pa-radius);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+.da-modal {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 12px;
+  padding: 1.5rem;
   width: 100%;
-  max-width: 520px;
+  max-width: 560px;
   max-height: 90vh;
   overflow-y: auto;
-  padding: 28px 24px;
-  animation: pa-slide-up 0.25s ease;
 }
 
-.panel-modal h2 {
-  margin: 0 0 20px;
-  font-size: 1.2rem;
-  color: var(--pa-primary);
-  font-weight: 700;
+.da-modal h2 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  color: var(--dash-text);
 }
 
-@keyframes pa-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.da-modal-campo {
+  margin-bottom: 0.75rem;
 }
 
-@keyframes pa-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* --- 24. Form Layout (inside modals) --- */
-.panel-form-grupo {
-  margin-bottom: 16px;
-}
-
-.panel-form-grupo label {
+.da-modal-campo label {
   display: block;
-  font-size: 0.85rem;
-  color: var(--pa-text-secondary);
-  margin-bottom: 6px;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dash-text-muted);
+  margin-bottom: 0.25rem;
 }
 
-.panel-form-grupo input,
-.panel-form-grupo select,
-.panel-form-grupo textarea {
+.da-modal-campo input,
+.da-modal-campo select,
+.da-modal-campo textarea {
   width: 100%;
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 1px solid var(--pa-border);
-  border-radius: var(--pa-radius-sm);
-  font-family: var(--pa-font);
-  font-size: 0.875rem;
-  color: var(--pa-text);
-  background: var(--pa-white);
-  transition: border-color var(--pa-transition);
+  padding: 0.5rem 0.75rem;
+  background: var(--dash-bg);
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  color: var(--dash-text);
+  font-size: 0.85rem;
+  font-family: inherit;
+  box-sizing: border-box;
 }
 
-.panel-form-grupo input:focus,
-.panel-form-grupo select:focus,
-.panel-form-grupo textarea:focus {
-  outline: none;
-  border-color: var(--pa-primary);
-  box-shadow: 0 0 0 3px rgba(108, 91, 62, 0.12);
-}
-
-.panel-form-grupo textarea {
-  min-height: 88px;
+.da-modal-campo textarea {
+  min-height: 60px;
   resize: vertical;
 }
 
-.panel-form-row {
-  display: flex;
-  gap: 12px;
+.da-modal-items {
+  margin-bottom: 1rem;
 }
 
-.panel-form-row > .panel-form-grupo {
+.da-modal-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--dash-bg);
+  border-radius: 6px;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.da-modal-item-nombre {
+  flex: 1;
+  color: var(--dash-text);
+}
+
+.da-modal-item-cant {
+  width: 50px;
+  padding: 0.3rem;
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 4px;
+  color: var(--dash-text);
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.da-modal-item-precio {
+  color: var(--dash-accent);
+  font-weight: 600;
+  min-width: 80px;
+  text-align: right;
+}
+
+.da-modal-item-quitar {
+  background: none;
+  border: none;
+  color: var(--dash-red);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.2rem;
+}
+
+.da-modal-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: var(--dash-bg);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.da-modal-total-valor {
+  color: var(--dash-accent);
+  font-size: 1.1rem;
+}
+
+.da-modal-acciones {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.da-btn-cancelar {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  color: var(--dash-text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.da-btn-registrar {
+  padding: 0.5rem 1.25rem;
+  background: var(--dash-green);
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.da-btn-registrar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Buscador de productos (modal) ──────────────── */
+
+.da-buscador-wrap {
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.da-buscador-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: var(--dash-bg);
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  color: var(--dash-text);
+  font-size: 0.85rem;
+  box-sizing: border-box;
+}
+
+.da-buscador-resultados {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.da-buscador-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border-bottom: 1px solid var(--dash-border);
+  transition: background 0.15s;
+}
+
+.da-buscador-item:hover {
+  background: var(--dash-surface-hover);
+}
+
+.da-buscador-item:last-child {
+  border-bottom: none;
+}
+
+.da-buscador-item-thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.da-buscador-item-info {
   flex: 1;
 }
 
-/* --- Responsive: Tablet (max 768px) --- */
-@media (max-width: 768px) {
-  .panel-admin {
-    padding: 16px 12px;
-  }
-
-  .panel-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .panel-canales-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .panel-header-title {
-    font-size: 1.25rem;
-  }
-
-  .panel-form-row {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .panel-modal {
-    padding: 20px 16px;
-  }
+.da-buscador-item-nombre {
+  color: var(--dash-text);
+  font-weight: 500;
 }
 
-/* --- Responsive: Mobile (max 480px) --- */
-@media (max-width: 480px) {
-  .panel-cards {
-    grid-template-columns: 1fr;
-  }
+.da-buscador-item-stock {
+  font-size: 0.7rem;
+  color: var(--dash-text-dim);
+}
 
-  .panel-canales-grid {
-    grid-template-columns: 1fr;
-  }
+/* ─── Venta manual button ────────────────────────── */
 
-  .panel-card-monto {
-    font-size: 1.25rem;
-  }
+.da-btn-venta-manual {
+  padding: 0.45rem 1rem;
+  background: var(--dash-green);
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
 
-  .panel-tabs {
-    margin-bottom: 16px;
-  }
+.da-btn-venta-manual:hover {
+  opacity: 0.85;
+}
 
-  .panel-tab {
-    padding: 8px 16px;
-    font-size: 0.85rem;
-  }
+/* ─── Mensaje vacio ──────────────────────────────── */
 
-  .panel-subtab {
-    padding: 6px 12px;
-    font-size: 0.78rem;
-  }
+.da-vacio {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--dash-text-dim);
+  font-size: 0.9rem;
+}
 
-  .panel-tabla-wrap {
-    margin-left: -12px;
-    margin-right: -12px;
-    border-radius: 0;
-  }
+/* ─── Toast de exito ─────────────────────────────── */
 
-  .panel-desglose {
-    padding: 16px;
-  }
+.da-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--dash-green);
+  color: #111;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 200;
+  animation: da-toast-in 0.3s ease;
+}
 
-  .panel-config {
-    padding: 16px;
-  }
+@keyframes da-toast-in {
+  from { transform: translateY(1rem); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
-  .panel-periodo {
+/* ─── Grafico de barras ──────────────────────────── */
+
+.da-chart-barras {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 120px;
+  padding-top: 1rem;
+}
+
+.da-barra {
+  flex: 1;
+  min-width: 6px;
+  background: var(--dash-accent);
+  border-radius: 2px 2px 0 0;
+  transition: height 0.3s ease;
+  position: relative;
+  cursor: default;
+}
+
+.da-barra:hover {
+  opacity: 0.8;
+}
+
+.da-barra-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--dash-bg);
+  border: 1px solid var(--dash-border);
+  border-radius: 4px;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.65rem;
+  white-space: nowrap;
+  color: var(--dash-text);
+  z-index: 5;
+}
+
+.da-barra:hover .da-barra-tooltip {
+  display: block;
+}
+
+/* ─── Top Productos lista ────────────────────────── */
+
+.da-top-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.da-top-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.da-top-rank {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--dash-accent-dim);
+  color: var(--dash-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.da-top-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.da-top-nombre {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--dash-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.da-top-cantidad {
+  font-size: 0.7rem;
+  color: var(--dash-text-dim);
+}
+
+.da-top-ingreso {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--dash-accent);
+  flex-shrink: 0;
+}
+
+/* ─── Responsive ─────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .da-kpis { grid-template-columns: repeat(2, 1fr); }
+  .da-grid-2 { grid-template-columns: 1fr; }
+  .da-stock-kpis { grid-template-columns: repeat(2, 1fr); }
+  .da-config-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .da-header {
     flex-direction: column;
+    gap: 0.75rem;
     align-items: stretch;
+    padding: 1rem;
   }
+  .da-header-der { justify-content: space-between; }
+  .da-contenido { padding: 1rem; }
+  .da-kpis { grid-template-columns: 1fr 1fr; }
+  .da-kpi-valor { font-size: 1.35rem; }
+  .da-tabs { padding: 0 1rem; }
+  .da-tab { padding: 0.6rem 0.75rem; font-size: 0.78rem; }
+  .da-donut-wrap { flex-direction: column; align-items: center; }
+  .da-donut { width: 150px; height: 150px; }
+  .da-donut-hole { width: 80px; height: 80px; }
+  .da-stock-kpis { grid-template-columns: 1fr 1fr; }
+  .da-stock-filtros { flex-direction: column; }
+  .da-stock-filtros input { min-width: 0; }
+  .da-modal { padding: 1rem; max-width: 100%; }
+}
 
-  .panel-modal {
-    max-width: 100%;
-    border-radius: var(--pa-radius) var(--pa-radius) 0 0;
-    max-height: 95vh;
-  }
+@media (max-width: 400px) {
+  .da-kpis { grid-template-columns: 1fr; }
+  .da-stock-kpis { grid-template-columns: 1fr; }
 }

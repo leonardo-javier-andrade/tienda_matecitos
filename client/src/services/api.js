@@ -571,3 +571,84 @@ export const compararCampanas = async (ids) => {
   });
   return res.json();
 };
+
+// ─── Dashboard Financiero (Admin) ────────────────────────
+
+export const obtenerResumenDashboard = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/dashboard/resumen?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerDesgloseDashboard = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/dashboard/desglose?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerAlertasStock = async () => {
+  const res = await fetch(`${API_URL}/api/dashboard/alertas-stock`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerLogistica = async () => {
+  const res = await fetch(`${API_URL}/api/dashboard/logistica`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const actualizarDespacho = async (id, estadoDespacho) => {
+  const res = await fetch(`${API_URL}/api/dashboard/logistica/${id}/despacho`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify({ estadoDespacho }),
+  });
+  return res.json();
+};
+
+export const marcarLogisticaPagada = async (id) => {
+  const res = await fetch(`${API_URL}/api/dashboard/logistica/${id}/pagada`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerTopProductos = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/dashboard/top-productos?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const obtenerStockDashboard = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/api/dashboard/stock?${params}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const registrarVentaManualDashboard = async (venta) => {
+  const res = await fetch(`${API_URL}/api/dashboard/venta-manual`, {
+    method: 'POST',
+    headers: headersConAuth(),
+    body: JSON.stringify(venta),
+  });
+  return res.json();
+};
+
+export const obtenerVentasPeriodo = async (dias = 30) => {
+  const res = await fetch(`${API_URL}/api/dashboard/ventas-periodo?dias=${dias}`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};

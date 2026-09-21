@@ -14,6 +14,10 @@ const configuracionSchema = new mongoose.Schema(
       min: 0,
       max: 100,
     },
+    aplicarIva: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

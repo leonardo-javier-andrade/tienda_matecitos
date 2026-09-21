@@ -17,11 +17,12 @@ router.get('/', verificarAdmin, async (req, res) => {
 // PUT /api/configuracion — Actualizar configuración
 router.put('/', verificarAdmin, async (req, res) => {
   try {
-    const { comisionMP, ivaComision } = req.body;
+    const { comisionMP, ivaComision, aplicarIva } = req.body;
     const config = await Configuracion.getConfig();
 
     if (comisionMP !== undefined) config.comisionMP = comisionMP;
     if (ivaComision !== undefined) config.ivaComision = ivaComision;
+    if (aplicarIva !== undefined) config.aplicarIva = aplicarIva;
 
     await config.save();
     res.json({ exito: true, mensaje: 'Configuración actualizada.', datos: config });

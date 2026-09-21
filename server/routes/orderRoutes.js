@@ -234,29 +234,46 @@ router.post('/webhook', async (req, res) => {
           switch (paymentData.status) {
             case 'approved':
               orden.estado = 'aprobado';
+              orden.origen = 'web';
               // Descontar stock y calcular costos
               let costoTotal = 0;
               for (const item of orden.items) {
                 const prod = await Producto.findById(item.producto).select('costoUnitario');
                 if (prod) {
                   costoTotal += (prod.costoUnitario || 0) * item.cantidad;
+                  item.costoUnitario = prod.costoUnitario || 0;
                 }
                 await Producto.findByIdAndUpdate(item.producto, {
                   $inc: { stock: -item.cantidad },
                 });
               }
               orden.costoProductos = costoTotal;
+              orden.costoTotalProductos = costoTotal;
 
-              // Calcular comisión de MercadoPago
-              if (orden.metodoPago === 'mercadopago' || orden.canal === 'online') {
-                try {
-                  const config = await Configuracion.getConfig();
-                  const comisionBase = orden.total * (config.comisionMP / 100);
-                  const ivaComision = comisionBase * (config.ivaComision / 100);
-                  orden.comisionMP = Math.round((comisionBase + ivaComision) * 100) / 100;
-                } catch (e) {
-                  console.error('Error calculando comisión MP:', e.message);
+              // Desglose financiero completo
+              {
+                const config = await Configuracion.getConfig();
+                const subtotal = orden.items.reduce((s, i) => s + i.precio * i.cantidad, 0);
+                const envioAlCliente = orden.costoEnvio || 0;
+                const totalPagado = subtotal + envioAlCliente;
+
+                // Comision MP sobre el total pagado
+                const comisionBase = totalPagado * (config.comisionMP / 100);
+                let ivaCalc = 0;
+                if (config.aplicarIva) {
+                  ivaCalc = comisionBase * (config.ivaComision / 100);
                 }
+                const comisionTotal = Math.round((comisionBase + ivaCalc) * 100) / 100;
+
+                orden.subtotalProductos = subtotal;
+                orden.envioCobradoAlCliente = envioAlCliente;
+                orden.comisionMPCalculada = comisionTotal;
+                orden.comisionMP = comisionTotal;
+                orden.ivaCalculado = Math.round(ivaCalc * 100) / 100;
+                orden.totalPagadoCliente = totalPagado;
+                orden.gananciaNetaEstimada = Math.round(
+                  (totalPagado - costoTotal - comisionTotal - envioAlCliente) * 100
+                ) / 100;
               }
               break;
             case 'rejected':

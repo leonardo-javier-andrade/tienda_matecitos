@@ -15,6 +15,7 @@ const gastoRoutes = require('./routes/gastoRoutes');
 const configuracionRoutes = require('./routes/configuracionRoutes');
 const finanzasRoutes = require('./routes/finanzasRoutes');
 const campanaRoutes = require('./routes/campanaRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 const Categoria = require('./models/Category');
 
 // Inicializar Express
@@ -68,6 +69,7 @@ app.use('/api/gastos', gastoRoutes);
 app.use('/api/configuracion', configuracionRoutes);
 app.use('/api/finanzas', finanzasRoutes);
 app.use('/api/campanas', campanaRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Ruta de estado / health check
 app.get('/api/status', (_req, res) => {
