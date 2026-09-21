@@ -128,10 +128,10 @@ function NavTienda() {
                   <span className="nav-user-name">{usuario.nombre}</span>
                   <span className="nav-user-email">{usuario.email}</span>
                 </div>
-                <Link to="/mis-ordenes" onClick={() => setDropdownAbierto(false)}>
                 <Link to="/favoritos" onClick={() => setDropdownAbierto(false)}>
                   Mis Favoritos
                 </Link>
+                <Link to="/mis-ordenes" onClick={() => setDropdownAbierto(false)}>
                   Mis Ordenes
                 </Link>
                 {usuario.rol === 'admin' && (
