@@ -467,6 +467,66 @@ function GestionHero() {
             )}
           </div>
 
+          {/* Vista previa en vivo */}
+          {(titulo || imagenFondo) && (
+            <div className="gestion-hero-grupo">
+              <label>Vista previa</label>
+              <div className="hero-preview">
+                <div className="hero-preview-slide">
+                  {imagenFondo?.url ? (
+                    tipoMedia === 'video' ? (
+                      <video
+                        className="hero-preview-bg"
+                        src={imagenFondo.url}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <img className="hero-preview-bg" src={imagenFondo.url} alt="Preview" />
+                    )
+                  ) : (
+                    <div className="hero-preview-bg-fallback" />
+                  )}
+                  <div className="hero-preview-overlay" />
+                  <div className="hero-preview-content">
+                    <span className="hero-preview-cat">Matecitos</span>
+                    <h2
+                      className="hero-preview-titulo"
+                      style={{
+                        ...(estiloTitulo.fontSize && { fontSize: estiloTitulo.fontSize }),
+                        ...(estiloTitulo.color && { color: estiloTitulo.color }),
+                        ...(estiloTitulo.fontFamily && { fontFamily: estiloTitulo.fontFamily }),
+                        ...(estiloTitulo.fontWeight === 'bold' && { fontWeight: 700 }),
+                      }}
+                    >
+                      {titulo || 'Titulo del slide'}
+                    </h2>
+                    {descripcion && (
+                      <p
+                        className="hero-preview-desc"
+                        style={{
+                          ...(estiloDescripcion.fontSize && { fontSize: estiloDescripcion.fontSize }),
+                          ...(estiloDescripcion.color && { color: estiloDescripcion.color }),
+                          ...(estiloDescripcion.fontFamily && { fontFamily: estiloDescripcion.fontFamily }),
+                          ...(estiloDescripcion.fontWeight === 'bold' && { fontWeight: 700 }),
+                        }}
+                      >
+                        {descripcion}
+                      </p>
+                    )}
+                    {enlace && (
+                      <span className="hero-preview-cta">
+                        {textoBoton || 'Ver mas'} →
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {error && <p className="gestion-hero-error">{error}</p>}
 
           <div className="gestion-hero-form-acciones">
