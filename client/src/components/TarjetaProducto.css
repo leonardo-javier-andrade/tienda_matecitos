@@ -337,12 +337,12 @@
 
 /* Blur en la imagen */
 .tarjeta-sin-stock .tarjeta-img-principal {
-  filter: blur(3px) grayscale(40%);
+  filter: blur(2px) grayscale(60%) brightness(0.95);
   transition: filter 0.3s ease;
 }
 
 .tarjeta-sin-stock:hover .tarjeta-img-principal {
-  filter: blur(2px) grayscale(20%);
+  filter: blur(1px) grayscale(40%) brightness(0.97);
 }
 
 /* Capa semitransparente sobre la imagen */
@@ -396,4 +396,35 @@
 .tarjeta-sin-stock .tarjeta-agregar-carrito:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ─── Precio "Consultar" para sin stock ──────────── */
+
+.tarjeta-precio-consultar {
+  font-style: italic;
+  color: var(--mate-dark, #5d4e37) !important;
+  font-size: 0.85rem !important;
+  opacity: 0.8;
+}
+
+/* ─── Botón WhatsApp en tarjeta sin stock ────────── */
+
+.tarjeta-btn-whatsapp {
+  background: #25d366 !important;
+  color: #fff !important;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  font-weight: 600;
+  font-size: 0.82rem;
+  opacity: 1 !important;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.tarjeta-btn-whatsapp:hover {
+  background: #1da851 !important;
+  transform: translateY(-1px);
 }

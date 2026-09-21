@@ -163,18 +163,33 @@ function TarjetaProducto({ producto, esFavorito, onToggleFav }) {
         <h3 className="tarjeta-nombre">{nombre}</h3>
         {descripcion && <p className="tarjeta-descripcion">{descripcion}</p>}
         <div className="tarjeta-footer">
-          <span className="tarjeta-precio">{precioFormateado}</span>
+          {sinStock ? (
+            <span className="tarjeta-precio tarjeta-precio-consultar">Consultar precio</span>
+          ) : (
+            <span className="tarjeta-precio">{precioFormateado}</span>
+          )}
           <span className={`tarjeta-stock ${stock > 0 ? 'disponible' : 'agotado'}`}>
             {stock > 0 ? 'Disponible' : 'Sin stock'}
           </span>
         </div>
-        <button
-          className={`tarjeta-agregar-carrito ${agregado ? 'agregado' : ''}`}
-          onClick={handleAgregar}
-          disabled={sinStock}
-        >
-          {agregado ? '✓ Agregado' : '🛒 Agregar al carrito'}
-        </button>
+        {sinStock ? (
+          <a
+            className="tarjeta-agregar-carrito tarjeta-btn-whatsapp"
+            href={`https://wa.me/5491178166636?text=${encodeURIComponent('Hola! Me interesa el producto "' + nombre + '". ¿Tienen fecha de reposición?')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            💬 Consultar reposición
+          </a>
+        ) : (
+          <button
+            className={`tarjeta-agregar-carrito ${agregado ? 'agregado' : ''}`}
+            onClick={handleAgregar}
+          >
+            {agregado ? '✓ Agregado' : '🛒 Agregar al carrito'}
+          </button>
+        )}
       </div>
     </article>
   );
