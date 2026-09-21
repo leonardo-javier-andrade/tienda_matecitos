@@ -209,6 +209,30 @@ router.get('/:id', verificarToken, async (req, res) => {
   }
 });
 
+// DELETE /api/orders/:id — Eliminar orden pendiente (usuario)
+router.delete("/:id", verificarToken, async (req, res) => {
+  try {
+    const orden = await Orden.findById(req.params.id);
+    if (!orden) {
+      return res.status(404).json({ exito: false, mensaje: "Orden no encontrada." });
+    }
+    if (orden.usuario.toString() !== req.usuario.id.toString()) {
+      return res.status(403).json({ exito: false, mensaje: "No autorizado." });
+    }
+    if (orden.estado !== "pendiente") {
+      return res.status(400).json({ exito: false, mensaje: "Solo se pueden eliminar ordenes pendientes." });
+    }
+    await Orden.findByIdAndDelete(req.params.id);
+    res.json({ exito: true, mensaje: "Orden eliminada." });
+  } catch (error) {
+    if (error.kind === "ObjectId") {
+      return res.status(400).json({ exito: false, mensaje: "ID invalido." });
+    }
+    console.error("Error al eliminar orden:", error.message);
+    res.status(500).json({ exito: false, mensaje: "Error interno del servidor." });
+  }
+});
+
 // ─── WEBHOOK DE MERCADOPAGO ────────────────────────────
 
 // POST /api/orders/webhook — Recibir notificaciones de MercadoPago

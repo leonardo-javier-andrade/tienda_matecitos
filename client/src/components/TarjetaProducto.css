@@ -285,3 +285,80 @@
 .productos-grid .tarjeta-producto:nth-child(5) { animation-delay: 0.32s; }
 .productos-grid .tarjeta-producto:nth-child(6) { animation-delay: 0.4s; }
 .productos-grid .tarjeta-producto:nth-child(n+7) { animation-delay: 0.48s; }
+
+/* ─── Favorito button ────────────────────────────── */
+
+.tarjeta-fav-btn {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  z-index: 6;
+  background: rgba(0, 0, 0, 0.35);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.tarjeta-fav-btn:hover {
+  background: rgba(0, 0, 0, 0.55);
+  transform: scale(1.1);
+}
+
+.tarjeta-fav-btn.activo {
+  background: rgba(231, 76, 60, 0.2);
+}
+
+.tarjeta-fav-btn.animando .tarjeta-fav-icon {
+  animation: favPulse 0.4s ease;
+}
+
+@keyframes favPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.tarjeta-fav-icon {
+  display: block;
+}
+
+/* ─── Sin stock overlay y opacity ────────────────── */
+
+.tarjeta-sin-stock {
+  opacity: 0.55;
+  filter: grayscale(30%);
+}
+
+.tarjeta-sin-stock:hover {
+  opacity: 0.75;
+}
+
+.tarjeta-sin-stock-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.tarjeta-sin-stock-overlay span {
+  background: rgba(198, 40, 40, 0.85);
+  color: #fff;
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  backdrop-filter: blur(4px);
+}

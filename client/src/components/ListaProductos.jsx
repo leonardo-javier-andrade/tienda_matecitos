@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { obtenerProductos, obtenerCategorias } from '../services/api';
+import { obtenerProductos, obtenerCategorias, obtenerFavoritos } from '../services/api';
 import TarjetaProducto from './TarjetaProducto';
 import './ListaProductos.css';
 
@@ -10,12 +10,25 @@ function ListaProductos() {
   const [error, setError] = useState(null);
   const [categoriaActiva, setCategoriaActiva] = useState('Todas');
   const [fondoActual, setFondoActual] = useState(null);
+  const [favIds, setFavIds] = useState(new Set());
   const videoRef = useRef(null);
 
   useEffect(() => {
     obtenerCategorias()
       .then(({ datos }) => setCategorias(datos || []))
       .catch(() => setCategorias([]));
+
+    // Cargar favoritos si está logueado
+    const token = localStorage.getItem('user_token');
+    if (token) {
+      obtenerFavoritos()
+        .then((res) => {
+          if (res.exito && Array.isArray(res.datos)) {
+            setFavIds(new Set(res.datos.map((p) => p._id)));
+          }
+        })
+        .catch(() => {});
+    }
   }, []);
 
   useEffect(() => {
@@ -24,7 +37,13 @@ function ListaProductos() {
         setCargando(true);
         const filtros = categoriaActiva !== 'Todas' ? { categoria: categoriaActiva } : {};
         const { datos } = await obtenerProductos(filtros);
-        setProductos(datos);
+        // Ordenar: productos con stock > 0 primero, sin stock al final
+        const ordenados = [...datos].sort((a, b) => {
+          if (a.stock === 0 && b.stock > 0) return 1;
+          if (a.stock > 0 && b.stock === 0) return -1;
+          return 0;
+        });
+        setProductos(ordenados);
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -39,7 +58,6 @@ function ListaProductos() {
   // Update background media when category changes
   useEffect(() => {
     if (categoriaActiva === 'Todas') {
-      // Buscar fondo general (categoría especial _todas)
       const fondoGeneral = categorias.find((c) => c.nombre === '_todas');
       if (fondoGeneral && fondoGeneral.fondoMedia && fondoGeneral.fondoMedia.url) {
         setFondoActual(fondoGeneral.fondoMedia);
@@ -64,12 +82,20 @@ function ListaProductos() {
     }
   }, [fondoActual]);
 
+  const handleToggleFav = (productoId, agregado) => {
+    setFavIds((prev) => {
+      const next = new Set(prev);
+      if (agregado) next.add(productoId);
+      else next.delete(productoId);
+      return next;
+    });
+  };
+
   const nombresCategorias = ['Todas', ...categorias.filter((c) => c.nombre !== '_todas').map((c) => c.nombre)];
 
   return (
     <section className="lista-productos">
       <div className={`lista-header-wrap ${fondoActual ? 'con-fondo' : ''}`}>
-        {/* Background media */}
         {fondoActual && (
           <div className="lista-header-bg">
             {fondoActual.tipo === 'video' ? (
@@ -129,7 +155,12 @@ function ListaProductos() {
 
       <div className="productos-grid">
         {productos.map((producto) => (
-          <TarjetaProducto key={producto._id} producto={producto} />
+          <TarjetaProducto
+            key={producto._id}
+            producto={producto}
+            esFavorito={favIds.has(producto._id)}
+            onToggleFav={handleToggleFav}
+          />
         ))}
       </div>
     </section>

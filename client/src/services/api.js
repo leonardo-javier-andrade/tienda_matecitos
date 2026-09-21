@@ -652,3 +652,31 @@ export const obtenerVentasPeriodo = async (dias = 30) => {
   });
   return res.json();
 };
+
+// ─── Carrito en base de datos ─────────────────────────
+
+export const obtenerCarritoDB = async () => {
+  const res = await fetch(`${API_URL}/api/auth/carrito`, {
+    headers: headersConAuth(),
+  });
+  return res.json();
+};
+
+export const guardarCarritoDB = async (items) => {
+  const res = await fetch(`${API_URL}/api/auth/carrito`, {
+    method: 'PUT',
+    headers: headersConAuth(),
+    body: JSON.stringify({ items }),
+  });
+  return res.json();
+};
+
+// ─── Eliminar orden pendiente ─────────────────────────
+
+export const eliminarOrdenPendiente = async (id) => {
+  const res = await fetch(`${API_URL}/api/orders/${id}`, {
+    method: 'DELETE',
+    headers: headersConAuth(),
+  });
+  return res.json();
+};

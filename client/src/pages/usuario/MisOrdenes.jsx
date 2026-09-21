@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { obtenerMisOrdenes } from '../../services/api';
+import { obtenerMisOrdenes, eliminarOrdenPendiente } from '../../services/api';
 import './MisOrdenes.css';
 
 const estadoConfig = {
@@ -16,6 +16,7 @@ function MisOrdenes() {
   const [ordenes, setOrdenes] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [expandida, setExpandida] = useState(null);
+  const [eliminando, setEliminando] = useState(null);
 
   useEffect(() => {
     obtenerMisOrdenes()
@@ -37,6 +38,23 @@ function MisOrdenes() {
       hour: '2-digit',
       minute: '2-digit',
     });
+
+  const handleEliminar = async (id) => {
+    if (!window.confirm('¿Seguro que queres eliminar esta orden pendiente?')) return;
+    setEliminando(id);
+    try {
+      const res = await eliminarOrdenPendiente(id);
+      if (res.exito) {
+        setOrdenes((prev) => prev.filter((o) => o._id !== id));
+      } else {
+        alert(res.mensaje || 'No se pudo eliminar la orden.');
+      }
+    } catch {
+      alert('Error al eliminar la orden.');
+    } finally {
+      setEliminando(null);
+    }
+  };
 
   if (cargando) {
     return (
@@ -153,6 +171,19 @@ function MisOrdenes() {
                               ~{Math.ceil(orden.envio.horasEntrega / 24)} dias habiles
                             </span>
                           )}
+                        </div>
+                      )}
+
+                      {/* Botón eliminar para ordenes pendientes */}
+                      {orden.estado === 'pendiente' && (
+                        <div className="orden-acciones">
+                          <button
+                            className="orden-btn-eliminar"
+                            onClick={() => handleEliminar(orden._id)}
+                            disabled={eliminando === orden._id}
+                          >
+                            {eliminando === orden._id ? 'Eliminando...' : '🗑 Eliminar orden pendiente'}
+                          </button>
                         </div>
                       )}
                     </div>

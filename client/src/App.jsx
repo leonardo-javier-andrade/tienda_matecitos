@@ -15,6 +15,7 @@ import FormularioProducto from './pages/admin/FormularioProducto';
 import GestionCategorias from './pages/admin/GestionCategorias';
 import GestionHero from './pages/admin/GestionHero';
 import MisOrdenes from './pages/usuario/MisOrdenes';
+import Favoritos from './pages/usuario/Favoritos';
 import VentaManual from './pages/admin/VentaManual';
 import PanelAdmin from './pages/admin/PanelAdmin';
 import Documentos from './pages/admin/Documentos';
@@ -128,6 +129,9 @@ function NavTienda() {
                   <span className="nav-user-email">{usuario.email}</span>
                 </div>
                 <Link to="/mis-ordenes" onClick={() => setDropdownAbierto(false)}>
+                <Link to="/favoritos" onClick={() => setDropdownAbierto(false)}>
+                  Mis Favoritos
+                </Link>
                   Mis Ordenes
                 </Link>
                 {usuario.rol === 'admin' && (
@@ -448,10 +452,13 @@ function HomePage() {
 // ─── LoginWrapper ─────────────────────────────────────
 function LoginWrapper() {
   const navigate = useNavigate();
+  const { recargarCarrito } = useCarrito();
 
-  const handleLogin = (usuario, token) => {
+  const handleLogin = async (usuario, token) => {
     // loginUsuario ya guarda token y usuario en localStorage
-    // solo navegamos segun el rol
+    // Recargar carrito desde la base de datos
+    await recargarCarrito();
+    // Navegar segun el rol
     if (usuario.rol === 'admin') {
       navigate('/admin');
     } else {
@@ -536,6 +543,16 @@ function App() {
           element={
             <RutaProtegida>
               <MisOrdenes />
+            </RutaProtegida>
+          }
+        />
+
+        {/* Favoritos (usuario) */}
+        <Route
+          path="/favoritos"
+          element={
+            <RutaProtegida>
+              <Favoritos />
             </RutaProtegida>
           }
         />

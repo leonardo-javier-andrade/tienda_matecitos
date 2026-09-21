@@ -389,3 +389,35 @@
     height: 38px;
   }
 }
+
+/* ─── Acciones orden pendiente ───────── */
+
+.orden-acciones {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f0ede8;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.orden-btn-eliminar {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e74c3c;
+  background: #fff5f5;
+  color: #c0392b;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.orden-btn-eliminar:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.orden-btn-eliminar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -245,3 +245,26 @@ router.post('/seed-admin', async (_req, res) => {
 });
 
 module.exports = router;
+
+// ─── CARRITO EN BASE DE DATOS ─────────────────────────
+
+// GET /api/auth/carrito — Obtener carrito del usuario
+router.get('/carrito', verificarToken, async (req, res) => {
+  try {
+    const usuario = await Usuario.findById(req.usuario.id).select('carrito');
+    res.json({ exito: true, datos: usuario?.carrito || [] });
+  } catch (error) {
+    res.status(500).json({ exito: false, mensaje: 'Error al obtener carrito.' });
+  }
+});
+
+// PUT /api/auth/carrito — Guardar/reemplazar carrito del usuario
+router.put('/carrito', verificarToken, async (req, res) => {
+  try {
+    const { items } = req.body;
+    await Usuario.findByIdAndUpdate(req.usuario.id, { carrito: items || [] });
+    res.json({ exito: true, mensaje: 'Carrito actualizado.' });
+  } catch (error) {
+    res.status(500).json({ exito: false, mensaje: 'Error al actualizar carrito.' });
+  }
+});

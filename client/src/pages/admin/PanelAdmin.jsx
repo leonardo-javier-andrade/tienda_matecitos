@@ -15,6 +15,8 @@ import {
   actualizarConfiguracion,
   obtenerTodosProductos,
   obtenerTodasCategorias,
+  crearProducto,
+  subirArchivos,
 } from '../../services/api';
 import './PanelAdmin.css';
 
@@ -619,8 +621,6 @@ function TabLogistica() {
 
 /* ═══════════════════════════════════════════════════
    TAB: STOCK
-   ═══════════════════════════════════════════════════ */
-
 function TabStock() {
   const [productos, setProductos] = useState([]);
   const [kpis, setKpis] = useState({});
@@ -629,6 +629,14 @@ function TabStock() {
   const [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [mostrarFormNuevo, setMostrarFormNuevo] = useState(false);
+  const [nuevoProducto, setNuevoProducto] = useState({
+    nombre: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
+    categoria: '', activo: true, destacado: false, imagenes: [], videos: [],
+  });
+  const [guardandoNuevo, setGuardandoNuevo] = useState(false);
+  const [archivosNuevo, setArchivosNuevo] = useState([]);
+  const [toastStock, setToastStock] = useState('');
 
   useEffect(() => {
     obtenerTodasCategorias()
@@ -642,8 +650,14 @@ function TabStock() {
       const params = { ...filtros, page: pagina, limit: 20 };
       Object.keys(params).forEach((k) => { if (!params[k]) delete params[k]; });
       const data = await obtenerStockDashboard(params);
-      // Backend returns { exito, datos: [products], total, paginas, kpis }
-      setProductos(data?.datos || []);
+      let prods = data?.datos || [];
+      // Ordenar: sin stock al final
+      prods = [...prods].sort((a, b) => {
+        if (a.stock === 0 && b.stock > 0) return 1;
+        if (a.stock > 0 && b.stock === 0) return -1;
+        return 0;
+      });
+      setProductos(prods);
       setKpis(data?.kpis || {});
       setTotalPaginas(data?.paginas || 1);
     } catch (err) {
@@ -685,6 +699,58 @@ function TabStock() {
     URL.revokeObjectURL(url);
   };
 
+  const handleNuevoChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setNuevoProducto((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const handleArchivosNuevo = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    setArchivosNuevo(files);
+  };
+
+  const handleCrearProducto = async (e) => {
+    e.preventDefault();
+    setGuardandoNuevo(true);
+    try {
+      let imagenesSubidas = [];
+      if (archivosNuevo.length > 0) {
+        const resUpload = await subirArchivos(archivosNuevo);
+        if (resUpload.exito) {
+          imagenesSubidas = resUpload.datos.filter((d) => d.tipo === 'imagen').map((d) => ({
+            url: d.url, publicId: d.publicId,
+          }));
+        }
+      }
+      const datosEnviar = {
+        ...nuevoProducto,
+        precio: Number(nuevoProducto.precio),
+        stock: Number(nuevoProducto.stock),
+        costoUnitario: Number(nuevoProducto.costoUnitario) || 0,
+        imagenes: imagenesSubidas,
+      };
+      const res = await crearProducto(datosEnviar);
+      if (res.exito) {
+        setToastStock('Producto creado exitosamente');
+        setTimeout(() => setToastStock(''), 2500);
+        setMostrarFormNuevo(false);
+        setNuevoProducto({
+          nombre: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
+          categoria: '', activo: true, destacado: false, imagenes: [], videos: [],
+        });
+        setArchivosNuevo([]);
+        cargar();
+      } else {
+        alert(res.mensaje || 'Error al crear producto');
+      }
+    } catch (err) {
+      alert('Error de conexion al crear producto');
+    } finally {
+      setGuardandoNuevo(false);
+    }
+  };
+
   const catNombres = categorias.filter((c) => c.activo).map((c) => c.nombre);
 
   return (
@@ -714,7 +780,68 @@ function TabStock() {
           placeholder="Buscar por nombre o SKU..."
         />
         <button className="da-btn-exportar" onClick={exportarCSV}>Exportar CSV</button>
+        <button className="da-btn-nuevo-prod" onClick={() => setMostrarFormNuevo(!mostrarFormNuevo)}>
+          {mostrarFormNuevo ? '✕ Cerrar' : '+ Agregar Producto'}
+        </button>
       </div>
+
+      {/* Formulario desplegable para agregar producto */}
+      {mostrarFormNuevo && (
+        <div className="da-nuevo-prod-form">
+          <h3>Nuevo Producto</h3>
+          <form onSubmit={handleCrearProducto}>
+            <div className="da-nuevo-grid">
+              <div className="da-nuevo-campo">
+                <label>Nombre *</label>
+                <input name="nombre" value={nuevoProducto.nombre} onChange={handleNuevoChange} required placeholder="Nombre del producto" />
+              </div>
+              <div className="da-nuevo-campo">
+                <label>Precio (ARS) *</label>
+                <input name="precio" type="number" min="0" step="0.01" value={nuevoProducto.precio} onChange={handleNuevoChange} required placeholder="0.00" />
+              </div>
+              <div className="da-nuevo-campo">
+                <label>Stock</label>
+                <input name="stock" type="number" min="0" value={nuevoProducto.stock} onChange={handleNuevoChange} />
+              </div>
+              <div className="da-nuevo-campo">
+                <label>Costo unitario</label>
+                <input name="costoUnitario" type="number" min="0" step="0.01" value={nuevoProducto.costoUnitario} onChange={handleNuevoChange} placeholder="0.00" />
+              </div>
+              <div className="da-nuevo-campo">
+                <label>Categoria *</label>
+                <select name="categoria" value={nuevoProducto.categoria} onChange={handleNuevoChange} required>
+                  <option value="">Seleccionar...</option>
+                  {catNombres.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="da-nuevo-campo da-nuevo-campo-full">
+                <label>Descripcion</label>
+                <textarea name="descripcion" value={nuevoProducto.descripcion} onChange={handleNuevoChange} rows={2} placeholder="Descripcion del producto..." />
+              </div>
+              <div className="da-nuevo-campo">
+                <label>Imagenes</label>
+                <input type="file" accept="image/*" multiple onChange={handleArchivosNuevo} />
+              </div>
+              <div className="da-nuevo-campo da-nuevo-checks">
+                <label className="da-nuevo-check">
+                  <input type="checkbox" name="activo" checked={nuevoProducto.activo} onChange={handleNuevoChange} />
+                  Activo
+                </label>
+                <label className="da-nuevo-check">
+                  <input type="checkbox" name="destacado" checked={nuevoProducto.destacado} onChange={handleNuevoChange} />
+                  Destacado
+                </label>
+              </div>
+            </div>
+            <div className="da-nuevo-acciones">
+              <button type="button" className="da-btn-sm" onClick={() => setMostrarFormNuevo(false)}>Cancelar</button>
+              <button type="submit" className="da-btn-guardar" disabled={guardandoNuevo}>
+                {guardandoNuevo ? 'Guardando...' : 'Crear Producto'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       <div className="da-stock-kpis">
         <div className="da-stock-kpi">
@@ -762,8 +889,13 @@ function TabStock() {
                 {productos.map((p) => {
                   const costoTotal = p.costoTotal || ((p.costoUnitario || 0) + (p.gastoEnvio || 0));
                   const precioSug = p.precioSugerido || 0;
+                  const sinStockRow = p.stock === 0;
                   return (
-                    <tr key={p._id} style={{ opacity: p.activo === false ? 0.5 : 1 }}>
+                    <tr
+                      key={p._id}
+                      className={sinStockRow ? 'da-row-sin-stock' : ''}
+                      style={{ opacity: p.activo === false ? 0.5 : 1 }}
+                    >
                       <td>
                         {p.imagenes?.[0]?.url ? (
                           <img className="da-stock-thumb" src={p.imagenes[0].url} alt={p.nombre} />
@@ -824,7 +956,11 @@ function TabStock() {
           )}
         </div>
       )}
+      {toastStock && <div className="da-toast">{toastStock}</div>}
     </>
+  );
+}
+
   );
 }
 

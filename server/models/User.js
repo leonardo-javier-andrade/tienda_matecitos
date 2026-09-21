@@ -38,6 +38,16 @@ const usuarioSchema = new mongoose.Schema(
         ref: 'Producto',
       },
     ],
+    carrito: [
+      {
+        productoId: { type: String },
+        nombre: { type: String },
+        precio: { type: Number },
+        imagen: { type: String, default: "" },
+        cantidad: { type: Number, default: 1 },
+        stock: { type: Number },
+      },
+    ],
   },
   {
     timestamps: true,

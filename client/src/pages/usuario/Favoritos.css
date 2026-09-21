@@ -102,3 +102,16 @@
     gap: 1rem;
   }
 }
+
+.favoritos-volver {
+  display: inline-block;
+  color: #6c5b3e;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.favoritos-volver:hover {
+  text-decoration: underline;
+}

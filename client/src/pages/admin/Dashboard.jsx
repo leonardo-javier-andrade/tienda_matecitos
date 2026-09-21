@@ -88,7 +88,7 @@ function Dashboard() {
           <h1>Panel de Administracion</h1>
         </div>
         <div className="dash-header-der">
-          <a href="/" className="dash-btn-tienda" target="_blank" rel="noopener">
+          <a href="/" className="dash-btn-tienda">
             Ver tienda
           </a>
           <button className="dash-btn-logout" onClick={handleLogout}>
