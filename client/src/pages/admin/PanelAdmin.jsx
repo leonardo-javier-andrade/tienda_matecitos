@@ -16,6 +16,8 @@ import {
   obtenerTodosProductos,
   obtenerTodasCategorias,
   crearProducto,
+  actualizarProducto,
+  crearCategoria,
   subirArchivos,
 } from '../../services/api';
 import './PanelAdmin.css';
@@ -630,14 +632,24 @@ function TabStock() {
   const [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [toastStock, setToastStock] = useState('');
+
+  // --- Formulario nuevo producto ---
   const [mostrarFormNuevo, setMostrarFormNuevo] = useState(false);
   const [nuevoProducto, setNuevoProducto] = useState({
     nombre: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
-    categoria: '', activo: true, destacado: false, imagenes: [], videos: [],
+    gastoEnvio: '', porcentajeMargen: 40, categoria: '', activo: true, destacado: false,
   });
   const [guardandoNuevo, setGuardandoNuevo] = useState(false);
   const [archivosNuevo, setArchivosNuevo] = useState([]);
-  const [toastStock, setToastStock] = useState('');
+  const [nuevaCategoria, setNuevaCategoria] = useState('');
+  const [creandoCategoria, setCreandoCategoria] = useState(false);
+
+  // --- Modal editar producto ---
+  const [editando, setEditando] = useState(null); // producto completo
+  const [editForm, setEditForm] = useState({});
+  const [guardandoEdit, setGuardandoEdit] = useState(false);
+  const [usarPrecioFijo, setUsarPrecioFijo] = useState(false);
 
   useEffect(() => {
     obtenerTodasCategorias()
@@ -652,7 +664,6 @@ function TabStock() {
       Object.keys(params).forEach((k) => { if (!params[k]) delete params[k]; });
       const data = await obtenerStockDashboard(params);
       let prods = data?.datos || [];
-      // Ordenar: sin stock al final
       prods = [...prods].sort((a, b) => {
         if (a.stock === 0 && b.stock > 0) return 1;
         if (a.stock > 0 && b.stock === 0) return -1;
@@ -700,15 +711,45 @@ function TabStock() {
     URL.revokeObjectURL(url);
   };
 
+  const catNombres = categorias.filter((c) => c.activo).map((c) => c.nombre);
+
+  /* ── Nuevo producto handlers ── */
   const handleNuevoChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNuevoProducto((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const handleArchivosNuevo = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
-    setArchivosNuevo(files);
+  const handleArchivosNuevo = (e) => {
+    setArchivosNuevo(Array.from(e.target.files));
+  };
+
+  const handleCrearCategoriaNueva = async () => {
+    const nombre = nuevaCategoria.trim();
+    if (!nombre) return;
+    setCreandoCategoria(true);
+    try {
+      const res = await crearCategoria({ nombre, activo: true });
+      if (res.exito || res.datos || res._id) {
+        const nueva = res.datos || res;
+        setCategorias((prev) => [...prev, nueva]);
+        setNuevoProducto((prev) => ({ ...prev, categoria: nombre }));
+        setNuevaCategoria('');
+        setToastStock('Categoria creada');
+        setTimeout(() => setToastStock(''), 2000);
+      } else {
+        alert(res.mensaje || 'Error al crear categoria');
+      }
+    } catch {
+      alert('Error de conexion al crear categoria');
+    } finally {
+      setCreandoCategoria(false);
+    }
+  };
+
+  const calcPrecioSugerido = (costo, envio, margen) => {
+    const total = (Number(costo) || 0) + (Number(envio) || 0);
+    const calc = total * (1 + (Number(margen) || 0) / 100);
+    return Math.round(calc / 100) * 100;
   };
 
   const handleCrearProducto = async (e) => {
@@ -729,6 +770,8 @@ function TabStock() {
         precio: Number(nuevoProducto.precio),
         stock: Number(nuevoProducto.stock),
         costoUnitario: Number(nuevoProducto.costoUnitario) || 0,
+        gastoEnvio: Number(nuevoProducto.gastoEnvio) || 0,
+        porcentajeMargen: Number(nuevoProducto.porcentajeMargen) || 40,
         imagenes: imagenesSubidas,
       };
       const res = await crearProducto(datosEnviar);
@@ -738,24 +781,75 @@ function TabStock() {
         setMostrarFormNuevo(false);
         setNuevoProducto({
           nombre: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
-          categoria: '', activo: true, destacado: false, imagenes: [], videos: [],
+          gastoEnvio: '', porcentajeMargen: 40, categoria: '', activo: true, destacado: false,
         });
         setArchivosNuevo([]);
         cargar();
       } else {
         alert(res.mensaje || 'Error al crear producto');
       }
-    } catch (err) {
+    } catch {
       alert('Error de conexion al crear producto');
     } finally {
       setGuardandoNuevo(false);
     }
   };
 
-  const catNombres = categorias.filter((c) => c.activo).map((c) => c.nombre);
+  /* ── Editar producto handlers ── */
+  const abrirEditor = (p) => {
+    setEditando(p);
+    setEditForm({
+      stock: p.stock,
+      precio: p.precio,
+      costoUnitario: p.costoUnitario || 0,
+      gastoEnvio: p.gastoEnvio || 0,
+      porcentajeMargen: p.porcentajeMargen ?? 40,
+      fechaIngreso: p.fechaIngreso ? new Date(p.fechaIngreso).toISOString().slice(0, 10) : '',
+      precioFijo: p.precio,
+    });
+    setUsarPrecioFijo(false);
+    setGuardandoEdit(false);
+  };
+
+  const handleEditChange = (name, value) => {
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const editPrecioSugerido = usarPrecioFijo
+    ? Number(editForm.precioFijo) || 0
+    : calcPrecioSugerido(editForm.costoUnitario, editForm.gastoEnvio, editForm.porcentajeMargen);
+
+  const handleGuardarEdit = async () => {
+    if (!editando) return;
+    setGuardandoEdit(true);
+    try {
+      const datos = {
+        stock: Number(editForm.stock),
+        precio: usarPrecioFijo ? Number(editForm.precioFijo) : editPrecioSugerido || editando.precio,
+        costoUnitario: Number(editForm.costoUnitario),
+        gastoEnvio: Number(editForm.gastoEnvio),
+        porcentajeMargen: Number(editForm.porcentajeMargen),
+        fechaIngreso: editForm.fechaIngreso ? new Date(editForm.fechaIngreso) : undefined,
+      };
+      const res = await actualizarProducto(editando._id, datos);
+      if (res.exito || res.datos) {
+        setToastStock('Producto actualizado');
+        setTimeout(() => setToastStock(''), 2500);
+        setEditando(null);
+        cargar();
+      } else {
+        alert(res.mensaje || 'Error al actualizar');
+      }
+    } catch {
+      alert('Error de conexion');
+    } finally {
+      setGuardandoEdit(false);
+    }
+  };
 
   return (
     <>
+      {/* ── Filtros ── */}
       <div className="da-stock-filtros">
         <select value={filtros.categoria} onChange={(e) => handleFiltro('categoria', e.target.value)}>
           <option value="">Todas las categorias</option>
@@ -782,11 +876,11 @@ function TabStock() {
         />
         <button className="da-btn-exportar" onClick={exportarCSV}>Exportar CSV</button>
         <button className="da-btn-nuevo-prod" onClick={() => setMostrarFormNuevo(!mostrarFormNuevo)}>
-          {mostrarFormNuevo ? '✕ Cerrar' : '+ Agregar Producto'}
+          {mostrarFormNuevo ? 'X Cerrar' : '+ Agregar Producto'}
         </button>
       </div>
 
-      {/* Formulario desplegable para agregar producto */}
+      {/* ── Formulario nuevo producto ── */}
       {mostrarFormNuevo && (
         <div className="da-nuevo-prod-form">
           <h3>Nuevo Producto</h3>
@@ -809,12 +903,43 @@ function TabStock() {
                 <input name="costoUnitario" type="number" min="0" step="0.01" value={nuevoProducto.costoUnitario} onChange={handleNuevoChange} placeholder="0.00" />
               </div>
               <div className="da-nuevo-campo">
+                <label>Gasto envio</label>
+                <input name="gastoEnvio" type="number" min="0" step="0.01" value={nuevoProducto.gastoEnvio} onChange={handleNuevoChange} placeholder="0.00" />
+              </div>
+              <div className="da-nuevo-campo">
+                <label>Margen %</label>
+                <input name="porcentajeMargen" type="number" min="0" step="1" value={nuevoProducto.porcentajeMargen} onChange={handleNuevoChange} />
+              </div>
+              <div className="da-nuevo-campo">
                 <label>Categoria *</label>
                 <select name="categoria" value={nuevoProducto.categoria} onChange={handleNuevoChange} required>
                   <option value="">Seleccionar...</option>
                   {catNombres.map((c) => <option key={c} value={c}>{c}</option>)}
+                  <option value="__nueva__">+ Crear nueva categoria</option>
                 </select>
               </div>
+              {nuevoProducto.categoria === '__nueva__' && (
+                <div className="da-nuevo-campo da-nueva-cat-row">
+                  <label>Nueva categoria</label>
+                  <div style={{ display: 'flex', gap: '0.4rem' }}>
+                    <input
+                      value={nuevaCategoria}
+                      onChange={(e) => setNuevaCategoria(e.target.value)}
+                      placeholder="Nombre de la categoria"
+                      style={{ flex: 1 }}
+                    />
+                    <button
+                      type="button"
+                      className="da-btn-guardar"
+                      style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
+                      disabled={creandoCategoria || !nuevaCategoria.trim()}
+                      onClick={handleCrearCategoriaNueva}
+                    >
+                      {creandoCategoria ? '...' : 'Crear'}
+                    </button>
+                  </div>
+                </div>
+              )}
               <div className="da-nuevo-campo da-nuevo-campo-full">
                 <label>Descripcion</label>
                 <textarea name="descripcion" value={nuevoProducto.descripcion} onChange={handleNuevoChange} rows={2} placeholder="Descripcion del producto..." />
@@ -834,6 +959,12 @@ function TabStock() {
                 </label>
               </div>
             </div>
+            {(Number(nuevoProducto.costoUnitario) > 0 || Number(nuevoProducto.gastoEnvio) > 0) && (
+              <div className="da-nuevo-preview-precio">
+                Precio sugerido: <strong>{fmtMoney(calcPrecioSugerido(nuevoProducto.costoUnitario, nuevoProducto.gastoEnvio, nuevoProducto.porcentajeMargen))}</strong>
+                <span className="da-muted"> (margen {nuevoProducto.porcentajeMargen}%)</span>
+              </div>
+            )}
             <div className="da-nuevo-acciones">
               <button type="button" className="da-btn-sm" onClick={() => setMostrarFormNuevo(false)}>Cancelar</button>
               <button type="submit" className="da-btn-guardar" disabled={guardandoNuevo}>
@@ -844,6 +975,7 @@ function TabStock() {
         </div>
       )}
 
+      {/* ── KPIs ── */}
       <div className="da-stock-kpis">
         <div className="da-stock-kpi">
           <div className="da-stock-kpi-valor">{kpis.totalArticulos || productos.length}</div>
@@ -863,6 +995,7 @@ function TabStock() {
         </div>
       </div>
 
+      {/* ── Tabla ── */}
       {loading ? (
         <p className="da-vacio">Cargando stock...</p>
       ) : (
@@ -884,6 +1017,7 @@ function TabStock() {
                   <th>P. Sugerido</th>
                   <th>Precio</th>
                   <th>Estado</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -901,7 +1035,7 @@ function TabStock() {
                         {p.imagenes?.[0]?.url ? (
                           <img className="da-stock-thumb" src={p.imagenes[0].url} alt={p.nombre} />
                         ) : (
-                          <span className="da-stock-thumb da-stock-thumb--placeholder">🧉</span>
+                          <span className="da-stock-thumb da-stock-thumb--placeholder">&#129481;</span>
                         )}
                       </td>
                       <td>{fmtFecha(p.fechaIngreso)}</td>
@@ -927,6 +1061,11 @@ function TabStock() {
                           {p.activo !== false ? 'Activo' : 'Inactivo'}
                         </span>
                       </td>
+                      <td>
+                        <button className="da-btn-editar-prod" onClick={() => abrirEditor(p)} title="Editar producto">
+                          &#9998;
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -936,27 +1075,143 @@ function TabStock() {
 
           {totalPaginas > 1 && (
             <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem' }}>
-              <button
-                className="da-btn-sm despachar"
-                disabled={pagina <= 1}
-                onClick={() => setPagina((p) => p - 1)}
-              >
+              <button className="da-btn-sm despachar" disabled={pagina <= 1} onClick={() => setPagina((p) => p - 1)}>
                 Anterior
               </button>
               <span style={{ fontSize: '0.8rem', color: 'var(--dash-text-muted)', alignSelf: 'center' }}>
                 {pagina} / {totalPaginas}
               </span>
-              <button
-                className="da-btn-sm despachar"
-                disabled={pagina >= totalPaginas}
-                onClick={() => setPagina((p) => p + 1)}
-              >
+              <button className="da-btn-sm despachar" disabled={pagina >= totalPaginas} onClick={() => setPagina((p) => p + 1)}>
                 Siguiente
               </button>
             </div>
           )}
         </div>
       )}
+
+      {/* ── Modal editar producto ── */}
+      {editando && (
+        <div className="da-modal-overlay" onClick={() => setEditando(null)}>
+          <div className="da-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="da-modal-header">
+              <h3>Editar: {editando.nombre}</h3>
+              <button className="da-modal-close" onClick={() => setEditando(null)}>&times;</button>
+            </div>
+            <div className="da-modal-body">
+              <div className="da-edit-grid">
+                {/* Stock con +/- */}
+                <div className="da-edit-campo">
+                  <label>Stock</label>
+                  <div className="da-stock-stepper">
+                    <button type="button" onClick={() => handleEditChange('stock', Math.max(0, Number(editForm.stock) - 1))}>-</button>
+                    <input
+                      type="number"
+                      min="0"
+                      value={editForm.stock}
+                      onChange={(e) => handleEditChange('stock', e.target.value)}
+                    />
+                    <button type="button" onClick={() => handleEditChange('stock', Number(editForm.stock) + 1)}>+</button>
+                  </div>
+                </div>
+
+                <div className="da-edit-campo">
+                  <label>Precio actual (ARS)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={editForm.precio}
+                    onChange={(e) => handleEditChange('precio', e.target.value)}
+                  />
+                </div>
+
+                <div className="da-edit-campo">
+                  <label>Costo unitario</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={editForm.costoUnitario}
+                    onChange={(e) => handleEditChange('costoUnitario', e.target.value)}
+                  />
+                </div>
+
+                <div className="da-edit-campo">
+                  <label>Gasto envio</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={editForm.gastoEnvio}
+                    onChange={(e) => handleEditChange('gastoEnvio', e.target.value)}
+                  />
+                </div>
+
+                <div className="da-edit-campo">
+                  <label>Margen %</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={editForm.porcentajeMargen}
+                    disabled={usarPrecioFijo}
+                    onChange={(e) => handleEditChange('porcentajeMargen', e.target.value)}
+                  />
+                </div>
+
+                <div className="da-edit-campo">
+                  <label>Fecha ingreso</label>
+                  <input
+                    type="date"
+                    value={editForm.fechaIngreso}
+                    onChange={(e) => handleEditChange('fechaIngreso', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Precio sugerido preview */}
+              <div className="da-edit-precio-box">
+                <div className="da-edit-precio-toggle">
+                  <label className="da-nuevo-check">
+                    <input
+                      type="checkbox"
+                      checked={usarPrecioFijo}
+                      onChange={(e) => setUsarPrecioFijo(e.target.checked)}
+                    />
+                    Precio fijo (sin calcular por margen)
+                  </label>
+                </div>
+                {usarPrecioFijo ? (
+                  <div className="da-edit-campo" style={{ marginTop: '0.5rem' }}>
+                    <label>Precio fijo</label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={editForm.precioFijo}
+                      onChange={(e) => handleEditChange('precioFijo', e.target.value)}
+                    />
+                  </div>
+                ) : (
+                  <div className="da-edit-precio-calc">
+                    <span className="da-muted">Costo total:</span> {fmtMoney((Number(editForm.costoUnitario) || 0) + (Number(editForm.gastoEnvio) || 0))}
+                    <span className="da-edit-precio-arrow">&rarr;</span>
+                    <span className="da-muted">P. Sugerido:</span> <strong style={{ color: 'var(--dash-accent)' }}>{fmtMoney(editPrecioSugerido)}</strong>
+                    <span className="da-muted"> ({editForm.porcentajeMargen}%)</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="da-modal-footer">
+              <button className="da-btn-sm" onClick={() => setEditando(null)}>Cancelar</button>
+              <button className="da-btn-guardar" disabled={guardandoEdit} onClick={handleGuardarEdit}>
+                {guardandoEdit ? 'Guardando...' : 'Guardar cambios'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {toastStock && <div className="da-toast">{toastStock}</div>}
     </>
   );
