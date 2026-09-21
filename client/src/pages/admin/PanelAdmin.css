@@ -502,6 +502,26 @@
   color: #111;
 }
 
+/* ─── Stock thumbnail ───────────────────────────── */
+
+.da-stock-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
+  background: var(--dash-border);
+  flex-shrink: 0;
+}
+
+.da-stock-thumb--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+}
+
 /* ─── Stock sub-dashboard ────────────────────────── */
 
 .da-stock-filtros {

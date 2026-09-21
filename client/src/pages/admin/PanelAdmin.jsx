@@ -625,7 +625,7 @@ function TabStock() {
   const [productos, setProductos] = useState([]);
   const [kpis, setKpis] = useState({});
   const [categorias, setCategorias] = useState([]);
-  const [filtros, setFiltros] = useState({ categoria: '', tipo: '', buscar: '' });
+  const [filtros, setFiltros] = useState({ categoria: '', tipo: '', buscar: '', activo: '' });
   const [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -639,13 +639,13 @@ function TabStock() {
   const cargar = useCallback(async () => {
     setLoading(true);
     try {
-      const params = { ...filtros, pagina, limite: 20 };
+      const params = { ...filtros, page: pagina, limit: 20 };
       Object.keys(params).forEach((k) => { if (!params[k]) delete params[k]; });
       const data = await obtenerStockDashboard(params);
-      const d = data?.datos || data;
-      setProductos(d?.productos || []);
-      setKpis(d?.kpis || {});
-      setTotalPaginas(d?.totalPaginas || 1);
+      // Backend returns { exito, datos: [products], total, paginas, kpis }
+      setProductos(data?.datos || []);
+      setKpis(data?.kpis || {});
+      setTotalPaginas(data?.paginas || 1);
     } catch (err) {
       console.error('Error cargando stock:', err);
     } finally {
@@ -702,6 +702,11 @@ function TabStock() {
           <option value="kit">Kit</option>
           <option value="otro">Otro</option>
         </select>
+        <select value={filtros.activo} onChange={(e) => handleFiltro('activo', e.target.value)}>
+          <option value="">Todos (activos e inactivos)</option>
+          <option value="true">Solo activos</option>
+          <option value="false">Solo inactivos</option>
+        </select>
         <input
           type="text"
           value={filtros.buscar}
@@ -738,6 +743,7 @@ function TabStock() {
             <table className="da-tabla">
               <thead>
                 <tr>
+                  <th></th>
                   <th>Fecha Ingreso</th>
                   <th>SKU</th>
                   <th>Categoria</th>
@@ -749,13 +755,22 @@ function TabStock() {
                   <th>Costo Total</th>
                   <th>P. Sugerido</th>
                   <th>Precio</th>
+                  <th>Estado</th>
                 </tr>
               </thead>
               <tbody>
                 {productos.map((p) => {
-                  const costoTotal = (p.costoUnitario || 0) + (p.gastoEnvio || 0);
+                  const costoTotal = p.costoTotal || ((p.costoUnitario || 0) + (p.gastoEnvio || 0));
+                  const precioSug = p.precioSugerido || 0;
                   return (
-                    <tr key={p._id}>
+                    <tr key={p._id} style={{ opacity: p.activo === false ? 0.5 : 1 }}>
+                      <td>
+                        {p.imagenes?.[0]?.url ? (
+                          <img className="da-stock-thumb" src={p.imagenes[0].url} alt={p.nombre} />
+                        ) : (
+                          <span className="da-stock-thumb da-stock-thumb--placeholder">🧉</span>
+                        )}
+                      </td>
                       <td>{fmtFecha(p.fechaIngreso)}</td>
                       <td style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>{p.sku || '-'}</td>
                       <td>{p.categoria || '-'}</td>
@@ -772,8 +787,13 @@ function TabStock() {
                       <td>{fmtMoney(p.costoUnitario)}</td>
                       <td>{fmtMoney(p.gastoEnvio)}</td>
                       <td style={{ fontWeight: 600 }}>{fmtMoney(costoTotal)}</td>
-                      <td style={{ color: 'var(--dash-accent)' }}>{fmtMoney(p.precioSugerido || 0)}</td>
+                      <td style={{ color: 'var(--dash-accent)' }}>{fmtMoney(precioSug)}</td>
                       <td>{fmtMoney(p.precio)}</td>
+                      <td>
+                        <span className={`da-estado-badge ${p.activo !== false ? 'despachado' : 'no-pagada'}`}>
+                          {p.activo !== false ? 'Activo' : 'Inactivo'}
+                        </span>
+                      </td>
                     </tr>
                   );
                 })}

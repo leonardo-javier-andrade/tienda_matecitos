@@ -230,9 +230,10 @@ router.get('/top-productos', verificarAdmin, async (req, res) => {
 // ─── GET /api/dashboard/stock — Control de stock con filtros ──
 router.get('/stock', verificarAdmin, async (req, res) => {
   try {
-    const { categoria, tipo, buscar, page = 1, limit = 50 } = req.query;
+    const { categoria, tipo, buscar, page = 1, limit = 50, activo } = req.query;
 
-    const filtro = { activo: true };
+    const filtro = {};
+    if (activo !== undefined) filtro.activo = activo === "true";
     if (categoria) filtro.categoria = categoria;
     if (tipo) filtro.tipoProducto = tipo;
     if (buscar) {
@@ -244,7 +245,7 @@ router.get('/stock', verificarAdmin, async (req, res) => {
 
     const productos = await Producto.find(filtro)
       .select(
-        'nombre sku categoria tipoProducto stock costoUnitario gastoEnvio porcentajeMargen precio fechaIngreso stockCritico imagenes'
+        'nombre sku categoria tipoProducto stock costoUnitario gastoEnvio porcentajeMargen precio fechaIngreso stockCritico imagenes activo'
       )
       .sort({ fechaIngreso: -1 })
       .skip((page - 1) * limit)
