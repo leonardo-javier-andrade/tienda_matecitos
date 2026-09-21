@@ -14,6 +14,13 @@ import Dashboard from './pages/admin/Dashboard';
 import FormularioProducto from './pages/admin/FormularioProducto';
 import GestionCategorias from './pages/admin/GestionCategorias';
 import GestionHero from './pages/admin/GestionHero';
+import MisOrdenes from './pages/usuario/MisOrdenes';
+import VentaManual from './pages/admin/VentaManual';
+import PanelAdmin from './pages/admin/PanelAdmin';
+import Documentos from './pages/admin/Documentos';
+import { CarritoProvider, useCarrito } from './context/CarritoContext';
+import Carrito from './components/Carrito';
+import ResultadoOrden from './pages/ResultadoOrden';
 import './App.css';
 
 // ─── Auth guard ───────────────────────────────────────
@@ -38,6 +45,17 @@ function RutaProtegida({ children }) {
   }
 
   return autenticado ? children : <Navigate to="/ingresar" replace />;
+}
+
+// ─── CartButton ───────────────────────────────────────
+function CartButton() {
+  const { totalItems, setAbierto } = useCarrito();
+  return (
+    <button className="nav-carrito-btn" onClick={() => setAbierto(true)} aria-label="Carrito" data-cart-target>
+      🛒
+      {totalItems > 0 && <span className="nav-carrito-badge">{totalItems}</span>}
+    </button>
+  );
 }
 
 // ─── NavTienda ────────────────────────────────────────
@@ -90,6 +108,7 @@ function NavTienda() {
 
         {/* Right */}
         <div className="nav-derecha">
+          <CartButton />
           {usuario ? (
             <div className="nav-usuario-wrap" ref={dropdownRef}>
               <button
@@ -108,10 +127,23 @@ function NavTienda() {
                   <span className="nav-user-name">{usuario.nombre}</span>
                   <span className="nav-user-email">{usuario.email}</span>
                 </div>
+                <Link to="/mis-ordenes" onClick={() => setDropdownAbierto(false)}>
+                  Mis Ordenes
+                </Link>
                 {usuario.rol === 'admin' && (
-                  <Link to="/admin" onClick={() => setDropdownAbierto(false)}>
-                    Panel Admin
-                  </Link>
+                  <>
+                    <div className="nav-dropdown-divider" />
+                    <span className="nav-dropdown-section">Administracion</span>
+                    <Link to="/admin" onClick={() => setDropdownAbierto(false)}>
+                      Cargar Productos
+                    </Link>
+                    <Link to="/admin/panel" onClick={() => setDropdownAbierto(false)}>
+                      Panel Administrador
+                    </Link>
+                    <Link to="/admin/documentos" onClick={() => setDropdownAbierto(false)}>
+                      Documentos
+                    </Link>
+                  </>
                 )}
                 <div className="nav-dropdown-divider" />
                 <button onClick={handleLogout}>Cerrar sesion</button>
@@ -385,6 +417,7 @@ function HomePage() {
   return (
     <div className="home-page">
       <NavTienda />
+      <Carrito />
       <HeroCarousel />
 
       {/* Products */}
@@ -422,6 +455,7 @@ function LoginWrapper() {
 function App() {
   return (
     <BrowserRouter>
+      <CarritoProvider>
       <Routes>
         {/* Tienda publica */}
         <Route path="/" element={<HomePage />} />
@@ -443,7 +477,7 @@ function App() {
         {/* Redirigir ruta vieja de admin/login */}
         <Route path="/admin/login" element={<Navigate to="/ingresar" replace />} />
 
-        {/* Admin */}
+        {/* Admin — Cargar Productos */}
         <Route
           path="/admin"
           element={
@@ -485,9 +519,53 @@ function App() {
           }
         />
 
+        {/* Mis Ordenes (usuario) */}
+        <Route
+          path="/mis-ordenes"
+          element={
+            <RutaProtegida>
+              <MisOrdenes />
+            </RutaProtegida>
+          }
+        />
+
+        {/* Panel Administrador (Ordenes, Analytics, Finanzas en tabs) */}
+        <Route
+          path="/admin/panel"
+          element={
+            <RutaProtegida>
+              <PanelAdmin />
+            </RutaProtegida>
+          }
+        />
+
+        {/* Resultado de orden (MercadoPago redirect) */}
+        <Route path="/orden/resultado" element={<ResultadoOrden />} />
+
+        {/* Venta Manual (linked from PanelAdmin) */}
+        <Route
+          path="/admin/venta-manual"
+          element={
+            <RutaProtegida>
+              <VentaManual />
+            </RutaProtegida>
+          }
+        />
+
+        {/* Documentos (Facturas y Remitos) */}
+        <Route
+          path="/admin/documentos"
+          element={
+            <RutaProtegida>
+              <Documentos />
+            </RutaProtegida>
+          }
+        />
+
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </CarritoProvider>
     </BrowserRouter>
   );
 }
