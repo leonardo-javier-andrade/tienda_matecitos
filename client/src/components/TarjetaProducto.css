@@ -329,17 +329,38 @@
   display: block;
 }
 
-/* ─── Sin stock overlay y opacity ────────────────── */
+/* ─── Sin stock — blur + overlay ──────────────────── */
 
 .tarjeta-sin-stock {
-  opacity: 0.55;
-  filter: grayscale(30%);
+  pointer-events: auto;
 }
 
-.tarjeta-sin-stock:hover {
-  opacity: 0.75;
+/* Blur en la imagen */
+.tarjeta-sin-stock .tarjeta-img-principal {
+  filter: blur(3px) grayscale(40%);
+  transition: filter 0.3s ease;
 }
 
+.tarjeta-sin-stock:hover .tarjeta-img-principal {
+  filter: blur(2px) grayscale(20%);
+}
+
+/* Capa semitransparente sobre la imagen */
+.tarjeta-sin-stock .tarjeta-imagen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 240, 235, 0.45);
+  z-index: 2;
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+
+.tarjeta-sin-stock:hover .tarjeta-imagen::after {
+  background: rgba(245, 240, 235, 0.3);
+}
+
+/* Overlay con etiqueta SIN STOCK */
 .tarjeta-sin-stock-overlay {
   position: absolute;
   inset: 0;
@@ -347,18 +368,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
 
 .tarjeta-sin-stock-overlay span {
-  background: rgba(198, 40, 40, 0.85);
+  background: rgba(183, 28, 28, 0.9);
   color: #fff;
-  padding: 0.35rem 1rem;
+  padding: 0.4rem 1.2rem;
   border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  backdrop-filter: blur(4px);
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(183, 28, 28, 0.35);
+}
+
+/* Info debajo de la tarjeta sin stock: texto atenuado */
+.tarjeta-sin-stock .tarjeta-contenido {
+  opacity: 0.6;
+}
+
+.tarjeta-sin-stock:hover .tarjeta-contenido {
+  opacity: 0.8;
+}
+
+/* Botón agregar deshabilitado */
+.tarjeta-sin-stock .tarjeta-agregar-carrito:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
