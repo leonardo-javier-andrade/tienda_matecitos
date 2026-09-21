@@ -14,17 +14,6 @@ import Dashboard from './pages/admin/Dashboard';
 import FormularioProducto from './pages/admin/FormularioProducto';
 import GestionCategorias from './pages/admin/GestionCategorias';
 import GestionHero from './pages/admin/GestionHero';
-import Analytics from './pages/admin/Analytics';
-import MisOrdenes from './pages/usuario/MisOrdenes';
-import GestionOrdenes from './pages/admin/GestionOrdenes';
-import Gastos from './pages/admin/Gastos';
-import VentaManual from './pages/admin/VentaManual';
-import Finanzas from './pages/admin/Finanzas';
-import Campanas from './pages/admin/Campanas';
-import Documentos from './pages/admin/Documentos';
-import { CarritoProvider, useCarrito } from './context/CarritoContext';
-import Carrito from './components/Carrito';
-import ResultadoOrden from './pages/ResultadoOrden';
 import './App.css';
 
 // ─── Auth guard ───────────────────────────────────────
@@ -49,17 +38,6 @@ function RutaProtegida({ children }) {
   }
 
   return autenticado ? children : <Navigate to="/ingresar" replace />;
-}
-
-// ─── CartButton ───────────────────────────────────────
-function CartButton() {
-  const { totalItems, setAbierto } = useCarrito();
-  return (
-    <button className="nav-carrito-btn" onClick={() => setAbierto(true)} aria-label="Carrito" data-cart-target>
-      🛒
-      {totalItems > 0 && <span className="nav-carrito-badge">{totalItems}</span>}
-    </button>
-  );
 }
 
 // ─── NavTienda ────────────────────────────────────────
@@ -112,7 +90,6 @@ function NavTienda() {
 
         {/* Right */}
         <div className="nav-derecha">
-          <CartButton />
           {usuario ? (
             <div className="nav-usuario-wrap" ref={dropdownRef}>
               <button
@@ -131,38 +108,10 @@ function NavTienda() {
                   <span className="nav-user-name">{usuario.nombre}</span>
                   <span className="nav-user-email">{usuario.email}</span>
                 </div>
-                <Link to="/mis-ordenes" onClick={() => setDropdownAbierto(false)}>
-                  Mis Ordenes
-                </Link>
                 {usuario.rol === 'admin' && (
-                  <>
-                    <div className="nav-dropdown-divider" />
-                    <span className="nav-dropdown-section">Administracion</span>
-                    <Link to="/admin" className="nav-dd-admin" onClick={() => setDropdownAbierto(false)}>
-                      Panel Admin
-                    </Link>
-                    <Link to="/admin/ordenes" className="nav-dd-ordenes" onClick={() => setDropdownAbierto(false)}>
-                      Ordenes
-                    </Link>
-                    <Link to="/admin/analytics" className="nav-dd-analytics" onClick={() => setDropdownAbierto(false)}>
-                      Analytics
-                    </Link>
-                    <Link to="/admin/finanzas" onClick={() => setDropdownAbierto(false)}>
-                      Finanzas
-                    </Link>
-                    <Link to="/admin/gastos" onClick={() => setDropdownAbierto(false)}>
-                      Gastos
-                    </Link>
-                    <Link to="/admin/venta-manual" onClick={() => setDropdownAbierto(false)}>
-                      Venta Manual
-                    </Link>
-                    <Link to="/admin/campanas" onClick={() => setDropdownAbierto(false)}>
-                      Campañas
-                    </Link>
-                    <Link to="/admin/documentos" onClick={() => setDropdownAbierto(false)}>
-                      Documentos
-                    </Link>
-                  </>
+                  <Link to="/admin" onClick={() => setDropdownAbierto(false)}>
+                    Panel Admin
+                  </Link>
                 )}
                 <div className="nav-dropdown-divider" />
                 <button onClick={handleLogout}>Cerrar sesion</button>
@@ -192,9 +141,7 @@ function NavTienda() {
 function HeroCarousel() {
   const [slides, setSlides] = useState([]);
   const [indice, setIndice] = useState(0);
-  const [avancePx, setAvancePx] = useState(0);
   const timerRef = useRef(null);
-  const carouselRef = useRef(null);
 
   useEffect(() => {
     obtenerHeroSlides()
@@ -203,22 +150,6 @@ function HeroCarousel() {
       })
       .catch(() => {});
   }, []);
-
-  // Measure actual slide width in pixels for bulletproof transforms
-  useEffect(() => {
-    const medir = () => {
-      const el = carouselRef.current;
-      if (!el) return;
-      const primerSlide = el.querySelector('.carousel-slide');
-      if (!primerSlide) return;
-      const style = getComputedStyle(primerSlide);
-      const w = primerSlide.offsetWidth + parseFloat(style.marginRight || 0);
-      setAvancePx(w);
-    };
-    medir();
-    window.addEventListener('resize', medir);
-    return () => window.removeEventListener('resize', medir);
-  }, [slides]);
 
   const total = slides.length;
 
@@ -263,37 +194,27 @@ function HeroCarousel() {
     );
   }
 
+  const slideWidth = total > 1 ? 87 : 100;
+
   return (
-    <section className="hero-carousel" ref={carouselRef}>
+    <section className="hero-carousel">
       <div
         className="carousel-track"
-        style={{
-          transform: avancePx ? `translateX(-${indice * avancePx}px)` : 'none',
-        }}
+        style={{ transform: `translateX(-${indice * slideWidth}%)` }}
       >
         {slides.map((slide) => (
           <div
             key={slide._id}
             className="carousel-slide"
+            style={{ minWidth: `${slideWidth}%` }}
           >
             {slide.imagenFondo?.url ? (
-              slide.tipoMedia === 'video' ? (
-                <video
-                  className="slide-bg slide-bg-video"
-                  src={slide.imagenFondo.url}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              ) : (
-                <img
-                  className="slide-bg"
-                  src={slide.imagenFondo.url}
-                  alt={slide.titulo}
-                  loading="lazy"
-                />
-              )
+              <img
+                className="slide-bg"
+                src={slide.imagenFondo.url}
+                alt={slide.titulo}
+                loading="lazy"
+              />
             ) : (
               <div className="slide-bg-fallback" />
             )}
@@ -403,7 +324,7 @@ function SeccionWhatsApp() {
         <h2>¿Tenes alguna consulta?</h2>
         <p>Escribinos por WhatsApp y te ayudamos a elegir el mate perfecto para vos.</p>
         <a
-          href="https://wa.me/5491178166636"
+          href="https://wa.me/5491100000000"
           target="_blank"
           rel="noopener noreferrer"
           className="whatsapp-btn"
@@ -464,7 +385,6 @@ function HomePage() {
   return (
     <div className="home-page">
       <NavTienda />
-      <Carrito />
       <HeroCarousel />
 
       {/* Products */}
@@ -502,7 +422,6 @@ function LoginWrapper() {
 function App() {
   return (
     <BrowserRouter>
-      <CarritoProvider>
       <Routes>
         {/* Tienda publica */}
         <Route path="/" element={<HomePage />} />
@@ -558,14 +477,6 @@ function App() {
           }
         />
         <Route
-          path="/admin/analytics"
-          element={
-            <RutaProtegida>
-              <Analytics />
-            </RutaProtegida>
-          }
-        />
-        <Route
           path="/admin/hero"
           element={
             <RutaProtegida>
@@ -574,75 +485,9 @@ function App() {
           }
         />
 
-        {/* Mis Ordenes (usuario) */}
-        <Route
-          path="/mis-ordenes"
-          element={
-            <RutaProtegida>
-              <MisOrdenes />
-            </RutaProtegida>
-          }
-        />
-
-        {/* Gestion de ordenes (admin) */}
-        <Route
-          path="/admin/ordenes"
-          element={
-            <RutaProtegida>
-              <GestionOrdenes />
-            </RutaProtegida>
-          }
-        />
-
-        {/* Resultado de orden (MercadoPago redirect) */}
-        <Route path="/orden/resultado" element={<ResultadoOrden />} />
-
-        {/* Finanzas */}
-        <Route
-          path="/admin/finanzas"
-          element={
-            <RutaProtegida>
-              <Finanzas />
-            </RutaProtegida>
-          }
-        />
-        <Route
-          path="/admin/gastos"
-          element={
-            <RutaProtegida>
-              <Gastos />
-            </RutaProtegida>
-          }
-        />
-        <Route
-          path="/admin/venta-manual"
-          element={
-            <RutaProtegida>
-              <VentaManual />
-            </RutaProtegida>
-          }
-        />
-        <Route
-          path="/admin/campanas"
-          element={
-            <RutaProtegida>
-              <Campanas />
-            </RutaProtegida>
-          }
-        />
-        <Route
-          path="/admin/documentos"
-          element={
-            <RutaProtegida>
-              <Documentos />
-            </RutaProtegida>
-          }
-        />
-
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      </CarritoProvider>
     </BrowserRouter>
   );
 }

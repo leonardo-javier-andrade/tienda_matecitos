@@ -1,0 +1,819 @@
+/* ==========================================================================
+   PanelAdmin.css — Matecitos Admin Dashboard
+   ========================================================================== */
+
+/* --- CSS Custom Properties --- */
+:root {
+  --pa-primary: #6c5b3e;
+  --pa-primary-light: #8b7a5e;
+  --pa-primary-dark: #564a32;
+  --pa-text: #2d3436;
+  --pa-text-secondary: #636e72;
+  --pa-bg: #f1f2f6;
+  --pa-white: #fff;
+  --pa-green: #00b894;
+  --pa-green-light: #e6f9f4;
+  --pa-red: #d63031;
+  --pa-red-light: #fce4e4;
+  --pa-border: #dfe6e9;
+  --pa-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --pa-radius: 12px;
+  --pa-radius-sm: 8px;
+  --pa-radius-pill: 999px;
+  --pa-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --pa-transition: 0.2s ease;
+}
+
+/* --- 1. Main Container --- */
+.panel-admin {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  font-family: var(--pa-font);
+  color: var(--pa-text);
+  background: var(--pa-bg);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.panel-admin *,
+.panel-admin *::before,
+.panel-admin *::after {
+  box-sizing: border-box;
+}
+
+/* --- 2. Header --- */
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.panel-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--pa-primary);
+  margin: 0;
+}
+
+.panel-header-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px;
+  background: var(--pa-white);
+  border: 1px solid var(--pa-border);
+  border-radius: var(--pa-radius-sm);
+  color: var(--pa-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background var(--pa-transition), box-shadow var(--pa-transition);
+}
+
+.panel-header-back:hover {
+  background: var(--pa-bg);
+  box-shadow: var(--pa-shadow);
+}
+
+/* --- 3. Main Tabs (Ordenes, Analytics, Finanzas) --- */
+.panel-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--pa-bg);
+  border: 1px solid var(--pa-border);
+  border-radius: var(--pa-radius-pill);
+  padding: 4px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.panel-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.panel-tab {
+  flex: 1 0 auto;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--pa-radius-pill);
+  background: transparent;
+  color: var(--pa-text-secondary);
+  font-family: var(--pa-font);
+  font-size: 0.925rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--pa-transition), color var(--pa-transition),
+    box-shadow var(--pa-transition);
+}
+
+.panel-tab:hover {
+  color: var(--pa-text);
+}
+
+.panel-tab.activo {
+  background: var(--pa-white);
+  color: var(--pa-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* --- 4. Sub-tabs (Finanzas sections) --- */
+.panel-subtabs {
+  display: flex;
+  gap: 4px;
+  background: var(--pa-bg);
+  border: 1px solid var(--pa-border);
+  border-radius: var(--pa-radius-pill);
+  padding: 3px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.panel-subtabs::-webkit-scrollbar {
+  display: none;
+}
+
+.panel-subtab {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 7px 16px;
+  border: none;
+  border-radius: var(--pa-radius-pill);
+  background: transparent;
+  color: var(--pa-text-secondary);
+  font-family: var(--pa-font);
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--pa-transition), color var(--pa-transition),
+    box-shadow var(--pa-transition);
+}
+
+.panel-subtab:hover {
+  color: var(--pa-text);
+}
+
+.panel-subtab.activo {
+  background: var(--pa-white);
+  color: var(--pa-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* --- 5. Cards Grid --- */
+.panel-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* --- 6. Individual Stat Card --- */
+.panel-card {
+  background: var(--pa-white);
+  border-radius: var(--pa-radius);
+  box-shadow: var(--pa-shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: box-shadow var(--pa-transition), transform var(--pa-transition);
+}
+
+.panel-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.panel-card-monto {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.panel-card-label {
+  font-size: 0.85rem;
+  color: var(--pa-text-secondary);
+  font-weight: 500;
+}
+
+/* --- 7. Color Classes --- */
+.ingreso .panel-card-monto,
+.ingreso {
+  color: var(--pa-green);
+}
+
+.gasto .panel-card-monto,
+.gasto {
+  color: var(--pa-red);
+}
+
+.ganancia .panel-card-monto,
+.ganancia {
+  color: var(--pa-green);
+}
+
+.neutro .panel-card-monto,
+.neutro {
+  color: var(--pa-primary);
+}
+
+/* --- 8. Table Wrapper --- */
+.panel-tabla-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 24px;
+  border-radius: var(--pa-radius);
+  background: var(--pa-white);
+  box-shadow: var(--pa-shadow);
+}
+
+/* --- 9. Data Table --- */
+.panel-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.panel-tabla thead {
+  background: var(--pa-bg);
+}
+
+.panel-tabla th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--pa-text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  border-bottom: 2px solid var(--pa-border);
+}
+
+.panel-tabla td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--pa-border);
+  color: var(--pa-text);
+  vertical-align: middle;
+}
+
+.panel-tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.panel-tabla tbody tr:hover {
+  background: #f8f9fa;
+}
+
+/* --- 10. Date/Period Filter Row --- */
+.panel-periodo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.panel-periodo input[type="date"],
+.panel-periodo select {
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--pa-border);
+  border-radius: var(--pa-radius-sm);
+  font-family: var(--pa-font);
+  font-size: 0.875rem;
+  color: var(--pa-text);
+  background: var(--pa-white);
+  transition: border-color var(--pa-transition);
+}
+
+.panel-periodo input[type="date"]:focus,
+.panel-periodo select:focus {
+  outline: none;
+  border-color: var(--pa-primary);
+  box-shadow: 0 0 0 3px rgba(108, 91, 62, 0.12);
+}
+
+/* --- 11. Filter Chips Row --- */
+.panel-filtros {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* --- 12. Filter Chip --- */
+.filtro-chip {
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 1px solid var(--pa-border);
+  border-radius: var(--pa-radius-pill);
+  background: var(--pa-white);
+  color: var(--pa-text-secondary);
+  font-family: var(--pa-font);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--pa-transition);
+}
+
+.filtro-chip:hover {
+  border-color: var(--pa-primary-light);
+  color: var(--pa-primary);
+}
+
+.filtro-chip.activo {
+  background: var(--pa-primary);
+  color: var(--pa-white);
+  border-color: var(--pa-primary);
+}
+
+/* --- 13. Order Status Badges --- */
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--pa-radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.estado-badge.pendiente {
+  background: #ffeaa7;
+  color: #856404;
+}
+
+.estado-badge.aprobado {
+  background: #d4e6ff;
+  color: #1a5276;
+}
+
+.estado-badge.enviado {
+  background: #fde3cf;
+  color: #a84300;
+}
+
+.estado-badge.entregado {
+  background: var(--pa-green-light);
+  color: #0a6b50;
+}
+
+.estado-badge.cancelado {
+  background: var(--pa-red-light);
+  color: var(--pa-red);
+}
+
+/* --- 14 & 15. P&L Breakdown --- */
+.panel-desglose {
+  background: var(--pa-white);
+  border-radius: var(--pa-radius);
+  box-shadow: var(--pa-shadow);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.panel-desglose-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--pa-border);
+  font-size: 0.9rem;
+}
+
+.panel-desglose-item:last-child {
+  border-bottom: none;
+}
+
+.panel-desglose-item strong {
+  font-weight: 700;
+}
+
+/* --- 16. MP Config Section --- */
+.panel-config {
+  background: var(--pa-white);
+  border-radius: var(--pa-radius);
+  box-shadow: var(--pa-shadow);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.panel-config h3 {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  color: var(--pa-primary);
+  font-weight: 700;
+}
+
+.panel-config label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--pa-text-secondary);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.panel-config input[type="text"],
+.panel-config input[type="number"],
+.panel-config input[type="url"],
+.panel-config textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--pa-border);
+  border-radius: var(--pa-radius-sm);
+  font-family: var(--pa-font);
+  font-size: 0.875rem;
+  color: var(--pa-text);
+  margin-bottom: 16px;
+  transition: border-color var(--pa-transition);
+}
+
+.panel-config input:focus,
+.panel-config textarea:focus {
+  outline: none;
+  border-color: var(--pa-primary);
+  box-shadow: 0 0 0 3px rgba(108, 91, 62, 0.12);
+}
+
+/* --- 17. Channels Grid --- */
+.panel-canales-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* --- 18. Channel Card --- */
+.panel-canal-card {
+  background: var(--pa-white);
+  border-radius: var(--pa-radius);
+  box-shadow: var(--pa-shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 4px solid var(--pa-primary);
+  transition: box-shadow var(--pa-transition), transform var(--pa-transition);
+}
+
+.panel-canal-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.panel-canal-card .canal-nombre {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--pa-text);
+}
+
+.panel-canal-card .canal-monto {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--pa-primary);
+}
+
+.panel-canal-card .canal-detalle {
+  font-size: 0.8rem;
+  color: var(--pa-text-secondary);
+}
+
+/* --- 19. Empty State --- */
+.panel-vacio {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--pa-text-secondary);
+  font-size: 0.95rem;
+}
+
+.panel-vacio::before {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  background: var(--pa-bg);
+  border-radius: 50%;
+}
+
+/* --- 20. Alerts --- */
+.panel-alerta {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--pa-radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.panel-alerta.sin-costo {
+  background: #ffeaa7;
+  color: #856404;
+}
+
+.panel-alerta.negativo {
+  background: var(--pa-red-light);
+  color: var(--pa-red);
+}
+
+/* --- 21. Stock Table --- */
+.panel-stock-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.panel-stock-tabla thead {
+  background: var(--pa-bg);
+}
+
+.panel-stock-tabla th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--pa-text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  border-bottom: 2px solid var(--pa-border);
+}
+
+.panel-stock-tabla td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--pa-border);
+  color: var(--pa-text);
+  vertical-align: middle;
+}
+
+.panel-stock-tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.panel-stock-tabla tbody tr:hover {
+  background: #f8f9fa;
+}
+
+/* --- 22. Action Buttons --- */
+.panel-btn-accion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--pa-radius-sm);
+  font-family: var(--pa-font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--pa-transition), transform var(--pa-transition),
+    box-shadow var(--pa-transition);
+}
+
+.panel-btn-accion:active {
+  transform: scale(0.97);
+}
+
+/* Primary (brown) — default */
+.panel-btn-accion {
+  background: var(--pa-primary);
+  color: var(--pa-white);
+}
+
+.panel-btn-accion:hover {
+  background: var(--pa-primary-dark);
+  box-shadow: 0 2px 8px rgba(108, 91, 62, 0.3);
+}
+
+/* Green variant */
+.panel-btn-accion.btn-verde {
+  background: var(--pa-green);
+  color: var(--pa-white);
+}
+
+.panel-btn-accion.btn-verde:hover {
+  background: #00a381;
+  box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
+}
+
+/* Blue variant */
+.panel-btn-accion.btn-azul {
+  background: #0984e3;
+  color: var(--pa-white);
+}
+
+.panel-btn-accion.btn-azul:hover {
+  background: #0773c5;
+  box-shadow: 0 2px 8px rgba(9, 132, 227, 0.3);
+}
+
+/* Outlined variant */
+.panel-btn-accion.btn-outlined {
+  background: transparent;
+  color: var(--pa-primary);
+  border: 1px solid var(--pa-border);
+}
+
+.panel-btn-accion.btn-outlined:hover {
+  background: var(--pa-bg);
+  border-color: var(--pa-primary-light);
+}
+
+/* --- 23. Modal --- */
+.panel-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: pa-fade-in 0.2s ease;
+}
+
+.panel-modal {
+  background: var(--pa-white);
+  border-radius: var(--pa-radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px 24px;
+  animation: pa-slide-up 0.25s ease;
+}
+
+.panel-modal h2 {
+  margin: 0 0 20px;
+  font-size: 1.2rem;
+  color: var(--pa-primary);
+  font-weight: 700;
+}
+
+@keyframes pa-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pa-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- 24. Form Layout (inside modals) --- */
+.panel-form-grupo {
+  margin-bottom: 16px;
+}
+
+.panel-form-grupo label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--pa-text-secondary);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.panel-form-grupo input,
+.panel-form-grupo select,
+.panel-form-grupo textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--pa-border);
+  border-radius: var(--pa-radius-sm);
+  font-family: var(--pa-font);
+  font-size: 0.875rem;
+  color: var(--pa-text);
+  background: var(--pa-white);
+  transition: border-color var(--pa-transition);
+}
+
+.panel-form-grupo input:focus,
+.panel-form-grupo select:focus,
+.panel-form-grupo textarea:focus {
+  outline: none;
+  border-color: var(--pa-primary);
+  box-shadow: 0 0 0 3px rgba(108, 91, 62, 0.12);
+}
+
+.panel-form-grupo textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.panel-form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.panel-form-row > .panel-form-grupo {
+  flex: 1;
+}
+
+/* --- Responsive: Tablet (max 768px) --- */
+@media (max-width: 768px) {
+  .panel-admin {
+    padding: 16px 12px;
+  }
+
+  .panel-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .panel-canales-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .panel-header-title {
+    font-size: 1.25rem;
+  }
+
+  .panel-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .panel-modal {
+    padding: 20px 16px;
+  }
+}
+
+/* --- Responsive: Mobile (max 480px) --- */
+@media (max-width: 480px) {
+  .panel-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-canales-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-card-monto {
+    font-size: 1.25rem;
+  }
+
+  .panel-tabs {
+    margin-bottom: 16px;
+  }
+
+  .panel-tab {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .panel-subtab {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+  }
+
+  .panel-tabla-wrap {
+    margin-left: -12px;
+    margin-right: -12px;
+    border-radius: 0;
+  }
+
+  .panel-desglose {
+    padding: 16px;
+  }
+
+  .panel-config {
+    padding: 16px;
+  }
+
+  .panel-periodo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .panel-modal {
+    max-width: 100%;
+    border-radius: var(--pa-radius) var(--pa-radius) 0 0;
+    max-height: 95vh;
+  }
+}
