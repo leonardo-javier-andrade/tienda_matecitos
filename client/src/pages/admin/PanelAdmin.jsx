@@ -19,6 +19,7 @@ import {
   actualizarProducto,
   crearCategoria,
   subirArchivos,
+  eliminarProducto,
 } from '../../services/api';
 import './PanelAdmin.css';
 
@@ -30,6 +31,34 @@ const fmtFecha = (f) => {
   const d = new Date(f);
   return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' });
 };
+
+/* ─── Margen sugerido helper ─────────────────────── */
+
+function obtenerMargenSugerido(categoria, tipoProducto) {
+  const cat = (categoria || '').toLowerCase();
+  const tipo = (tipoProducto || '').toLowerCase();
+
+  // Bombillas
+  if (cat.includes('bombilla') || tipo.includes('bombilla')) {
+    return { min: 100, max: 200, label: 'Bombillas' };
+  }
+  // Mates premium / artesanales
+  const premiumKeywords = ['imperial', 'camionero', 'calabaza', 'virola', 'plata', 'premium', 'artesanal'];
+  if (premiumKeywords.some((kw) => cat.includes(kw) || tipo.includes(kw))) {
+    return { min: 60, max: 90, label: 'Mates premium/artesanales' };
+  }
+  // Mates comunes
+  const mateKeywords = ['vidrio', 'ceramica', 'cerámica', 'plastico', 'plástico', 'silicona'];
+  if (cat.includes('mate') || tipo.includes('mate') || mateKeywords.some((kw) => cat.includes(kw) || tipo.includes(kw))) {
+    return { min: 80, max: 120, label: 'Mates' };
+  }
+  // Termos y materas
+  if (cat.includes('termo') || tipo.includes('termo') || cat.includes('matera') || tipo.includes('matera')) {
+    return { min: 40, max: 70, label: 'Termos y materas' };
+  }
+  // Default
+  return { min: 40, max: 80, label: 'General' };
+}
 
 /* ─── KPI Card ────────────────────────────────────── */
 
@@ -622,6 +651,122 @@ function TabLogistica() {
 }
 
 /* ═══════════════════════════════════════════════════
+   MODAL: DETALLE PRODUCTO
+   ═══════════════════════════════════════════════════ */
+
+function ModalDetalleProducto({ producto, onCerrar }) {
+  if (!producto) return null;
+
+  const costoTotal = (producto.costoUnitario || 0) + (producto.gastoEnvio || 0);
+  const margenReal = costoTotal > 0 ? (((producto.precio || 0) - costoTotal) / costoTotal * 100).toFixed(1) : '-';
+  const precioSug = producto.precioSugerido || 0;
+  const margenSug = obtenerMargenSugerido(producto.categoria, producto.tipoProducto);
+
+  return (
+    <div className="da-modal-overlay" onClick={onCerrar}>
+      <div className="da-modal da-modal-detalle" onClick={(e) => e.stopPropagation()}>
+        <div className="da-modal-header">
+          <h3>Detalle del Producto</h3>
+          <button className="da-modal-close" onClick={onCerrar}>&times;</button>
+        </div>
+        <div className="da-modal-body">
+          {/* Header con imagen e info */}
+          <div className="da-detalle-header">
+            {producto.imagenes?.[0]?.url ? (
+              <img className="da-detalle-thumb" src={producto.imagenes[0].url} alt={producto.nombre} />
+            ) : (
+              <div className="da-detalle-thumb--placeholder">🧉</div>
+            )}
+            <div className="da-detalle-info">
+              <div className="da-detalle-nombre">{producto.nombre}</div>
+              <div className="da-detalle-meta">
+                {producto.sku && <span>SKU: {producto.sku}</span>}
+                {producto.categoria && <span>Categoria: {producto.categoria}</span>}
+                {producto.tipoProducto && <span>Tipo: {producto.tipoProducto}</span>}
+                <span>Stock: {producto.stock}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* KPIs */}
+          <div className="da-detalle-kpis">
+            <div className="da-detalle-kpi">
+              <div className="da-detalle-kpi-label">Precio de venta</div>
+              <div className="da-detalle-kpi-valor">{fmtMoney(producto.precio)}</div>
+            </div>
+            <div className="da-detalle-kpi">
+              <div className="da-detalle-kpi-label">Costo total</div>
+              <div className="da-detalle-kpi-valor" style={{ color: 'var(--dash-text)' }}>{fmtMoney(costoTotal)}</div>
+            </div>
+            <div className="da-detalle-kpi">
+              <div className="da-detalle-kpi-label">Margen real</div>
+              <div className="da-detalle-kpi-valor" style={{ color: margenReal !== '-' && Number(margenReal) < margenSug.min ? 'var(--dash-red)' : 'var(--dash-green)' }}>
+                {margenReal !== '-' ? `${margenReal}%` : '-'}
+              </div>
+            </div>
+          </div>
+
+          {/* Margen sugerido */}
+          <div className="da-detalle-seccion">
+            <h4>Margen sugerido para {margenSug.label}</h4>
+            <div className="da-margen-sugerido">
+              <span>📊</span>
+              <span>{margenSug.min}% - {margenSug.max}%</span>
+            </div>
+          </div>
+
+          {/* Historial de precios */}
+          <div className="da-detalle-seccion">
+            <h4>Historial de precios</h4>
+            <div className="da-tabla-wrap">
+              <table className="da-tabla">
+                <thead>
+                  <tr>
+                    <th>Fecha ingreso</th>
+                    <th>Costo unit.</th>
+                    <th>Gasto envio</th>
+                    <th>Margen %</th>
+                    <th>P. Sugerido</th>
+                    <th>P. Venta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(producto.historialPrecios && producto.historialPrecios.length > 0)
+                    ? producto.historialPrecios.map((h, i) => (
+                        <tr key={i}>
+                          <td>{fmtFecha(h.fecha || h.fechaIngreso)}</td>
+                          <td>{fmtMoney(h.costoUnitario)}</td>
+                          <td>{fmtMoney(h.gastoEnvio)}</td>
+                          <td>{h.porcentajeMargen ?? '-'}%</td>
+                          <td style={{ color: 'var(--dash-accent)' }}>{fmtMoney(h.precioSugerido)}</td>
+                          <td>{fmtMoney(h.precioVenta || h.precio)}</td>
+                        </tr>
+                      ))
+                    : (
+                      <tr>
+                        <td>{fmtFecha(producto.fechaIngreso)}</td>
+                        <td>{fmtMoney(producto.costoUnitario)}</td>
+                        <td>{fmtMoney(producto.gastoEnvio)}</td>
+                        <td>{producto.porcentajeMargen ?? '-'}%</td>
+                        <td style={{ color: 'var(--dash-accent)' }}>{fmtMoney(precioSug)}</td>
+                        <td>{fmtMoney(producto.precio)}</td>
+                      </tr>
+                    )
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div className="da-modal-footer">
+          <button className="da-btn-sm despachar" onClick={onCerrar}>Cerrar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
    TAB: STOCK
    ═══════════════════════════════════════════════════ */
 function TabStock() {
@@ -637,7 +782,7 @@ function TabStock() {
   // --- Formulario nuevo producto ---
   const [mostrarFormNuevo, setMostrarFormNuevo] = useState(false);
   const [nuevoProducto, setNuevoProducto] = useState({
-    nombre: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
+    nombre: '', sku: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
     gastoEnvio: '', porcentajeMargen: 40, categoria: '', activo: true, destacado: false,
   });
   const [guardandoNuevo, setGuardandoNuevo] = useState(false);
@@ -650,6 +795,9 @@ function TabStock() {
   const [editForm, setEditForm] = useState({});
   const [guardandoEdit, setGuardandoEdit] = useState(false);
   const [usarPrecioFijo, setUsarPrecioFijo] = useState(false);
+
+  // --- Modal detalle producto ---
+  const [detalleProducto, setDetalleProducto] = useState(null);
 
   useEffect(() => {
     obtenerTodasCategorias()
@@ -780,7 +928,7 @@ function TabStock() {
         setTimeout(() => setToastStock(''), 2500);
         setMostrarFormNuevo(false);
         setNuevoProducto({
-          nombre: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
+          nombre: '', sku: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
           gastoEnvio: '', porcentajeMargen: 40, categoria: '', activo: true, destacado: false,
         });
         setArchivosNuevo([]);
@@ -847,6 +995,11 @@ function TabStock() {
     }
   };
 
+  // Margen sugerido para el formulario nuevo
+  const margenHintNuevo = nuevoProducto.categoria && nuevoProducto.categoria !== '__nueva__'
+    ? obtenerMargenSugerido(nuevoProducto.categoria, '')
+    : null;
+
   return (
     <>
       {/* ── Filtros ── */}
@@ -891,6 +1044,10 @@ function TabStock() {
                 <input name="nombre" value={nuevoProducto.nombre} onChange={handleNuevoChange} required placeholder="Nombre del producto" />
               </div>
               <div className="da-nuevo-campo">
+                <label>SKU</label>
+                <input name="sku" value={nuevoProducto.sku} onChange={handleNuevoChange} placeholder="Codigo SKU" />
+              </div>
+              <div className="da-nuevo-campo">
                 <label>Precio (ARS) *</label>
                 <input name="precio" type="number" min="0" step="0.01" value={nuevoProducto.precio} onChange={handleNuevoChange} required placeholder="0.00" />
               </div>
@@ -909,6 +1066,11 @@ function TabStock() {
               <div className="da-nuevo-campo">
                 <label>Margen %</label>
                 <input name="porcentajeMargen" type="number" min="0" step="1" value={nuevoProducto.porcentajeMargen} onChange={handleNuevoChange} />
+                {margenHintNuevo && (
+                  <div className="da-margen-hint">
+                    Sugerido para {margenHintNuevo.label}: {margenHintNuevo.min}% - {margenHintNuevo.max}%
+                  </div>
+                )}
               </div>
               <div className="da-nuevo-campo">
                 <label>Categoria *</label>
@@ -1042,7 +1204,10 @@ function TabStock() {
                       <td style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>{p.sku || '-'}</td>
                       <td>{p.categoria || '-'}</td>
                       <td>{p.tipoProducto || '-'}</td>
-                      <td style={{ fontWeight: 600, color: 'var(--dash-text)' }}>{p.nombre}</td>
+                      <td style={{ fontWeight: 600, color: 'var(--dash-text)', cursor: 'pointer', textDecoration: 'underline dotted' }}
+                          onClick={() => setDetalleProducto(p)}>
+                        {p.nombre}
+                      </td>
                       <td style={{ textAlign: 'center' }}>
                         <span style={{
                           color: p.stock === 0 ? 'var(--dash-red)' : p.stock <= (p.stockCritico || 3) ? 'var(--dash-orange)' : 'var(--dash-green)',
@@ -1062,9 +1227,23 @@ function TabStock() {
                         </span>
                       </td>
                       <td>
-                        <button className="da-btn-editar-prod" onClick={() => abrirEditor(p)} title="Editar producto">
-                          &#9998;
-                        </button>
+                        <div className="da-stock-acciones">
+                          <button className="da-btn-editar-prod" onClick={() => abrirEditor(p)} title="Editar producto">
+                            &#9998;
+                          </button>
+                          <button className="da-btn-eliminar-prod" onClick={async () => {
+                            if (window.confirm(`¿Eliminar "${p.nombre}"? Esta acción no se puede deshacer.`)) {
+                              try {
+                                await eliminarProducto(p._id);
+                                setToastStock('Producto eliminado');
+                                setTimeout(() => setToastStock(''), 2500);
+                                cargar();
+                              } catch { setToastStock('Error al eliminar'); setTimeout(() => setToastStock(''), 2500); }
+                            }
+                          }} title="Eliminar producto">
+                            🗑️
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -1211,6 +1390,9 @@ function TabStock() {
           </div>
         </div>
       )}
+
+      {/* ── Modal detalle producto ── */}
+      <ModalDetalleProducto producto={detalleProducto} onCerrar={() => setDetalleProducto(null)} />
 
       {toastStock && <div className="da-toast">{toastStock}</div>}
     </>

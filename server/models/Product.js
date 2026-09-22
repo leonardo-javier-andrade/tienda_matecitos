@@ -96,6 +96,16 @@ const productoSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    historialPrecios: [
+      {
+        fecha: { type: Date, default: Date.now },
+        costoUnitario: { type: Number, default: 0 },
+        gastoEnvio: { type: Number, default: 0 },
+        porcentajeMargen: { type: Number, default: 40 },
+        precioSugerido: { type: Number, default: 0 },
+        precioVenta: { type: Number, default: 0 },
+      },
+    ],
   },
   {
     timestamps: true,

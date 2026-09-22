@@ -1,7 +1,8 @@
-// ─── WhatsApp Cloud API — Notificaciones de compra ───
-// Envía un mensaje al número de la tienda cuando se realiza una compra
+// ─── WhatsApp Cloud API — Notificaciones al dueño ───
+// Envía avisos al dueño/administradores cuando se realiza una compra
+// o cuando el stock de un producto baja a niveles críticos.
 
-const WHATSAPP_API_URL = 'https://graph.facebook.com/v21.0';
+const WHATSAPP_API_URL = 'https://graph.facebook.com/v25.0';
 
 /**
  * Enviar mensaje de WhatsApp usando la Cloud API de Meta
@@ -56,22 +57,39 @@ const enviarMensajeWhatsApp = async (telefono, mensaje) => {
 };
 
 /**
+ * Obtener los números de notificación (soporta múltiples separados por coma)
+ * WHATSAPP_TIENDA_NUMERO puede ser "5491124578724" o "5491124578724,5491178166636"
+ */
+const obtenerNumerosNotificacion = () => {
+  const raw = process.env.WHATSAPP_TIENDA_NUMERO || '';
+  return raw.split(',').map(n => n.trim()).filter(Boolean);
+};
+
+/**
+ * Enviar un mensaje a todos los números de notificación configurados
+ */
+const notificarATodos = async (mensaje) => {
+  const numeros = obtenerNumerosNotificacion();
+  if (numeros.length === 0) {
+    console.warn('WHATSAPP_TIENDA_NUMERO no configurado');
+    return;
+  }
+  const resultados = await Promise.allSettled(
+    numeros.map(num => enviarMensajeWhatsApp(num, mensaje))
+  );
+  return resultados;
+};
+
+/**
  * Formatear precio en ARS
  */
 const formatPrecio = (n) =>
   new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(n);
 
 /**
- * Enviar notificación de nueva compra al número de la tienda
+ * Enviar notificación de nueva compra a los administradores
  */
 const notificarCompraPorWhatsApp = async (orden, usuario) => {
-  const telefonoTienda = process.env.WHATSAPP_TIENDA_NUMERO;
-
-  if (!telefonoTienda) {
-    console.warn('WHATSAPP_TIENDA_NUMERO no configurado');
-    return;
-  }
-
   // Armar lista de productos
   const listaItems = orden.items
     .map((item) => `  • ${item.nombre} x${item.cantidad} — ${formatPrecio(item.precio * item.cantidad)}`)
@@ -106,7 +124,27 @@ const notificarCompraPorWhatsApp = async (orden, usuario) => {
     envioTexto +
     `\n\n✅ Pago aprobado por MercadoPago`;
 
-  return enviarMensajeWhatsApp(telefonoTienda, mensaje);
+  return notificarATodos(mensaje);
 };
 
-module.exports = { enviarMensajeWhatsApp, notificarCompraPorWhatsApp };
+/**
+ * Notificar stock crítico de un producto
+ * Se llama cuando el stock baja de un umbral (ej: 3 unidades)
+ */
+const notificarStockCritico = async (producto, stockActual) => {
+  const mensaje =
+    `⚠️ *STOCK CRÍTICO — Matecitos*\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n\n` +
+    `📦 *Producto:* ${producto.nombre}\n` +
+    `🔢 *Stock actual:* ${stockActual} unidades\n` +
+    `💰 Precio: ${formatPrecio(producto.precio)}\n\n` +
+    `🔄 Revisá el inventario y reponé antes de quedarte sin stock.`;
+
+  return notificarATodos(mensaje);
+};
+
+module.exports = {
+  enviarMensajeWhatsApp,
+  notificarCompraPorWhatsApp,
+  notificarStockCritico,
+};

@@ -1450,3 +1450,123 @@
     gap: 0.3rem;
   }
 }
+
+/* ── Stock action buttons ── */
+.da-stock-acciones {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.da-btn-eliminar-prod {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.15s, background 0.15s;
+}
+.da-btn-eliminar-prod:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* ── Detail modal (wider) ── */
+.da-modal-detalle {
+  max-width: 700px;
+}
+
+.da-detalle-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.da-detalle-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.da-detalle-thumb--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dash-border);
+  font-size: 2rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.da-detalle-info {
+  flex: 1;
+}
+.da-detalle-nombre {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dash-text);
+  margin-bottom: 0.25rem;
+}
+.da-detalle-meta {
+  font-size: 0.8rem;
+  color: var(--dash-text-dim);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+.da-detalle-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.da-detalle-kpi {
+  background: var(--dash-bg);
+  border-radius: 8px;
+  padding: 0.6rem;
+  text-align: center;
+}
+.da-detalle-kpi-label {
+  font-size: 0.7rem;
+  color: var(--dash-text-dim);
+  margin-bottom: 0.2rem;
+}
+.da-detalle-kpi-valor {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dash-accent);
+}
+
+.da-detalle-seccion {
+  margin-bottom: 1rem;
+}
+.da-detalle-seccion h4 {
+  font-size: 0.85rem;
+  color: var(--dash-text-muted);
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--dash-border);
+  padding-bottom: 0.3rem;
+}
+
+.da-margen-sugerido {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  background: rgba(201, 169, 110, 0.1);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--dash-accent);
+}
+
+.da-margen-hint {
+  font-size: 0.72rem;
+  color: var(--dash-accent);
+  margin-top: 0.2rem;
+  opacity: 0.8;
+}

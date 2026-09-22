@@ -145,18 +145,61 @@ router.post('/', verificarAdmin, async (req, res) => {
 // PUT /api/products/:id — Actualizar un producto
 router.put('/:id', verificarAdmin, async (req, res) => {
   try {
-    const producto = await Producto.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-
-    if (!producto) {
+    const productoAnterior = await Producto.findById(req.params.id);
+    if (!productoAnterior) {
       return res.status(404).json({
         exito: false,
         mensaje: 'Producto no encontrado.',
       });
     }
+
+    // Detectar si cambió costo, margen o precio → agregar al historial
+    const nuevosCampos = req.body;
+    const costoAnterior = productoAnterior.costoUnitario || 0;
+    const envioAnterior = productoAnterior.gastoEnvio || 0;
+    const margenAnterior = productoAnterior.porcentajeMargen ?? 40;
+    const precioAnterior = productoAnterior.precio || 0;
+
+    const costoCambio = (nuevosCampos.costoUnitario !== undefined && Number(nuevosCampos.costoUnitario) !== costoAnterior);
+    const envioCambio = (nuevosCampos.gastoEnvio !== undefined && Number(nuevosCampos.gastoEnvio) !== envioAnterior);
+    const margenCambio = (nuevosCampos.porcentajeMargen !== undefined && Number(nuevosCampos.porcentajeMargen) !== margenAnterior);
+    const precioCambio = (nuevosCampos.precio !== undefined && Number(nuevosCampos.precio) !== precioAnterior);
+
+    if (costoCambio || envioCambio || margenCambio || precioCambio) {
+      const costoU = nuevosCampos.costoUnitario !== undefined ? Number(nuevosCampos.costoUnitario) : costoAnterior;
+      const gastoE = nuevosCampos.gastoEnvio !== undefined ? Number(nuevosCampos.gastoEnvio) : envioAnterior;
+      const margen = nuevosCampos.porcentajeMargen !== undefined ? Number(nuevosCampos.porcentajeMargen) : margenAnterior;
+      const costoTotal = costoU + gastoE;
+      const precioSugerido = Math.round((costoTotal * (1 + margen / 100)) / 100) * 100;
+      const precioVenta = nuevosCampos.precio !== undefined ? Number(nuevosCampos.precio) : precioAnterior;
+
+      if (!nuevosCampos.$push) nuevosCampos.$push = {};
+      nuevosCampos.$push.historialPrecios = {
+        fecha: nuevosCampos.fechaIngreso || new Date(),
+        costoUnitario: costoU,
+        gastoEnvio: gastoE,
+        porcentajeMargen: margen,
+        precioSugerido,
+        precioVenta,
+      };
+      // Remove historialPrecios from direct body to avoid conflict with $push
+      delete nuevosCampos.historialPrecios;
+    }
+
+    // Separate $push from regular fields
+    const pushOps = nuevosCampos.$push;
+    delete nuevosCampos.$push;
+
+    const updateQuery = { ...nuevosCampos };
+    if (pushOps) {
+      updateQuery.$push = pushOps;
+    }
+
+    const producto = await Producto.findByIdAndUpdate(
+      req.params.id,
+      updateQuery,
+      { new: true, runValidators: true }
+    );
 
     res.json({
       exito: true,
