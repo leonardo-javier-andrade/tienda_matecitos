@@ -96,6 +96,13 @@ const productoSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    coloresDisponibles: [
+      {
+        color: { type: String, required: true },   // hex, ej: '#E8D44D'
+        nombre: { type: String, default: '' },      // nombre legible, ej: 'Amarillo'
+        stock: { type: Number, default: 0, min: 0 },
+      },
+    ],
     historialPrecios: [
       {
         fecha: { type: Date, default: Date.now },

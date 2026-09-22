@@ -1570,3 +1570,124 @@
   margin-top: 0.2rem;
   opacity: 0.8;
 }
+
+/* ─── Selector de Colores ──────────────────────────── */
+.da-colores-selector {
+  width: 100%;
+}
+
+.da-colores-grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
+  gap: 4px;
+  max-width: 320px;
+}
+
+.da-color-chip {
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  padding: 0;
+  outline: none;
+}
+
+.da-color-chip:hover {
+  transform: scale(1.2);
+  z-index: 2;
+}
+
+.da-color-chip.activo {
+  border-color: var(--dash-accent) !important;
+  box-shadow: 0 0 0 2px var(--dash-accent), inset 0 0 0 1px rgba(0,0,0,0.3);
+  transform: scale(1.15);
+}
+
+.da-colores-detalle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--dash-border);
+}
+
+.da-color-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.06);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.da-color-muestra {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+.da-color-nombre {
+  font-size: 0.75rem;
+  color: var(--dash-muted);
+  min-width: 60px;
+}
+
+.da-color-stock-input {
+  width: 48px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid var(--dash-border);
+  background: var(--dash-card);
+  color: var(--dash-text);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+/* ─── Mini colores en tabla de stock ─────────────── */
+.da-nombre-colores-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.da-colores-mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.da-color-mini {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  font-size: 0;
+}
+
+.da-color-mini-stock {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 14px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0,0,0,0.65);
+  border-radius: 7px;
+  padding: 0 3px;
+  pointer-events: none;
+}

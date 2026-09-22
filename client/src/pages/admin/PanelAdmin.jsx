@@ -60,6 +60,136 @@ function obtenerMargenSugerido(categoria, tipoProducto) {
   return { min: 40, max: 80, label: 'General' };
 }
 
+/* ─── Paleta de colores para productos ─────────────── */
+const PALETA_COLORES = [
+  // Fila 1 — Amarillos / Verdes
+  { color: '#E8D44D', nombre: 'Amarillo' },
+  { color: '#B5CC18', nombre: 'Lima' },
+  { color: '#5BAC0E', nombre: 'Verde claro' },
+  { color: '#21A637', nombre: 'Verde' },
+  { color: '#1E9E50', nombre: 'Verde medio' },
+  { color: '#1B8A3E', nombre: 'Verde oscuro' },
+  { color: '#0E7A52', nombre: 'Verde esmeralda' },
+  { color: '#0A5E3A', nombre: 'Verde bosque' },
+  // Fila 2 — Amarillos / Naranjas
+  { color: '#F5E27A', nombre: 'Amarillo pastel' },
+  { color: '#F0D732', nombre: 'Dorado' },
+  { color: '#F5C71A', nombre: 'Mostaza' },
+  { color: '#F0A30A', nombre: 'Ámbar' },
+  { color: '#ED8B00', nombre: 'Naranja suave' },
+  { color: '#E87800', nombre: 'Naranja' },
+  { color: '#E05500', nombre: 'Naranja fuerte' },
+  { color: '#D4A030', nombre: 'Miel' },
+  // Fila 3 — Rojos / Marrones
+  { color: '#F5A08C', nombre: 'Salmón' },
+  { color: '#E8455A', nombre: 'Rosa fuerte' },
+  { color: '#D10042', nombre: 'Carmesí' },
+  { color: '#E8563C', nombre: 'Coral' },
+  { color: '#D41920', nombre: 'Rojo' },
+  { color: '#C41A1A', nombre: 'Rojo oscuro' },
+  { color: '#B85C2A', nombre: 'Terracota' },
+  { color: '#A0A0B0', nombre: 'Gris' },
+  // Fila 4 — Rosas / Púrpuras
+  { color: '#F0A0D0', nombre: 'Rosa claro' },
+  { color: '#E84090', nombre: 'Magenta' },
+  { color: '#C8148C', nombre: 'Fucsia' },
+  { color: '#A81E8C', nombre: 'Púrpura rosa' },
+  { color: '#7B2D8E', nombre: 'Púrpura' },
+  { color: '#6A1E6E', nombre: 'Púrpura oscuro' },
+  { color: '#2D1E6E', nombre: 'Índigo' },
+  { color: '#8A5C2A', nombre: 'Marrón' },
+  // Fila 5 — Azules / Lavandas
+  { color: '#B8A8D0', nombre: 'Lavanda' },
+  { color: '#8E7CB8', nombre: 'Lila' },
+  { color: '#7A8CC0', nombre: 'Azul lavanda' },
+  { color: '#5E8EC8', nombre: 'Azul cielo' },
+  { color: '#9898D0', nombre: 'Azul pastel' },
+  { color: '#3E9EE0', nombre: 'Azul celeste' },
+  { color: '#2878C8', nombre: 'Azul' },
+  { color: '#1E5EB0', nombre: 'Azul real' },
+  // Fila 6 — Celestes / Azules oscuros
+  { color: '#70D8F0', nombre: 'Celeste' },
+  { color: '#38C0E0', nombre: 'Turquesa claro' },
+  { color: '#1E78A0', nombre: 'Teal' },
+  { color: '#1E5E88', nombre: 'Azul petróleo' },
+  { color: '#3E1E78', nombre: 'Violeta oscuro' },
+  { color: '#1E70B0', nombre: 'Azul medio' },
+  { color: '#1E4E88', nombre: 'Azul marino' },
+  { color: '#5A4888', nombre: 'Uva' },
+  // Extras: neutros
+  { color: '#FFFFFF', nombre: 'Blanco' },
+  { color: '#222222', nombre: 'Negro' },
+  { color: '#F5E6D0', nombre: 'Crema' },
+  { color: '#C0B090', nombre: 'Beige' },
+];
+
+/* ─── Selector de Colores ─────────────────────────── */
+function SelectorColores({ seleccionados, onChange }) {
+  const toggle = (colorObj) => {
+    const existe = seleccionados.find((c) => c.color === colorObj.color);
+    if (existe) {
+      onChange(seleccionados.filter((c) => c.color !== colorObj.color));
+    } else {
+      onChange([...seleccionados, { color: colorObj.color, nombre: colorObj.nombre, stock: 0 }]);
+    }
+  };
+
+  const actualizarStock = (hex, stock) => {
+    onChange(seleccionados.map((c) => (c.color === hex ? { ...c, stock: Math.max(0, Number(stock) || 0) } : c)));
+  };
+
+  const estaSeleccionado = (hex) => seleccionados.some((c) => c.color === hex);
+
+  return (
+    <div className="da-colores-selector">
+      <div className="da-colores-grilla">
+        {PALETA_COLORES.map((c) => (
+          <button
+            key={c.color}
+            type="button"
+            className={`da-color-chip${estaSeleccionado(c.color) ? ' activo' : ''}`}
+            style={{ backgroundColor: c.color, borderColor: c.color === '#FFFFFF' ? '#888' : c.color }}
+            title={c.nombre}
+            onClick={() => toggle(c)}
+          />
+        ))}
+      </div>
+      {seleccionados.length > 0 && (
+        <div className="da-colores-detalle">
+          {seleccionados.map((c) => (
+            <div key={c.color} className="da-color-item">
+              <span className="da-color-muestra" style={{ backgroundColor: c.color, borderColor: c.color === '#FFFFFF' ? '#888' : c.color }} />
+              <span className="da-color-nombre">{c.nombre}</span>
+              <input
+                type="number"
+                min="0"
+                className="da-color-stock-input"
+                value={c.stock}
+                onChange={(e) => actualizarStock(c.color, e.target.value)}
+                title="Stock de este color"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Mini colores en tabla ─────────────────────────── */
+function ColoresProducto({ colores }) {
+  if (!colores || colores.length === 0) return null;
+  return (
+    <div className="da-colores-mini">
+      {colores.map((c) => (
+        <span key={c.color} className="da-color-mini" style={{ backgroundColor: c.color, borderColor: c.color === '#FFFFFF' ? '#888' : c.color }} title={`${c.nombre}: ${c.stock}`}>
+          <span className="da-color-mini-stock">{c.stock}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 /* ─── KPI Card ────────────────────────────────────── */
 
 function KpiCard({ label, sublabel, valor, icon, destacada, badge }) {
@@ -784,6 +914,7 @@ function TabStock() {
   const [nuevoProducto, setNuevoProducto] = useState({
     nombre: '', sku: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
     gastoEnvio: '', porcentajeMargen: 40, categoria: '', activo: true, destacado: false,
+    coloresDisponibles: [],
   });
   const [guardandoNuevo, setGuardandoNuevo] = useState(false);
   const [archivosNuevo, setArchivosNuevo] = useState([]);
@@ -930,6 +1061,7 @@ function TabStock() {
         setNuevoProducto({
           nombre: '', sku: '', descripcion: '', precio: '', stock: 0, costoUnitario: '',
           gastoEnvio: '', porcentajeMargen: 40, categoria: '', activo: true, destacado: false,
+          coloresDisponibles: [],
         });
         setArchivosNuevo([]);
         cargar();
@@ -954,6 +1086,7 @@ function TabStock() {
       porcentajeMargen: p.porcentajeMargen ?? 40,
       fechaIngreso: p.fechaIngreso ? new Date(p.fechaIngreso).toISOString().slice(0, 10) : '',
       precioFijo: p.precio,
+      coloresDisponibles: p.coloresDisponibles || [],
     });
     setUsarPrecioFijo(false);
     setGuardandoEdit(false);
@@ -978,6 +1111,7 @@ function TabStock() {
         gastoEnvio: Number(editForm.gastoEnvio),
         porcentajeMargen: Number(editForm.porcentajeMargen),
         fechaIngreso: editForm.fechaIngreso ? new Date(editForm.fechaIngreso) : undefined,
+        coloresDisponibles: editForm.coloresDisponibles,
       };
       const res = await actualizarProducto(editando._id, datos);
       if (res.exito || res.datos) {
@@ -1110,6 +1244,13 @@ function TabStock() {
                 <label>Imagenes</label>
                 <input type="file" accept="image/*" multiple onChange={handleArchivosNuevo} />
               </div>
+              <div className="da-nuevo-campo da-nuevo-campo-full">
+                <label>Colores disponibles</label>
+                <SelectorColores
+                  seleccionados={nuevoProducto.coloresDisponibles}
+                  onChange={(colores) => setNuevoProducto((prev) => ({ ...prev, coloresDisponibles: colores }))}
+                />
+              </div>
               <div className="da-nuevo-campo da-nuevo-checks">
                 <label className="da-nuevo-check">
                   <input type="checkbox" name="activo" checked={nuevoProducto.activo} onChange={handleNuevoChange} />
@@ -1206,7 +1347,10 @@ function TabStock() {
                       <td>{p.tipoProducto || '-'}</td>
                       <td style={{ fontWeight: 600, color: 'var(--dash-text)', cursor: 'pointer', textDecoration: 'underline dotted' }}
                           onClick={() => setDetalleProducto(p)}>
-                        {p.nombre}
+                        <div className="da-nombre-colores-wrap">
+                          <span>{p.nombre}</span>
+                          <ColoresProducto colores={p.coloresDisponibles} />
+                        </div>
                       </td>
                       <td style={{ textAlign: 'center' }}>
                         <span style={{
@@ -1346,6 +1490,15 @@ function TabStock() {
                     onChange={(e) => handleEditChange('fechaIngreso', e.target.value)}
                   />
                 </div>
+              </div>
+
+              {/* Colores */}
+              <div style={{ marginTop: '1rem' }}>
+                <label style={{ fontWeight: 600, marginBottom: '0.5rem', display: 'block', color: 'var(--dash-text)' }}>Colores disponibles</label>
+                <SelectorColores
+                  seleccionados={editForm.coloresDisponibles || []}
+                  onChange={(colores) => handleEditChange('coloresDisponibles', colores)}
+                />
               </div>
 
               {/* Precio sugerido preview */}
