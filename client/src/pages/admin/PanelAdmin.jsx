@@ -887,6 +887,26 @@ function ModalDetalleProducto({ producto, onCerrar }) {
               </table>
             </div>
           </div>
+
+          {/* Colores disponibles */}
+          {producto.coloresDisponibles && producto.coloresDisponibles.length > 0 && (
+            <div className="da-detalle-seccion">
+              <h4>Colores disponibles</h4>
+              <div className="da-detalle-colores">
+                {producto.coloresDisponibles.map((c) => (
+                  <div key={c.color} className="da-detalle-color-item">
+                    <span
+                      className="da-detalle-color-swatch"
+                      style={{ backgroundColor: c.color, borderColor: c.color === '#FFFFFF' ? '#888' : c.color }}
+                    >
+                      <span className="da-detalle-color-stock">{c.stock}</span>
+                    </span>
+                    <span className="da-detalle-color-nombre">{c.nombre}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
         <div className="da-modal-footer">
           <button className="da-btn-sm despachar" onClick={onCerrar}>Cerrar</button>

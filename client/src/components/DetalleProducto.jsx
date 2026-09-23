@@ -182,6 +182,26 @@ function DetalleProducto() {
                 </span>
               </div>
 
+              {/* Colores disponibles */}
+              {producto.coloresDisponibles && producto.coloresDisponibles.length > 0 && (
+                <div className="detalle-colores">
+                  <h3>Colores Disponibles</h3>
+                  <div className="detalle-colores-grid">
+                    {producto.coloresDisponibles.map((c) => (
+                      <div key={c.color} className="detalle-color-chip" title={`${c.nombre} (${c.stock})`}>
+                        <span
+                          className="detalle-color-swatch"
+                          style={{ backgroundColor: c.color, borderColor: c.color === '#FFFFFF' ? '#ccc' : c.color }}
+                        >
+                          {c.stock > 0 && <span className="detalle-color-qty">{c.stock}</span>}
+                        </span>
+                        <span className="detalle-color-name">{c.nombre}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {descripcion && (
                 <div className="detalle-descripcion">
                   <h3>Descripción</h3>

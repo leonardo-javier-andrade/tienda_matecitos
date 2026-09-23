@@ -1691,3 +1691,49 @@
   padding: 0 3px;
   pointer-events: none;
 }
+
+/* ─── Colores en modal detalle producto ──────────── */
+.da-detalle-colores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.da-detalle-color-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.da-detalle-color-swatch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  border: 2px solid transparent;
+}
+
+.da-detalle-color-stock {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0,0,0,0.7);
+  border-radius: 8px;
+  padding: 0 3px;
+}
+
+.da-detalle-color-nombre {
+  font-size: 0.78rem;
+  color: var(--dash-muted);
+}
